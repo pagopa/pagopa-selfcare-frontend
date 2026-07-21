@@ -116,7 +116,7 @@ jobs:
           export REACT_APP_URL_FE_SELFCARE='${{ vars.SELFCARE_HOST_FE }}/dashboard/'
           export REACT_APP_URL_FE_TOKEN_EXCHANGE='${{ vars.SELFCARE_HOST_FE }}/token-exchange'
 
-          export REACT_APP_URL_API_TOKEN='${{ vars.SELFCARE_API_BE }}/api/token/token'
+          export REACT_APP_URL_API_TOKEN='${{ vars.SELFCARE_API_BE }}/backoffice/selfcare/sso/v1/tokens'
           export REACT_APP_URL_BACKOFFICE='${{ vars.SELFCARE_API_BE }}/backoffice/v1'
           export REACT_APP_PUBLIC_URL='/ui'
           export REACT_APP_URL_BETA='false'

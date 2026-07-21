@@ -26,6 +26,7 @@ import { userIsPagopaOperator } from '../../hooks/useUserRole';
 import { useFlagValue } from '../../hooks/useFeatureFlags';
 import { useOrganizationType } from '../../hooks/useOrganizationType';
 import { ShowSettingsSection } from '../../pages/settings/utils';
+import ProfileItem from '../ProfileItem';
 import SidenavItem from './SidenavItem';
 
 
@@ -63,6 +64,8 @@ export default function SideMenu({
 
   return (
     <List>
+      <ProfileItem />
+
       {useFlagValue('delegations-list') &&
         orgIsBrokerSigned &&
         userHasPermission('delegations-list') && (

@@ -4,7 +4,7 @@ import {featureFlagsActions, featureFlagsSelectors} from "../redux/slices/featur
 import {useFeatureFlags} from "../hooks/useFeatureFlags";
 import {useAppDispatch} from "../redux/hooks";
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type WithFeatureFlagsProps = {};
 
 export default function withFeatureFlags<T extends WithFeatureFlagsProps>(
@@ -36,4 +36,3 @@ export default function withFeatureFlags<T extends WithFeatureFlagsProps>(
     return ComponentWithFeatureFlags;
 
 }
-

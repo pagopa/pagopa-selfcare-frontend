@@ -41,7 +41,7 @@ const reduceTaxonomies = (taxonomies: Array<PSPBundleTaxonomyWithFromFile>) =>
         return newResult;
     }, {});
 
-// eslint-disable-next-line @typescript-eslint/semi
+// eslint-disable-next-line semi
 const mapTaxonomyToPspBundleTaxonomy = (
     taxonomy: TaxonomyWithFromFile
 ): PSPBundleTaxonomyWithFromFile => ({

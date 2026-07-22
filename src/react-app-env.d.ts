@@ -1,4 +1,4 @@
-/// <reference types="react-scripts" />
+/// <reference types="vite/client" />
 
 declare namespace NodeJS {
     interface ProcessEnv {
@@ -12,4 +12,5 @@ declare namespace NodeJS {
 
 interface Window {
     Stripe: any;
+    _env_?: Record<string, string>;
 }

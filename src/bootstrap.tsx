@@ -1,5 +1,5 @@
 import React from 'react';
-import {createRoot} from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import './index.css';
 import '@pagopa/selfcare-common-frontend/index.css';
 import {BrowserRouter} from 'react-router-dom';
@@ -30,10 +30,7 @@ CONFIG.TEST.JWT = testToken;
 // eslint-disable-next-line functional/immutable-data
 CONFIG.HEADER.LINK.PRODUCTURL = ROUTES.HOME;
 
-const rootElement = document.getElementById('root');
-
-if (rootElement) {
-  createRoot(rootElement).render(
+ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
             <BrowserRouter>
@@ -44,8 +41,8 @@ if (rootElement) {
             </BrowserRouter>
         </Provider>
     </React.StrictMode>,
-  );
-}
+    document.getElementById('root')
+);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

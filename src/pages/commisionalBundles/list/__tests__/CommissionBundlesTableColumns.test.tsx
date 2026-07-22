@@ -65,7 +65,7 @@ const params: GridRenderCellParams<any, any, any> = {
 };
 
 const AllCells = ({ isPsp, isEc }: { isPsp: boolean; isEc: boolean }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('translation');
 
   return <GridLinkActionBundleDetails bundle={mockedCommissionBundlePspDetailGlobal} />;
 };
@@ -79,7 +79,7 @@ const BundleStateChip = ({
   isPsp: boolean;
   isEc: boolean;
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('translation');
 
   return <>{getStateChip({ ...params, row: bundle }, t, isPsp, isEc)}</>;
 };

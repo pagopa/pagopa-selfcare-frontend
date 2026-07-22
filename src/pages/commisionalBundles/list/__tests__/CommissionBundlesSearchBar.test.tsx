@@ -17,7 +17,7 @@ describe('<CommissionBundlesSearchBar />', () => {
           <Route path="/comm-bundles">
             <ThemeProvider theme={theme}>
               <CommissionBundlesSearchBar
-                tabValue={0}
+                tabValue={undefined}
                 setFiltersValues={setFilters}
                 setTabValue={setTab}
               />

@@ -22,8 +22,6 @@ import * as useFlagValue from '../../../../hooks/useFeatureFlags';
 
 jest.mock('../../../components/commonFunctions');
 
-jest.setTimeout(15000);
-
 let updateWrapperStationDetailsSpy: jest.SpyInstance;
 let createWrapperStationSpy: jest.SpyInstance;
 let updateStationSpy: jest.SpyInstance;
@@ -109,9 +107,6 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
             </Provider>
         );
 
-        const stationCode = screen.getByTestId('station-code-test') as HTMLInputElement;
-        await waitFor(() => expect(stationCode.value).toBe(mockedStationCode.stationCode));
-
         const syncRadio = screen
             .getByTestId('connection-type-radio-group')
             .querySelector(`[value=${ConnectionType.SYNC}]`) as HTMLInputElement;
@@ -119,29 +114,33 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
         fireEvent.click(syncRadio);
         await waitFor(() => expect(syncRadio.checked).toBeTruthy());
 
+        const stationCode = screen.getByTestId('station-code-test') as HTMLInputElement;
         const primitiveVersion = screen.getByTestId('primitive-version-test') as HTMLInputElement;
         const targetPofConcat = screen.getByTestId('targetPofConcat-test') as HTMLInputElement;
 
         expect(stationCode.value).toBe(mockedStationCode.stationCode);
+        fireEvent.change(stationCode, {target: {value: 'station Code'}});
+        expect(stationCode.value).toBe('station Code');
+
         expect(primitiveVersion.value).toBe('2');
+
         expect(targetPofConcat.value).toBe('');
 
-        await waitFor(() => userEvent.type(targetPofConcat, 'https://www.pagopa.it:8080/pathTest'), {
+        await waitFor(() => userEvent.type(targetPofConcat, 'https:www.pagopa.it:8080/pathTest'), {
             timeout: 5000,
         });
 
-        await waitFor(() => expect(targetPofConcat.value).toBe('https://www.pagopa.it:8080/pathTest'));
+        await waitFor(() => expect(targetPofConcat.value).toBe('https:www.pagopa.it:8080/pathTest'));
 
-        const continueBtn = screen.getByTestId('confirm-button-test');
-        await waitFor(() => expect(continueBtn).toBeEnabled());
+        const continueBtn = screen.getByText('general.confirm');
         fireEvent.click(continueBtn);
 
-        const backBtn = await screen.findByText('general.turnBack');
+        const backBtn = screen.getByText('general.turnBack');
         fireEvent.click(backBtn);
 
         fireEvent.click(continueBtn);
 
-        const confirmModalBtn = await screen.findByTestId('confirm-button-modal-test');
+        const confirmModalBtn = screen.getByTestId('confirm-button-modal-test');
         fireEvent.click(confirmModalBtn);
 
         //expect(createWrapperStation).toBeCalledTimes(1);
@@ -218,16 +217,18 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
 
         expect(testStation).toBeCalledTimes(3);
 
-        const continueBtn = screen.getByTestId('confirm-button-test');
-        await waitFor(() => expect(continueBtn).toBeEnabled());
+        const continueBtn = screen.getByText('general.confirm');
         fireEvent.click(continueBtn);
 
-        const backBtn = await screen.findByText('general.turnBack');
+        const backBtn = screen.getByText('general.turnBack');
         fireEvent.click(backBtn);
 
         fireEvent.click(continueBtn);
 
-        const confirmModalBtn = await screen.findByTestId('confirm-button-modal-test');
+        const confirmBtn = screen.getByText('general.confirm');
+        fireEvent.click(confirmBtn);
+
+        const confirmModalBtn = screen.getByTestId('confirm-button-modal-test');
         fireEvent.click(confirmModalBtn);
 
         //    expect(updateWrapperStationToCheckUpdate).toBeCalledTimes(1);

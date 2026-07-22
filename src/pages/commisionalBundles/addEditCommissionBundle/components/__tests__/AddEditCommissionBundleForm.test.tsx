@@ -25,11 +25,6 @@ import { TypeEnum } from '../../../../../api/generated/portal/PSPBundleResource'
 import * as useOrganizationType from '../../../../../hooks/useOrganizationType';
 import { mockedChannels } from '../../../../../services/__mocks__/channelService';
 
-jest.mock('@pagopa/selfcare-common-frontend', () => ({
-  useErrorDispatcher: jest.fn(),
-  useLoading: () => jest.fn(),
-}));
-
 let spyOnGetPaymentTypes: jest.SpyInstance<any, unknown[]>;
 let spyOnGetTouchpoint: jest.SpyInstance<any, unknown[]>;
 let spyOnGetInstitutionService: jest.SpyInstance<any, unknown[]>;
@@ -345,9 +340,7 @@ describe('<AddEditCommissionBundleForm />', () => {
 
     //Test onUs flag
     fireEvent.mouseDown(
-      screen.getByRole('combobox', {
-        name: 'commissionBundlesPage.addEditCommissionBundle.form.paymentType',
-      })
+      screen.getByLabelText('commissionBundlesPage.addEditCommissionBundle.form.paymentType')
     );
     fireEvent.click(screen.getByText(new RegExp('.*PostePay - PPAY.*', 'i')));
     expect(input.paymentType).toHaveTextContent('PostePay - PPAY');
@@ -465,12 +458,10 @@ describe('<AddEditCommissionBundleForm />', () => {
     );
 
     // Check broker code list
-    await waitFor(() =>
-      expect(input.brokerCodeList.value).toBe(
-        mockedDelegatedPSP.delegation_list!.find(
-          (el) => el.broker_tax_code === mockedBundleRequestForEdit.idBrokerPsp
-        )?.broker_name
-      )
+    expect(input.brokerCodeList.value).toBe(
+      mockedDelegatedPSP.delegation_list!.find(
+        (el) => el.broker_tax_code === mockedBundleRequestForEdit.idBrokerPsp
+      )?.broker_name
     );
 
     // Check channel id

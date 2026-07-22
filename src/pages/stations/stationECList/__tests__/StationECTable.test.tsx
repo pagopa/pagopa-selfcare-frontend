@@ -10,15 +10,13 @@ import React from 'react';
 import { mockedStationECs } from '../../../../services/__mocks__/stationService';
 
 let spyApi: jest.SpyInstance;
-let getECListByStationCodeSpy: jest.SpyInstance;
-let dissociateEcSpy: jest.SpyInstance;
+const getECListByStationCodeSpy = jest.spyOn(stationService, 'getECListByStationCode');
+const dissociateEcSpy = jest.spyOn(stationService, "dissociateECfromStation");
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
   spyApi = jest.spyOn(stationService, 'dissociateECfromStation');
-  getECListByStationCodeSpy = jest.spyOn(stationService, 'getECListByStationCode');
-  dissociateEcSpy = jest.spyOn(stationService, "dissociateECfromStation");
 });
 
 afterEach(cleanup);
@@ -50,7 +48,7 @@ describe('<StationECTable />', () => {
       expect(table).toBeInTheDocument();
     });
 
-    const menuButton = (await screen.findAllByRole('menuitem'))[0];
+    const menuButton = screen.getAllByRole('menuitem')[0];
     fireEvent.click(menuButton);
 
     let dissociateButton;
@@ -123,7 +121,7 @@ describe('<StationECTable />', () => {
       expect(table).toBeInTheDocument();
     });
 
-    const menuButton = (await screen.findAllByRole('menuitem'))[0];
+    const menuButton = screen.getAllByRole('menuitem')[0];
     fireEvent.click(menuButton);
 
     let dissociateButton;

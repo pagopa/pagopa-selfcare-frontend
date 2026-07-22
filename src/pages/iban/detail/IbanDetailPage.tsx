@@ -33,9 +33,7 @@ const IbanDetailPage = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [lastIban, setLastIban] = useState(false);
     const [ibanDeletionDate, setIbanDeletionDate] = useState<Date | null>(null);
-    const [isExistPendingDeletionRequest, setIsExistPendingDeletionRequest] = useState<string | null>(
-        null
-    );
+    const [isExistPendingDeletionRequest, setIsExistPendingDeletionRequest] = useState< string | null >();
     const [showCancelIbanDeletionRequestModal, setShowCancelIbanDeletionRequestModal] = useState(false);
 
     useEffect(() => {
@@ -86,7 +84,8 @@ const IbanDetailPage = () => {
     };
 
     const cancelIbanDeletionRequestHandler = async (id: string) => {
-        setLoadingDelete(true);
+        console.log('cancelIbanDeletionRequestHandler called with id:', id);
+            setLoadingDelete(true);
         try {
             await cancelIbanDeletionRequests(selectedParty?.fiscalCode ?? '', id);
             history.push(ROUTES.IBAN);
@@ -284,7 +283,7 @@ const IbanDetailPage = () => {
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DesktopDatePicker
                                         label={t('addEditIbanPage.delete-modal.deletionDateLabel')} 
-                                        format="dd/MM/yyyy"
+                                        inputFormat="dd/MM/yyyy"
                                         minDate={(() => {
                                             const tomorrow = new Date(); 
                                             tomorrow.setDate(tomorrow.getDate() + 1); 
@@ -292,11 +291,7 @@ const IbanDetailPage = () => {
                                         })()}
                                         value={ibanDeletionDate}
                                         onChange={(newDate: Date|null) => setIbanDeletionDate(newDate||null)}
-                                        slotProps={{
-                                            textField: {
-                                                fullWidth: true,
-                                            },
-                                        }}
+                                        renderInput={(params) => <TextField {...params} fullWidth />}
                                     />
                                 </LocalizationProvider>
                             </Box>

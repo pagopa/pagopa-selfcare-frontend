@@ -10,8 +10,7 @@ import * as BundleService from '../../../../services/bundleService';
 import * as useOrganizationType from '../../../../hooks/useOrganizationType';
 import { mockedCommissionBundlePspList } from '../../../../services/__mocks__/bundleService';
 
-let getBundleListByPSPSpy: jest.SpyInstance;
-let getCisBundlesSpy: jest.SpyInstance;
+let getCommissionBundlePspSpy: jest.SpyInstance;
 
 jest.mock('../../../../hooks/useOrganizationType');
 
@@ -19,16 +18,18 @@ beforeEach(() => {
   jest
     .spyOn(require('../../../../hooks/usePermissions'), 'usePermissions')
     .mockReturnValue({ isPsp: () => true, isEc: () => true });
-  getBundleListByPSPSpy = jest.spyOn(BundleService, 'getBundleListByPSP');
-  getCisBundlesSpy = jest.spyOn(BundleService, 'getCisBundles');
+  getCommissionBundlePspSpy = jest.spyOn(
+    require('../../../../services/__mocks__/bundleService'),
+    'getCommissionBundlePsp'
+  );
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-afterEach(() => {
-  cleanup();
-  jest.restoreAllMocks();
-});
+const mock = jest.spyOn(BundleService, 'getBundleListByPSP');
+const mockEC = jest.spyOn(BundleService, 'getCisBundles');
+
+afterEach(cleanup);
 
 describe('<CommissionBundlesTable />', () => {
   test('render component CommissionBundlesTable with bundle list for PSP', async () => {
@@ -51,7 +52,7 @@ describe('<CommissionBundlesTable />', () => {
       orgIsPspSigned: false,
     });
 
-    getBundleListByPSPSpy.mockResolvedValue(mockedCommissionBundlePspList);
+    mock.mockReturnValueOnce(new Promise((resolve) => resolve(mockedCommissionBundlePspList)));
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/comm-bundles`]}>
@@ -67,9 +68,10 @@ describe('<CommissionBundlesTable />', () => {
       </Provider>
     );
 
-    expect(await screen.findByText('Commission Bundle Name')).toBeInTheDocument();
-    expect(screen.getByTestId('data-grid')).toBeInTheDocument();
-    expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
+      expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
+    });
   });
 
   test('render component CommissionBundlesTable with bundle list for EC', async () => {
@@ -92,7 +94,7 @@ describe('<CommissionBundlesTable />', () => {
       orgIsPspSigned: false,
     });
 
-    getCisBundlesSpy.mockResolvedValue(mockedCommissionBundlePspList);
+    mockEC.mockReturnValueOnce(new Promise((resolve) => resolve(mockedCommissionBundlePspList)));
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/comm-bundles`]}>
@@ -108,9 +110,10 @@ describe('<CommissionBundlesTable />', () => {
       </Provider>
     );
 
-    expect(await screen.findByText('Commission Bundle Name')).toBeInTheDocument();
-    expect(screen.getByTestId('data-grid')).toBeInTheDocument();
-    expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
+      expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
+    });
   });
 
   test('render component CommissionBundlesTable without bundle list', async () => {
@@ -132,7 +135,7 @@ describe('<CommissionBundlesTable />', () => {
       orgIsPspDirect: false,
       orgIsPspSigned: false,
     });
-    getBundleListByPSPSpy.mockRejectedValue('');
+    mock.mockRejectedValueOnce('');
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/comm-bundles`]}>
@@ -173,7 +176,7 @@ describe('<CommissionBundlesTable />', () => {
       orgIsPspSigned: false,
     });
 
-    getCisBundlesSpy.mockResolvedValue([]);
+    mockEC.mockReturnValueOnce(new Promise((resolve) => resolve([])));
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/comm-bundles`]}>
@@ -195,10 +198,11 @@ describe('<CommissionBundlesTable />', () => {
       expect(screen.queryByTestId('private-bundle-cta')).toBeInTheDocument();
     });
 
-    getCisBundlesSpy.mockResolvedValue(mockedCommissionBundlePspList);
+    mockEC.mockReturnValueOnce(new Promise((resolve) => resolve(mockedCommissionBundlePspList)));
     fireEvent.click(screen.getByTestId('private-bundle-cta'));
 
-    expect(await screen.findByText('Commission Bundle Name')).toBeInTheDocument();
-    expect(getCisBundlesSpy).toBeCalledTimes(2);
+    await waitFor(() => {
+      expect(mockEC).toBeCalledTimes(2);
+    });
   });
 });

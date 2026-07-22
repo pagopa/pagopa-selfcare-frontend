@@ -2,9 +2,11 @@ import React, {PropsWithChildren} from 'react';
 import {render} from '@testing-library/react';
 import type {RenderOptions} from '@testing-library/react';
 import {configureStore} from '@reduxjs/toolkit';
+import type {PreloadedState} from '@reduxjs/toolkit';
 import {Provider} from 'react-redux';
 import {userReducer} from '@pagopa/selfcare-common-frontend/redux/slices/userSlice';
 import {appStateReducer} from '@pagopa/selfcare-common-frontend/redux/slices/appStateSlice';
+import {RootState} from '../redux/store';
 import {partiesReducer} from '../redux/slices/partiesSlice';
 
 // As a basic setup, import your same slice reducers
@@ -12,7 +14,7 @@ import {partiesReducer} from '../redux/slices/partiesSlice';
 // This type interface extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
-    preloadedState?: any;
+    preloadedState?: PreloadedState<RootState>;
     store?: any;
 }
 
@@ -28,11 +30,11 @@ export function renderWithProviders(
                 appState: appStateReducer,
             },
             preloadedState,
-        } as any),
+        }),
         ...renderOptions
     }: ExtendedRenderOptions = {}
 ) {
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    // eslint-disable-next-line @typescript-eslint/ban-types
     function Wrapper({children}: PropsWithChildren<{}>): JSX.Element {
         return <Provider store={store}>{children}</Provider>;
     }

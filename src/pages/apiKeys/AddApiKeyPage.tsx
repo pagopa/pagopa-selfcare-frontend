@@ -15,7 +15,7 @@ import { theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { Trans, useTranslation, TFunction } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { InstitutionApiKeysResource } from '../../api/generated/portal/InstitutionApiKeysResource';
 import {
@@ -219,7 +219,7 @@ const buildAvailableProduct = (
   data: InstitutionApiKeysResource,
   products: Array<ConfiguredProductKeys>,
   setAvailableProduct: any,
-  t: (key: string) => string
+  t: TFunction
 ) => {
   if (data?.institution_api_key_list?.some((el) => el.id.includes(API_KEY_PRODUCTS.NODOAUTH.key))) {
     // if nodeAuth was created, elements that are present in both lists will be disabled

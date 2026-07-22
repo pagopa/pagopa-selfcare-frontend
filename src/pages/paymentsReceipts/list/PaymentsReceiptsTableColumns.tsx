@@ -1,5 +1,5 @@
 import {GridColDef} from '@mui/x-data-grid';
-import {TFunction} from 'i18next';
+import {TFunction} from 'react-i18next';
 import {Box, Button} from '@mui/material';
 import {renderCell, showCustomHeader} from '../../../components/Table/TableUtils';
 import {formatDateToDDMMYYYY} from '../../../utils/common-utils';

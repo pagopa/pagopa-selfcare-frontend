@@ -1,4 +1,4 @@
-import {TFunction} from 'i18next';
+import { TFunction } from 'react-i18next';
 import { BackofficeApi } from '../api/BackofficeClient';
 import { BundleCreateResponse } from '../api/generated/portal/BundleCreateResponse';
 import { BundleRequest, TypeEnum } from '../api/generated/portal/BundleRequest';

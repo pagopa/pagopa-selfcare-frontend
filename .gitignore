@@ -27,8 +27,6 @@ generated
 build
 local
 dist
-.cache
-/debug.json
 
 # Local python packages
 .python_packages/

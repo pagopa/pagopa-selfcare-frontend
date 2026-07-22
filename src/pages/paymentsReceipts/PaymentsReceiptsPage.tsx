@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {TitleBox} from '@pagopa/selfcare-common-frontend';
 import {DesktopDatePicker, LocalizationProvider} from '@mui/x-date-pickers';
+import {TextField, TextFieldProps} from '@mui/material';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import SideMenuLayout from '../../components/SideMenu/SideMenuLayout';
 import TableSearchBar from '../../components/Table/TableSearchBar';
@@ -17,9 +18,9 @@ export default function PaymentsReceiptsPage() {
     const [selectedYear, setSelectedYear] = useState<number | null>(null);
     const [searchTrigger, setSearchTrigger] = useState<boolean>(false);
 
-    function handleSetYear(value: Date | null) {
+    function handleSetYear(value: string | null) {
         if (value) {
-            setSelectedYear(value.getFullYear());
+            setSelectedYear(new Date(value).getFullYear());
         } else {
             setSelectedYear(null);
         }
@@ -48,19 +49,22 @@ export default function PaymentsReceiptsPage() {
                         label={t('paymentsReceiptsPage.search.yearFilter')}
                         views={['year']}
                         onChange={(value) => handleSetYear(value)}
-                        value={selectedYear ? new Date(selectedYear, 0, 1) : null}
-                        minDate={new Date(2022, 0, 1)}
-                        maxDate={new Date(todaysYear, 0, 1)}
-                        slotProps={{
-                            textField: {
-                                inputProps: {
+                        value={selectedYear ? `01/01/${selectedYear}` : null}
+                        minDate="01/01/2022"
+                        maxDate={`01/01/${todaysYear}`}
+                        renderInput={(params: TextFieldProps) => (
+                            <TextField
+                                {...params}
+                                inputProps={{
+                                    ...params.inputProps,
                                     placeholder: 'aaaa',
                                     'data-testid': 'select-year',
-                                },
-                                id: 'year',
-                                name: 'year',
-                                size: 'small',
-                                sx: {
+                                }}
+                                id="year"
+                                name="year"
+                                type="date"
+                                size="small"
+                                sx={{
                                     backgroundColor: '#FFFFFF',
                                     ml: 1,
                                     '.MuiOutlinedInput-root': {
@@ -69,9 +73,9 @@ export default function PaymentsReceiptsPage() {
                                     '.MuiInputLabel-root': {
                                         paddingTop: '2px',
                                     },
-                                },
-                            },
-                        }}
+                                }}
+                            />
+                        )}
                     />
                 </LocalizationProvider>
             </TableSearchBar>

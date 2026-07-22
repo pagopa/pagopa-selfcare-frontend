@@ -11,6 +11,8 @@ import { stationsReducer } from './slices/stationsSlice';
 import { brokersReducer } from './slices/brokersSlide';
 import { channelsReducer } from './slices/channelsSlice';
 
+const additionalMiddlewares = [LOG_REDUX_ACTIONS ? logger : undefined];
+
 export const createStore = () =>
     configureStore({
         reducer: {
@@ -24,10 +26,11 @@ export const createStore = () =>
             brokers: brokersReducer,
             channels: channelsReducer,
         },
-        middleware: (getDefaultMiddleware) => {
-            const defaultMiddleware = getDefaultMiddleware({serializableCheck: false});
-            return LOG_REDUX_ACTIONS ? defaultMiddleware.concat(logger) : defaultMiddleware;
-        },
+        middleware: (getDefaultMiddleware) =>
+            additionalMiddlewares.reduce(
+                (array, middleware) => (middleware ? array.concat(middleware) : array),
+                getDefaultMiddleware({serializableCheck: false})
+            ),
     });
 
 export const store = createStore();

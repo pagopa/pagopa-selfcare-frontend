@@ -1,7 +1,7 @@
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { IconButton } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
-import {TFunction} from 'i18next';
+import { TFunction } from 'react-i18next';
 import { CIBrokerStationResource } from '../../../../api/generated/portal/CIBrokerStationResource';
 import { renderCell, showCustomHeader } from '../../../../components/Table/TableUtils';
 import { getAuxDigit } from '../../../../utils/station-utils';

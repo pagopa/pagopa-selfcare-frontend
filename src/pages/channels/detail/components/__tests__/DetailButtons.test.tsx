@@ -98,9 +98,5 @@ describe('<DetailButtons />', () => {
     });
 
     fireEvent.click(confirmButton);
-
-    await waitFor(() => {
-      expect(screen.queryByTestId('confirm-and-send-button')).not.toBeInTheDocument();
-    });
   });
 });

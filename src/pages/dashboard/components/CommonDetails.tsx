@@ -1,6 +1,6 @@
 import {Grid, Typography} from '@mui/material';
 import React from 'react';
-import {TFunction} from 'react-i18next';
+import {TFunction} from 'i18next';
 import {Party} from '../../../model/Party';
 
 type Props = {

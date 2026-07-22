@@ -1,5 +1,5 @@
 import { GridColDef } from '@mui/x-data-grid';
-import { TFunction } from 'react-i18next';
+import {TFunction} from 'i18next';
 import { generatePath } from 'react-router-dom';
 import { StatusEnum } from '../../../api/generated/portal/StationDetailsDto';
 import GridLinkAction from '../../../components/Table/GridLinkAction';

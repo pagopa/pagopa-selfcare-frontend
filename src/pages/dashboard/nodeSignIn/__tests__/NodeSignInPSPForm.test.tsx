@@ -1,6 +1,7 @@
 import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
 import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {createMemoryHistory} from 'history';
 import React from 'react';
 import {Provider} from 'react-redux';
@@ -50,7 +51,7 @@ const renderApp = (
     return {store, history};
 };
 
-const setupFormAndSubmit = async (store) => {
+const setupFormAndSubmit = async (store, intermediaryAvailable = true) => {
     await waitFor(() =>
         store.dispatch({
             type: 'parties/setPartySelected',
@@ -66,15 +67,29 @@ const setupFormAndSubmit = async (store) => {
     const intermediaryTrue = screen
         .getByTestId('intermediary-available-test')
         .querySelector('[value=true]') as HTMLInputElement;
+    const intermediaryFalse = screen
+        .getByTestId('intermediary-available-test')
+        .querySelector('[value=false]') as HTMLInputElement;
 
-    fireEvent.change(bicCode, {target: {value: '12345'}});
-    expect(bicCode.value).toBe('12345');
+    await waitFor(() => expect(businessName.value).toBe(pspPartySelected.description));
+
+    if (bicCode.disabled) {
+        expect(bicCode.value).not.toBe('');
+    } else {
+        fireEvent.change(bicCode, {target: {value: '12345'}});
+        await waitFor(() => expect(bicCode.value).toBe('12345'));
+    }
 
     fireEvent.click(digitalStampRadioTrue);
-
-    fireEvent.click(intermediaryTrue);
+    const selectedIntermediaryRadio = intermediaryAvailable ? intermediaryTrue : intermediaryFalse;
+    await waitFor(() => expect(selectedIntermediaryRadio).toBeEnabled());
+    fireEvent.click(selectedIntermediaryRadio);
+    await waitFor(() =>
+        expect(selectedIntermediaryRadio).toBeChecked()
+    );
 
     const confirmBtn = await screen.findByTestId('continue-button-test');
+    await waitFor(() => expect(confirmBtn).toBeEnabled());
     fireEvent.click(confirmBtn);
 };
 
@@ -150,12 +165,6 @@ describe('NodeSignInPSPForm', () => {
 
         await setupFormAndSubmit(store);
 
-        const intermediaryTrue = screen
-            .getByTestId('intermediary-available-test')
-            .querySelector('[value=true]') as HTMLInputElement;
-
-        fireEvent.click(intermediaryTrue);
-
         await waitFor(() => expect(createPSPDirectMocked).toHaveBeenCalledTimes(1));
         await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
     });
@@ -177,13 +186,7 @@ describe('NodeSignInPSPForm', () => {
             })
         );
 
-        await setupFormAndSubmit(store);
-
-        const intermediaryFalse = screen
-            .getByTestId('intermediary-available-test')
-            .querySelector('[value=false]') as HTMLInputElement;
-
-        fireEvent.click(intermediaryFalse);
+        await setupFormAndSubmit(store, false);
 
         await waitFor(() => expect(createPSPIndirectMocked).toHaveBeenCalledTimes(1));
         await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
@@ -207,12 +210,6 @@ describe('NodeSignInPSPForm', () => {
         );
 
         await setupFormAndSubmit(store);
-
-        const intermediaryTrue = screen
-            .getByTestId('intermediary-available-test')
-            .querySelector('[value=true]') as HTMLInputElement;
-
-        fireEvent.click(intermediaryTrue);
 
         await waitFor(() => expect(createPspBroker).toHaveBeenCalledTimes(1));
         await waitFor(() => expect(useSigninDataMocked).toHaveBeenCalled());
@@ -262,12 +259,12 @@ describe('NodeSignInPSPForm', () => {
         );
         const bicCode = screen.getByTestId('bicCode-test') as HTMLInputElement;
     
-        expect(bicCode.value).toBe(
-            brokerOrPspDetailsResource_PSPAndBroker.paymentServiceProviderDetailsResource?.bic
+        await waitFor(() =>
+            expect(bicCode.value).toBe(
+                brokerOrPspDetailsResource_PSPAndBroker.paymentServiceProviderDetailsResource?.bic
+            )
         );
-    
-        fireEvent.change(bicCode, {target: {value: '12345'}});
-        expect(bicCode.value).toBe('12345');
+        expect(bicCode).toBeDisabled();
     
         const confirmBtn = await screen.findByTestId('continue-button-test');
         fireEvent.click(confirmBtn);
@@ -278,6 +275,7 @@ describe('NodeSignInPSPForm', () => {
     });
     
     test('Test rendering NodeSignInPSPForm in case of updating the form with a psp indirect', async () => {
+        const user = userEvent.setup();
         const {store} = renderApp(brokerOrPspDetailsResource_PSPOnly);
     
         await waitFor(() =>
@@ -301,17 +299,33 @@ describe('NodeSignInPSPForm', () => {
             .getByTestId('intermediary-available-test')
             .querySelector('[value=true]') as HTMLInputElement;
     
-        expect(bicCode.value).toBe(
-            brokerOrPspDetailsResource_PSPOnly.paymentServiceProviderDetailsResource?.bic
+        await waitFor(() =>
+            expect(bicCode.value).toBe(
+                brokerOrPspDetailsResource_PSPOnly.paymentServiceProviderDetailsResource?.bic
+            )
         );
-        expect(intermediaryFalse.checked).toBe(true);
-    
-        fireEvent.change(bicCode, {target: {value: '12345'}});
-        expect(bicCode.value).toBe('12345');
+        expect(bicCode).toBeDisabled();
+        await waitFor(() => expect(intermediaryFalse).toBeChecked());
     
         expect(intermediaryTrue.checked).toBe(false);
-        fireEvent.click(intermediaryTrue);
-        expect(intermediaryTrue.checked).toBe(true);
+        await waitFor(() =>
+            expect(
+                screen
+                    .getByTestId('intermediary-available-test')
+                    .querySelector('[value=true]') as HTMLInputElement
+            ).toBeEnabled()
+        );
+        const enabledIntermediaryTrue = screen
+            .getByTestId('intermediary-available-test')
+            .querySelector('[value=true]') as HTMLInputElement;
+        await user.click(enabledIntermediaryTrue);
+        await waitFor(() =>
+            expect(
+                screen
+                    .getByTestId('intermediary-available-test')
+                    .querySelector('[value=true]') as HTMLInputElement
+            ).toBeChecked()
+        );
     
         const confirmBtn = await screen.findByTestId('continue-button-test');
         fireEvent.click(confirmBtn);

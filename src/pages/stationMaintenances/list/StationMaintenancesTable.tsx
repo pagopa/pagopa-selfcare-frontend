@@ -8,6 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import {
+  TextFieldProps,
+  TextField,
   FormControl,
   InputLabel,
   Select,
@@ -106,9 +108,9 @@ export default function StationMaintenancesTable({
     setSearchTrigger((prev: boolean) => !prev);
   };
 
-  function handleSetYear(newYear: Date | null) {
+  function handleSetYear(newYear: string | null) {
     if (newYear) {
-      setFilterYear(newYear.getFullYear());
+      setFilterYear(new Date(newYear).getFullYear());
     }
   }
 
@@ -277,29 +279,32 @@ export default function StationMaintenancesTable({
             label={t('general.year')}
             views={['year']}
             onChange={(value) => handleSetYear(value)}
-            value={filterYear ? new Date(filterYear, 0, 1) : null}
+            value={filterYear ? `01/01/${filterYear}` : null}
             minDate={
               filterState === StationMaintenanceState.FINISHED
-                ? new Date(2024, 0, 1)
-                : new Date(todaysYear, 0, 1)
+                ? '01/01/2024'
+                : `01/01/${todaysYear}`
             }
             maxDate={
               filterState === StationMaintenanceState.FINISHED
-                ? new Date(todaysYear, 0, 1)
-                : new Date(todaysYear + 1, 0, 1)
+                ? `01/01/${todaysYear}`
+                : `01/01/${todaysYear + 1}`
             }
-            slotProps={{
-              textField: {
-                inputProps: {
+            renderInput={(params: TextFieldProps) => (
+              <TextField
+                {...params}
+                inputProps={{
+                  ...params.inputProps,
                   placeholder: 'aaaa',
                   'data-testid': 'select-year',
-                },
-                id: 'year',
-                name: 'year',
-                size: 'small',
-                sx: baseInputStyle,
-              },
-            }}
+                }}
+                id="year"
+                name="year"
+                type="date"
+                size="small"
+                sx={baseInputStyle}
+              />
+            )}
           />
         </LocalizationProvider>
         {filterState !== StationMaintenanceState.FINISHED && (

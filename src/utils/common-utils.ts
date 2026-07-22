@@ -1,6 +1,6 @@
 /* eslint-disable functional/no-let */
 import { DateTime } from 'luxon';
-import {TFunction} from 'i18next';
+import { TFunction } from 'react-i18next';
 import { Iban } from '../api/generated/portal/Iban';
 import { IbanOnCreation } from '../model/Iban';
 

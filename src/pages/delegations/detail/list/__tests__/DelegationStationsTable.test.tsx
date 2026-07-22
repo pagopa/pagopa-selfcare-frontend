@@ -10,17 +10,15 @@ import * as BrokerService from '../../../../../services/brokerService';
 import * as StationService from '../../../../../services/stationService';
 import DelegationStationsTable from '../DelegationStationsTable';
 
-let mock: jest.SpyInstance;
-let dissociateStationMock: jest.SpyInstance;
-
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
     });
     jest.spyOn(console, 'warn').mockImplementation(() => {
     });
-    mock = jest.spyOn(BrokerService, 'getCIBrokerStations');
-    dissociateStationMock = jest.spyOn(StationService, 'dissociateECfromStation');
 });
+
+const mock = jest.spyOn(BrokerService, 'getCIBrokerStations');
+const dissociateStationMock = jest.spyOn(StationService, 'dissociateECfromStation');
 
 afterEach(cleanup);
 
@@ -85,9 +83,8 @@ describe('<DelegationStationsTable />', () => {
             expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
         });
 
-        let goToStationDetailButton = await screen.findAllByTestId(
-            'column-station-detail-button'
-        );
+        let goToStationDetailButton = screen.queryAllByTestId('column-station-detail-button');
+        expect(goToStationDetailButton.length).toBeTruthy();
         fireEvent.click(goToStationDetailButton[0]);
 
         await waitFor(() => {
@@ -109,9 +106,7 @@ describe('<DelegationStationsTable />', () => {
             expect(screen.queryByTestId('station-detail-drawer-column')).not.toBeInTheDocument();
         });
 
-        goToStationDetailButton = await screen.findAllByTestId(
-            'column-station-detail-button'
-        );
+        goToStationDetailButton = screen.queryAllByTestId('column-station-detail-button');
         fireEvent.click(goToStationDetailButton[0]);
 
         await waitFor(() => {

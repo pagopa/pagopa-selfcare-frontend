@@ -5,17 +5,8 @@ import {Party} from "../model/Party";
 import {useOrganizationType} from "./useOrganizationType";
 import {useFlagValue} from "./useFeatureFlags";
 
-export type UserRoleInfo = {
-    userRole: ROLE;
-    userIsPspAdmin: boolean;
-    userIsEcAdmin: boolean;
-    userIsPspDirectAdmin: boolean;
-    userIsAdmin: boolean;
-    userIsPagopaOperator: boolean;
-    userIsPspOperator?: boolean;
-};
 
-export const useUserRole = (): UserRoleInfo => {
+export const useUserRole = () => {
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
     const {orgInfo} = useOrganizationType();
 
@@ -96,4 +87,5 @@ function mapEcRoles(isECBroker: boolean, roleKey: string) {
     }
     return ROLE.UNKNOWN;
 }
+
 

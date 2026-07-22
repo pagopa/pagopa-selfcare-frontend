@@ -1,12 +1,12 @@
 import {
   Footer as MuiItaliaFooter,
   FooterLinksType,
-  LangCode,
   PreLoginFooterLinksType,
-} from '@pagopa/mui-italia';
+} from '@pagopa/mui-italia/dist/components/Footer/Footer';
 import { Trans, useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import i18next from 'i18next';
+import { LangCode } from '@pagopa/mui-italia';
+import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
 import { CONFIG } from '@pagopa/selfcare-common-frontend/config/env';
 import { LANGUAGES, pagoPALink } from '@pagopa/selfcare-common-frontend/components/Footer/FooterConfig';
 import ROUTES from '../../routes';
@@ -134,9 +134,9 @@ export default function Footer({
           linkType: 'internal',
         },
         {
-          label: t('common.footer.preLoginLinks.resources.links.Model231'),
-          href: CONFIG.FOOTER.LINK.MODEL231,
-          ariaLabel: 'Vai al link: Modello 231',
+          label: t('common.footer.preLoginLinks.resources.links.Model321'),
+          href: CONFIG.FOOTER.LINK.MODEL321,
+          ariaLabel: 'Vai al link: Modello 321',
           linkType: 'internal',
         },
       ],
@@ -238,9 +238,7 @@ export default function Footer({
       onExit={onExit}
       languages={LANGUAGES as any}
       onLanguageChanged={async (language: LangCode) => {
-        await (
-          i18next as unknown as { changeLanguage: (language: string) => Promise<unknown> }
-        ).changeLanguage(language);
+        await i18n.changeLanguage(language);
         setSelectedLanguage(language);
       }}
       currentLangCode={selectedLanguage}

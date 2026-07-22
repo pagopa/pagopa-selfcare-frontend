@@ -1,6 +1,6 @@
 import React from 'react';
 import {Grid} from '@mui/material';
-import {PartyAccountItemButton} from '@pagopa/mui-italia';
+import {PartyAccountItemButton} from '@pagopa/mui-italia/dist/components/PartyAccountItemButton';
 
 type Props = {
     title: string | undefined;

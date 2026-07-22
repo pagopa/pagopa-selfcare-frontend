@@ -1,12 +1,3 @@
-const esModulesToTransform = [
-    '@pagopa[\\\\/]mui-italia',
-    '@pagopa[\\\\/]selfcare-common-frontend',
-    '@mui[\\\\/]icons-material[\\\\/]esm',
-    '@mui[\\\\/]material[\\\\/]esm',
-    '@mui[\\\\/]system[\\\\/]esm',
-    'italia-ts-commons',
-].join('|');
-
 /*
  * For a detailed explanation regarding each configuration property, visit:
  * https://jestjs.io/docs/configuration
@@ -32,7 +23,7 @@ module.exports = {
     // collectCoverageFrom: undefined,
     collectCoverageFrom: [
         "src/**/*.{js,jsx,ts,tsx}",
-        "!src/main.ts"
+        "!src/index.js"
     ],
 
     // The directory where Jest should output its coverage files
@@ -40,7 +31,7 @@ module.exports = {
 
     // An array of regexp pattern strings used to skip coverage collection
     coveragePathIgnorePatterns: [
-        "src/main.ts",
+        "src/index.js",
         "src/bootstrap.tsx",
         "src/consentAndAnalyticsConfiguration.ts",
         "src/reportWebVitals.ts",
@@ -102,11 +93,8 @@ module.exports = {
     // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
     // moduleNameMapper: {},
     "moduleNameMapper": {
-        "^@mui/base/ButtonUnstyled$": "<rootDir>/node_modules/@mui/base/useButton",
         "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
         "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
-        "^@pagopa/selfcare-common-frontend/lib/(.*)$": "<rootDir>/node_modules/@pagopa/selfcare-common-frontend/lib/$1",
-        "^@pagopa/selfcare-common-frontend/(.*)$": "<rootDir>/node_modules/@pagopa/selfcare-common-frontend/lib/$1",
         "react-markdown": "<rootDir>/__mocks__/react-markdown.tsx",
     },
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -120,8 +108,10 @@ module.exports = {
 
     // A preset that is used as a base for Jest's configuration
     // preset: undefined,
+    preset: 'ts-jest',
     transform: {
-        "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "<rootDir>/jest.babelTransform.js",
+        '^.+\\.(ts|tsx)?$': 'ts-jest',
+        "^.+\\.(js|jsx)$": "babel-jest",
     },
 
     // Run tests from one or more projects
@@ -214,7 +204,8 @@ module.exports = {
     //   "\\.pnp\\.[^\\/]+$"
     // ],
     transformIgnorePatterns: [
-        `[\\\\/]node_modules[\\\\/](?!(${esModulesToTransform})([\\\\/]|$))`,
+        "<rootDir />/node_modules/?!(react-icons)",
+        "<rootDir />/node_modules/?!(italia-ts-commons)",
     ],
 
     // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them

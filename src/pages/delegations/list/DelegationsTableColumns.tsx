@@ -2,7 +2,7 @@ import {InfoOutlined as InfoOutlinedIcon} from '@mui/icons-material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Tooltip from '@mui/material/Tooltip';
 import {GridColDef} from '@mui/x-data-grid';
-import {TFunction} from 'i18next';
+import {TFunction} from 'react-i18next';
 import {CIBrokerDelegationResource} from '../../../api/generated/portal/CIBrokerDelegationResource';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import {renderCell, showCustomHeader} from '../../../components/Table/TableUtils';

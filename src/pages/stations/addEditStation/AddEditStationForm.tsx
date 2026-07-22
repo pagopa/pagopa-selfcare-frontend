@@ -476,7 +476,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
       const { protocolSplit, hostSplit, portSplit, pathSplit } = splitURL(
         formik.values.targetConcat
       );
-      void testStation(
+      testStation(
         protocolSplit,
         hostSplit,
         portSplit > 0 ? portSplit : 443,
@@ -504,7 +504,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
       const { protocolSplit, hostSplit, portSplit, pathSplit } = splitURL(
         formik.values.redirectConcat
       );
-      void testStation(
+      testStation(
         protocolSplit,
         hostSplit,
         portSplit > 0 ? portSplit : protocolSplit.includes('https') ? 443 : 80,
@@ -532,7 +532,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
       const { protocolSplit, hostSplit, portSplit, pathSplit } = splitURL(
         formik.values.targetPofConcat
       );
-      void testStation(
+      testStation(
         protocolSplit,
         hostSplit,
         portSplit > 0 ? portSplit : 443,
@@ -843,9 +843,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                 disabled
                 onChange={(e) => formik.handleChange(e)}
                 error={formik.touched.stationCode && Boolean(formik.errors.stationCode)}
-                helperText={
-                  formik.touched.stationCode ? String(formik.errors.stationCode ?? '') : undefined
-                }
+                helperText={formik.touched.stationCode && formik.errors.stationCode}
                 inputProps={{
                   'data-testid': 'station-code-test',
                 }}
@@ -865,9 +863,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                   disabled
                   onChange={(e) => formik.handleChange(e)}
                   error={formik.touched.brokerCode && Boolean(formik.errors.brokerCode)}
-                  helperText={
-                    formik.touched.brokerCode ? String(formik.errors.brokerCode ?? '') : undefined
-                  }
+                  helperText={formik.touched.brokerCode && formik.errors.brokerCode}
                   inputProps={{
                     'data-testid': 'broker-code-test',
                   }}
@@ -902,9 +898,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                       Boolean(formik.errors.targetConcat)
                     }
                     helperText={
-                      formik.touched.targetConcat || testRtResult
-                        ? String(formik.errors.targetConcat ?? '')
-                        : undefined
+                      (formik.touched.targetConcat || testRtResult) && formik.errors.targetConcat
                     }
                     inputProps={{
                       'data-testid': 'targetConcat-test',
@@ -966,9 +960,8 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                       Boolean(formik.errors.redirectConcat)
                     }
                     helperText={
-                      formik.touched.redirectConcat || testRedirectResult
-                        ? String(formik.errors.redirectConcat ?? '')
-                        : undefined
+                      (formik.touched.redirectConcat || testRedirectResult) &&
+                      formik.errors.redirectConcat
                     }
                     inputProps={{
                       'data-testid': 'redirectConcat-test',
@@ -1038,9 +1031,8 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                       Boolean(formik.errors.targetPofConcat)
                     }
                     helperText={
-                      formik.touched.targetPofConcat || testPofResult
-                        ? String(formik.errors.targetPofConcat ?? '')
-                        : undefined
+                      (formik.touched.targetPofConcat || testPofResult) &&
+                      formik.errors.targetPofConcat
                     }
                     inputProps={{
                       'data-testid': 'targetPofConcat-test',
@@ -1146,7 +1138,7 @@ const AddEditStationForm = ({ stationDetail, formAction }: Props) => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={Boolean(formik.errors.restEndpoint)}
-                      helperText={String(formik.errors.restEndpoint ?? '')}
+                      helperText={formik.errors.restEndpoint}
                       inputProps={{
                         'data-testid': 'restEndpoint-test',
                       }}

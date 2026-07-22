@@ -11,13 +11,8 @@ import * as BundleService from '../../../../services/bundleService';
 import * as CIService from '../../../../services/creditorInstitutionService.ts';
 import { mockedCreditorInstitutionsResource } from '../../../../services/__mocks__/creditorInstitutionService.ts';
 
-let spyOnGetCreditorInstitutions: jest.SpyInstance;
-let spyOnGetAddRecipients: jest.SpyInstance;
-
-beforeEach(() => {
-  spyOnGetCreditorInstitutions = jest.spyOn(CIService, 'getCreditorInstitutions');
-  spyOnGetAddRecipients = jest.spyOn(BundleService, 'createCIBundleOffers');
-});
+const spyOnGetCreditorInstitutions = jest.spyOn(CIService, 'getCreditorInstitutions');
+const spyOnGetAddRecipients = jest.spyOn(BundleService, 'createCIBundleOffers');
 
 const ComponentToRender = () => {
   const dispatcher = useAppDispatch();

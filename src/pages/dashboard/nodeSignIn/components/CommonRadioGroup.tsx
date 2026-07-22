@@ -6,8 +6,7 @@ import {Alert, Box, FormControlLabel, Grid, Radio, RadioGroup} from '@mui/materi
 import Tooltip from '@mui/material/Tooltip';
 import {ButtonNaked} from '@pagopa/mui-italia';
 import {useState} from 'react';
-import {TFunction} from 'i18next';
-import {useTranslation} from 'react-i18next';
+import {TFunction, useTranslation} from 'react-i18next';
 import FormSectionTitle from '../../../../components/Form/FormSectionTitle';
 
 type Props = {

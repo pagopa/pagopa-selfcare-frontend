@@ -15,13 +15,8 @@ import { Provider } from 'react-redux';
 import * as BundleService from '../../../../services/bundleService';
 import { CIBundleResource } from '../../../../api/generated/portal/CIBundleResource.ts';
 
-let spyOnCreateRequest: jest.SpyInstance;
-let spyOnAcceptOffer: jest.SpyInstance;
-
-beforeEach(() => {
-  spyOnCreateRequest = jest.spyOn(BundleService, 'createCIBundleRequest');
-  spyOnAcceptOffer = jest.spyOn(BundleService, 'acceptPrivateBundleOffer');
-});
+const spyOnCreateRequest = jest.spyOn(BundleService, 'createCIBundleRequest');
+const spyOnAcceptOffer = jest.spyOn(BundleService, 'acceptPrivateBundleOffer');
 
 const ComponentToRender = ({ bundle }: { bundle: CIBundleResource }) => {
   const dispatcher = useAppDispatch();

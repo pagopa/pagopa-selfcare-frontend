@@ -16,19 +16,14 @@ import {
 
 jest.mock('../../../../hooks/useOrganizationType');
 
-jest.setTimeout(15000);
-
-let mockGetStationMaintenances: jest.SpyInstance;
-let mockTerminateMaintenance: jest.SpyInstance;
-let mockDeleteMaintenance: jest.SpyInstance;
-
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
-  mockGetStationMaintenances = jest.spyOn(StationMaintenanceService, 'getStationMaintenances');
-  mockTerminateMaintenance = jest.spyOn(StationMaintenanceService, 'finishStationMaintenance');
-  mockDeleteMaintenance = jest.spyOn(StationMaintenanceService, 'deleteStationMaintenance');
 });
+
+const mockGetStationMaintenances = jest.spyOn(StationMaintenanceService, 'getStationMaintenances');
+const mockTerminateMaintenance = jest.spyOn(StationMaintenanceService, 'finishStationMaintenance');
+const mockDeleteMaintenance = jest.spyOn(StationMaintenanceService, 'deleteStationMaintenance');
 
 afterEach(cleanup);
 
@@ -306,7 +301,7 @@ describe('<StationMaintenancesTable />', () => {
     const list = mockStationMaintenancesList;
     list.station_maintenance_list = [...getMockMaintenanceInProgress(1)];
     mockGetStationMaintenances.mockResolvedValue(list);
-    mockTerminateMaintenance.mockRejectedValueOnce('error');
+    mockDeleteMaintenance.mockRejectedValueOnce('error');
 
     render(
       <Provider store={store}>

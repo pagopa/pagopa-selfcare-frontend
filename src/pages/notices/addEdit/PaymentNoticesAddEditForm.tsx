@@ -393,7 +393,6 @@ const PaymentNoticesAddEditForm = ({goBack, data}: Props) => {
                                                 dropzoneLabel={t(
                                                     'addEditInstitutionsDataPage.addForm.dropFileText'
                                                 )}
-                                                dropzoneButton={t('general.upload')}
                                                 rejectedLabel={t(
                                                     'addEditInstitutionsDataPage.addForm.rejectedFile'
                                                 )}
@@ -683,17 +682,10 @@ const PaymentNoticesAddEditForm = ({goBack, data}: Props) => {
                         </Box>
                         <Box>
                             <Typography variant="body1">
-                                {hasPay
-                                    ? `${String(
-                                        t(
-                                            formik.values.webChannel
-                                                ? formik.values.appChannel
-                                                    ? 'addEditInstitutionsDataPage.detail.webApp'
-                                                    : 'addEditInstitutionsDataPage.detail.onlyWeb'
-                                                : 'addEditInstitutionsDataPage.detail.onlyApp'
-                                        )
-                                    )}, `
-                                    : ''}
+                                {hasPay ? t(formik.values.webChannel ?
+                                    formik.values.appChannel ? 'addEditInstitutionsDataPage.detail.webApp' :
+                                        'addEditInstitutionsDataPage.detail.onlyWeb'
+                                    : 'addEditInstitutionsDataPage.detail.onlyApp') + ', ' : ''}
                                 {t('addEditInstitutionsDataPage.addForm.dialog.baseText')}
                             </Typography>
                         </Box>

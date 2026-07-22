@@ -1,4 +1,4 @@
-import {fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import React from 'react';
 import {Provider} from 'react-redux';
 import CommissionBundleDetailSubscriptionsTable from '../CommissionBundleDetailSubscriptionsTable';
@@ -13,33 +13,24 @@ import {
 import * as bundleService from '../../../../../../services/bundleService';
 import {SubscriptionStateType} from '../../../../../../model/CommissionBundle';
 
-let spyOnGetBundleCISubscriptions: jest.SpyInstance;
-let spyOnGetBundleCISubscriptionsDetail: jest.SpyInstance;
-let spyOnRejectSubcriptionRequest: jest.SpyInstance;
-let spyOnAcceptSubcriptionRequest: jest.SpyInstance;
-let spyOnDeleteSubscription: jest.SpyInstance;
-let spyOnDeleteOffer: jest.SpyInstance;
+const spyOnGetBundleCISubscriptions = jest.spyOn(
+    bundleService,
+    'getBundleCISubscriptions'
+);
+const spyOnGetBundleCISubscriptionsDetail = jest.spyOn(
+    bundleService,
+    'getBundleCISubscriptionsDetail'
+);
+const spyOnRejectSubcriptionRequest = jest.spyOn(bundleService, 'rejectPublicBundleSubscription');
+const spyOnAcceptSubcriptionRequest = jest.spyOn(bundleService, 'acceptBundleSubscriptionRequest');
+const spyOnDeleteSubscription = jest.spyOn(bundleService, 'deleteCIBundleSubscription');
+const spyOnDeleteOffer = jest.spyOn(bundleService, "deletePrivateBundleOffer");
 
 const generalPath = "commissionBundlesPage.commissionBundleDetail.subscriptionsTable"
 const componentPath = `${generalPath}.requestsTable`;
 
 const idBundle = 'idBundle';
 describe('<CommissionBundleDetailSubscriptionsTable />', () => {
-    beforeEach(() => {
-        spyOnGetBundleCISubscriptions = jest.spyOn(
-            bundleService,
-            'getBundleCISubscriptions'
-        );
-        spyOnGetBundleCISubscriptionsDetail = jest.spyOn(
-            bundleService,
-            'getBundleCISubscriptionsDetail'
-        );
-        spyOnRejectSubcriptionRequest = jest.spyOn(bundleService, 'rejectPublicBundleSubscription');
-        spyOnAcceptSubcriptionRequest = jest.spyOn(bundleService, 'acceptBundleSubscriptionRequest');
-        spyOnDeleteSubscription = jest.spyOn(bundleService, 'deleteCIBundleSubscription');
-        spyOnDeleteOffer = jest.spyOn(bundleService, "deletePrivateBundleOffer");
-    });
-
     afterEach(() => {
         jest.clearAllMocks();
     });
@@ -90,9 +81,9 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
 
         await waitFor(() => {
             expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(2);
-            expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
         });
 
+        expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
         expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
     });
 
@@ -110,15 +101,21 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
             </Provider>
         );
 
+        await waitFor(() => {
+            expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
+        });
+
         spyOnGetBundleCISubscriptionsDetail.mockRejectedValueOnce('');
-        const subscriptionDetailButton = await screen.findByTestId('request-detail-button');
+        const subscriptionDetailButton = screen.getByTestId('request-detail-button');
         fireEvent.click(subscriptionDetailButton);
 
-        await waitFor(() => {
-            expect(spyOnGetBundleCISubscriptionsDetail).toBeCalledTimes(1);
-            expect(screen.queryByTestId('request-accept-button')).not.toBeInTheDocument();
-            expect(screen.queryByTestId('subscription-delete-button')).not.toBeInTheDocument();
-            expect(screen.queryByTestId('request-reject-button')).not.toBeInTheDocument();
+        await act(async () => {
+            await waitFor(() => {
+                expect(screen.queryByTestId('request-accept-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('subscription-delete-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('request-reject-button')).not.toBeInTheDocument();
+            });
         });
     });
 
@@ -152,27 +149,44 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
         const searchButton = screen.getByTestId('button-search');
         fireEvent.click(searchButton);
 
+        await waitFor(() => {
+            expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(2);
+        });
+
+        expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
+
         spyOnGetBundleCISubscriptionsDetail.mockReturnValue(
             Promise.resolve(mockedCiSubscriptionDetail)
         );
-        const subscriptionDetailButton = await screen.findByTestId('request-detail-button');
-        expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(2);
+        const subscriptionDetailButton = screen.getByTestId('request-detail-button');
         fireEvent.click(subscriptionDetailButton);
 
-        const deleteButton = await screen.findByTestId('subscription-delete-button');
-        expect(screen.queryByTestId('request-reject-button')).not.toBeInTheDocument();
-        expect(screen.queryByTestId('request-accept-button')).not.toBeInTheDocument();
-        fireEvent.click(deleteButton);
+        await act(async () => {
+            let deleteButton;
+            await waitFor(() => {
+                deleteButton = screen.getByTestId('subscription-delete-button');
+                expect(screen.queryByTestId('request-reject-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('request-accept-button')).not.toBeInTheDocument();
+            });
 
-        const modalConfirmButton = await screen.findByTestId('confirm-button-test');
-        spyOnDeleteSubscription.mockReturnValue(Promise.resolve());
-        fireEvent.click(modalConfirmButton);
+            fireEvent.click(deleteButton);
 
-        await waitFor(() => {
-            expect(spyOnDeleteSubscription).toBeCalled();
-            expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(3);
+            await waitFor(() => {
+                expect(screen.getByTestId('fade-test')).toBeInTheDocument();
+            });
+
+            const modalConfirmButton = screen.getByTestId('confirm-button-test');
+            spyOnDeleteSubscription.mockReturnValue(Promise.resolve());
+            fireEvent.click(modalConfirmButton);
+
+            await waitFor(() => {
+                expect(spyOnDeleteSubscription).toBeCalled();
+                expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(3);
+            });
+
+            expect(screen.getByTestId('success-alert')).toBeInTheDocument();
         });
-        expect(await screen.findByTestId('success-alert')).toBeInTheDocument();
     });
 
     test('render component CommissionBundleDetailSubscriptionsTable and test reject waiting requests', async () => {
@@ -189,26 +203,42 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
             </Provider>
         );
 
+        await waitFor(() => {
+            expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
+        });
+
         spyOnGetBundleCISubscriptionsDetail.mockReturnValue(
             Promise.resolve(mockedCiSubscriptionDetail)
         );
-        const subscriptionDetailButton = await screen.findByTestId('request-detail-button');
+        const subscriptionDetailButton = screen.getByTestId('request-detail-button');
         fireEvent.click(subscriptionDetailButton);
 
-        const rejectButton = await screen.findByTestId('request-reject-button');
-        expect(screen.queryByTestId('subscription-delete-button')).not.toBeInTheDocument();
-        expect(screen.queryByTestId('request-accept-button')).toBeInTheDocument();
-        fireEvent.click(rejectButton);
+        await act(async () => {
+            let rejectButton;
+            await waitFor(() => {
+                rejectButton = screen.getByTestId('request-reject-button');
+                expect(screen.queryByTestId('subscription-delete-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('request-accept-button')).toBeInTheDocument();
+            });
 
-        const modalConfirmButton = await screen.findByTestId('confirm-button-test');
-        spyOnRejectSubcriptionRequest.mockReturnValue(Promise.resolve());
-        fireEvent.click(modalConfirmButton);
+            fireEvent.click(rejectButton);
 
-        await waitFor(() => {
-            expect(spyOnRejectSubcriptionRequest).toBeCalled();
-            expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(2);
+            await waitFor(() => {
+                expect(screen.getByTestId('fade-test')).toBeInTheDocument();
+            });
+
+            const modalConfirmButton = screen.getByTestId('confirm-button-test');
+            spyOnRejectSubcriptionRequest.mockReturnValue(Promise.resolve());
+            fireEvent.click(modalConfirmButton);
+
+            await waitFor(() => {
+                expect(spyOnRejectSubcriptionRequest).toBeCalled();
+                expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(2);
+            });
+
+            expect(screen.getByTestId('success-alert')).toBeInTheDocument();
         });
-        expect(await screen.findByTestId('success-alert')).toBeInTheDocument();
     });
 
     test('render component CommissionBundleDetailSubscriptionsTable and test accept waiting requests', async () => {
@@ -225,26 +255,42 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
             </Provider>
         );
 
+        await waitFor(() => {
+            expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
+        });
+
         spyOnGetBundleCISubscriptionsDetail.mockReturnValue(
             Promise.resolve(mockedCiSubscriptionDetail)
         );
-        const subscriptionDetailButton = await screen.findByTestId('request-detail-button');
+        const subscriptionDetailButton = screen.getByTestId('request-detail-button');
         fireEvent.click(subscriptionDetailButton);
 
-        const acceptButton = await screen.findByTestId('request-accept-button');
-        expect(screen.queryByTestId('subscription-delete-button')).not.toBeInTheDocument();
-        expect(screen.queryByTestId('request-reject-button')).toBeInTheDocument();
-        fireEvent.click(acceptButton);
+        await act(async () => {
+            let acceptButton;
+            await waitFor(() => {
+                acceptButton = screen.getByTestId('request-accept-button');
+                expect(screen.queryByTestId('subscription-delete-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('request-reject-button')).toBeInTheDocument();
+            });
 
-        const modalConfirmButton = await screen.findByTestId('confirm-button-test');
-        spyOnAcceptSubcriptionRequest.mockReturnValue(Promise.resolve());
-        fireEvent.click(modalConfirmButton);
+            fireEvent.click(acceptButton);
 
-        await waitFor(() => {
-            expect(spyOnAcceptSubcriptionRequest).toBeCalled();
-            expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(2);
+            await waitFor(() => {
+                expect(screen.getByTestId('fade-test')).toBeInTheDocument();
+            });
+
+            const modalConfirmButton = screen.getByTestId('confirm-button-test');
+            spyOnAcceptSubcriptionRequest.mockReturnValue(Promise.resolve());
+            fireEvent.click(modalConfirmButton);
+
+            await waitFor(() => {
+                expect(spyOnAcceptSubcriptionRequest).toBeCalled();
+                expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(2);
+            });
+
+            expect(screen.getByTestId('success-alert')).toBeInTheDocument();
         });
-        expect(await screen.findByTestId('success-alert')).toBeInTheDocument();
     });
 
     test('render component CommissionBundleDetailSubscriptionsTable and test reject offers', async () => {
@@ -261,26 +307,42 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
             </Provider>
         );
 
+        await waitFor(() => {
+            expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
+        });
+
         spyOnGetBundleCISubscriptionsDetail.mockReturnValue(
             Promise.resolve(mockedCiSubscriptionDetail)
         );
-        const subscriptionDetailButton = await screen.findByTestId('request-detail-button');
+        const subscriptionDetailButton = screen.getByTestId('request-detail-button');
         fireEvent.click(subscriptionDetailButton);
 
-        const deleteOfferButton = await screen.findByTestId("offer-delete-button");
-        expect(screen.queryByTestId('subscription-delete-button')).not.toBeInTheDocument();
-        expect(screen.queryByTestId('request-accept-button')).not.toBeInTheDocument();
-        fireEvent.click(deleteOfferButton);
+        await act(async () => {
+            let deleteOfferButton;
+            await waitFor(() => {
+                deleteOfferButton = screen.getByTestId("offer-delete-button");
+                expect(screen.queryByTestId('subscription-delete-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('request-accept-button')).not.toBeInTheDocument();
+            });
 
-        const modalConfirmButton = await screen.findByTestId('confirm-button-test');
-        spyOnDeleteOffer.mockReturnValue(Promise.resolve());
-        fireEvent.click(modalConfirmButton);
+            fireEvent.click(deleteOfferButton);
 
-        await waitFor(() => {
-            expect(spyOnDeleteOffer).toBeCalled();
-            expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(2);
+            await waitFor(() => {
+                expect(screen.getByTestId('fade-test')).toBeInTheDocument();
+            });
+
+            const modalConfirmButton = screen.getByTestId('confirm-button-test');
+            spyOnDeleteOffer.mockReturnValue(Promise.resolve());
+            fireEvent.click(modalConfirmButton);
+
+            await waitFor(() => {
+                expect(spyOnDeleteOffer).toBeCalled();
+                expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(2);
+            });
+
+            expect(screen.getByTestId('success-alert')).toBeInTheDocument();
         });
-        expect(await screen.findByTestId('success-alert')).toBeInTheDocument();
     });
 
     test('render component CommissionBundleDetailSubscriptionsTable and test error action on waiting requests', async () => {
@@ -297,26 +359,42 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
             </Provider>
         );
 
+        await waitFor(() => {
+            expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
+        });
+
         spyOnGetBundleCISubscriptionsDetail.mockReturnValue(
             Promise.resolve(mockedCiSubscriptionDetail)
         );
-        const subscriptionDetailButton = await screen.findByTestId('request-detail-button');
+        const subscriptionDetailButton = screen.getByTestId('request-detail-button');
         fireEvent.click(subscriptionDetailButton);
 
-        const acceptButton = await screen.findByTestId('request-accept-button');
-        expect(screen.queryByTestId('subscription-delete-button')).not.toBeInTheDocument();
-        expect(screen.queryByTestId('request-reject-button')).toBeInTheDocument();
-        fireEvent.click(acceptButton);
+        await act(async () => {
+            let acceptButton;
+            await waitFor(() => {
+                acceptButton = screen.getByTestId('request-accept-button');
+                expect(screen.queryByTestId('subscription-delete-button')).not.toBeInTheDocument();
+                expect(screen.queryByTestId('request-reject-button')).toBeInTheDocument();
+            });
 
-        const modalConfirmButton = await screen.findByTestId('confirm-button-test');
-        spyOnAcceptSubcriptionRequest.mockRejectedValue('error');
-        fireEvent.click(modalConfirmButton);
+            fireEvent.click(acceptButton);
 
-        await waitFor(() => {
-            expect(spyOnAcceptSubcriptionRequest).toBeCalled();
-            expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(1);
+            await waitFor(() => {
+                expect(screen.getByTestId('fade-test')).toBeInTheDocument();
+            });
+
+            const modalConfirmButton = screen.getByTestId('confirm-button-test');
+            spyOnAcceptSubcriptionRequest.mockRejectedValue('error');
+            fireEvent.click(modalConfirmButton);
+
+            await waitFor(() => {
+                expect(spyOnAcceptSubcriptionRequest).toBeCalled();
+                expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(1);
+            });
+
+            expect(screen.queryByTestId('success-alert')).not.toBeInTheDocument();
         });
-        expect(screen.queryByTestId('success-alert')).not.toBeInTheDocument();
     });
 
     test('render component CommissionBundleDetailSubscriptionsTable and test error on retrieve subscription list', async () => {
@@ -333,9 +411,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
             </Provider>
         );
 
-        await waitFor(() => {
-            expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(1);
-            expect(screen.queryByTestId('empty-state-table')).toBeInTheDocument();
-        });
+        expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(1);
+        expect(screen.queryByTestId('empty-state-table')).toBeInTheDocument();
     });
 });

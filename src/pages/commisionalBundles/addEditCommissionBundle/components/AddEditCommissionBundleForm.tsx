@@ -383,7 +383,13 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                       'commissionBundlesPage.addEditCommissionBundle.form.paymentType'
                     )}
                     size="small"
-                    value={formik.values.paymentType ?? ''}
+                    value={
+                        touchpointList?.touchpoints?.some(
+                          (el) => el.name === formik.values.touchpoint
+                        )
+                          ? formik.values.touchpoint
+                          : ''
+                      }
                     onChange={(e) => handleChangePaymentType(e.target.value)}
                     error={formik.touched.paymentType && Boolean(formik.errors.paymentType)}
                     data-testid="payment-type-test"

@@ -101,6 +101,7 @@ const validate = (
               ? t(`${componentPath}.validationMessage.moreThanMaxPayment`)
               : undefined,
         name: !values.name ? t(`${componentPath}.validationMessage.requiredField`) : undefined,
+        paymentType: !values.paymentType ? t(`${componentPath}.validationMessage.requiredField`)  : undefined,
         paymentAmount:
           !values.paymentAmount && values.paymentAmount !== 0
             ? t(`${componentPath}.validationMessage.requiredField`)

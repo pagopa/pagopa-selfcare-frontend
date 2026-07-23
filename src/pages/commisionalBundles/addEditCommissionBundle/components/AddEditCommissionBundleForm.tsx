@@ -383,13 +383,7 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                       'commissionBundlesPage.addEditCommissionBundle.form.paymentType'
                     )}
                     size="small"
-                    value={
-                        touchpointList?.touchpoints?.some(
-                          (el) => el.name === formik.values.touchpoint
-                        )
-                          ? formik.values.touchpoint
-                          : ''
-                      }
+                    value={formik.values.paymentType ?? ''}
                     onChange={(e) => handleChangePaymentType(e.target.value)}
                     error={formik.touched.paymentType && Boolean(formik.errors.paymentType)}
                     data-testid="payment-type-test"
@@ -418,8 +412,14 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                     name={'touchpoint'}
                     label={t('commissionBundlesPage.addEditCommissionBundle.form.touchpoint')}
                     placeholder={t('commissionBundlesPage.addEditCommissionBundle.form.touchpoint')}
-                    size="small"
-                    value={formik.values.touchpoint ?? ''}
+                    size="small"                   
+                    value={
+                        touchpointList?.touchpoints?.some(
+                          (el) => el.name === formik.values.touchpoint
+                        )
+                          ? formik.values.touchpoint
+                          : ''
+                      }
                     onChange={formik.handleChange}
                     error={formik.touched.touchpoint && Boolean(formik.errors.touchpoint)}
                     data-testid="touchpoint-test"

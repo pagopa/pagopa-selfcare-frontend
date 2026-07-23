@@ -422,7 +422,9 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                     }
                   >
                    
-                    {touchpointList?.touchpoints?.map((el) => (
+                   {[...(touchpointList?.touchpoints ?? [])]
+                    .sort((a, b) => (a.name === 'ANY' ? -1 : b.name === 'ANY' ? 1 : 0))
+                    .map((el) => (
                       <MenuItem key={`touchpoint${el.name}`} value={el.name}>
                         {el.name}
                       </MenuItem>

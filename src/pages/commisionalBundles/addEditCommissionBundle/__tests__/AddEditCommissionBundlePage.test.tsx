@@ -320,7 +320,7 @@ describe('<AddEditCommissionBundlePage />', () => {
         let bundle = {
             ...mockedCommissionBundlePspDetailGlobal,
             touchpoint: 'ANY',
-            paymentType: 'ANY',
+            paymentType: undefined,
             bundleTaxonomies: [],
         };
         render(

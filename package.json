@@ -1,6 +1,6 @@
 {
   "name": "pagopa-selfcare-backoffice-frontend",
-  "version": "1.49.2",
+  "version": "1.49.2-2-PIDM-863-metodi-pagamento-no-any",
   "homepage": "ui",
   "private": true,
   "scripts": {

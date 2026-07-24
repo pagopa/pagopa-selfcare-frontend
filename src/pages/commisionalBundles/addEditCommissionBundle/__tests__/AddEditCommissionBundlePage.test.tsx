@@ -320,7 +320,7 @@ describe('<AddEditCommissionBundlePage />', () => {
         let bundle = {
             ...mockedCommissionBundlePspDetailGlobal,
             touchpoint: 'ANY',
-            paymentType: 'ANY',
+            paymentType: 'CP',
             bundleTaxonomies: [],
         };
         render(
@@ -370,7 +370,7 @@ describe('<AddEditCommissionBundlePage />', () => {
             abi: '',
             pspBusinessName: '',
             touchpoint: undefined,
-            paymentType: undefined,
+            paymentType: 'CP',
             transferCategoryList: undefined,
         };
         delete requestBundle.idBundle;

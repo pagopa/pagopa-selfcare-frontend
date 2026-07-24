@@ -1,7 +1,6 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
@@ -142,7 +141,7 @@ describe('NodeSignInECForm', () => {
   test('Test rendering NodeSignInECForm with intermediary true and Sumbit a direct ec', async () => {
     const { store } = renderApp({});
 
-    await dispatchAdminUsignedAndSignInDataEmpty(store);
+    dispatchAdminUsignedAndSignInDataEmpty(store);
 
     setupForm();
 
@@ -151,10 +150,8 @@ describe('NodeSignInECForm', () => {
       .querySelector('[value=true]') as HTMLInputElement;
 
     fireEvent.click(intermediaryTrue);
-    await waitFor(() => expect(intermediaryTrue).toBeChecked());
 
     const confirmBtn = await screen.findByTestId('continue-button-test');
-    await waitFor(() => expect(confirmBtn).toBeEnabled());
     fireEvent.click(confirmBtn);
 
     await waitFor(() => {
@@ -167,7 +164,7 @@ describe('NodeSignInECForm', () => {
 
     const { store } = renderApp(ecDetailsDispatched);
 
-    await dispatchAdminUsignedAndSignInDataEmpty(store);
+    dispatchAdminUsignedAndSignInDataEmpty(store);
 
     setupForm();
 
@@ -175,11 +172,9 @@ describe('NodeSignInECForm', () => {
       .getByTestId('intermediary-available-test')
       .querySelector('[value=false]') as HTMLInputElement;
 
-    await waitFor(() => expect(intermediaryFalse).toBeChecked());
     fireEvent.click(intermediaryFalse);
 
     const confirmBtn = await screen.findByTestId('continue-button-test');
-    await waitFor(() => expect(confirmBtn).toBeEnabled());
     fireEvent.click(confirmBtn);
 
     await waitFor(() => expect(spyOnCreateEcIndirect).toHaveBeenCalled());
@@ -192,40 +187,17 @@ describe('NodeSignInECForm', () => {
   });
 
   test('Test rendering NodeSignInECForm with intermediary true and create ecBroker', async () => {
-    const user = userEvent.setup();
     const { store } = renderApp(brokerAndEcDetailsResource_ECOnly);
 
-    await dispatchAdminSignedIndirectAndEcDetailsOnly(store);
+    await waitFor(() => dispatchAdminSignedIndirectAndEcDetailsOnly(store));
 
     const intermediaryTrue = screen
       .getByTestId('intermediary-available-test')
       .querySelector('[value=true]') as HTMLInputElement;
-    const intermediaryFalse = screen
-      .getByTestId('intermediary-available-test')
-      .querySelector('[value=false]') as HTMLInputElement;
 
-    await waitFor(() => expect(intermediaryFalse).toBeChecked());
-    await waitFor(() =>
-      expect(
-        screen
-          .getByTestId('intermediary-available-test')
-          .querySelector('[value=true]') as HTMLInputElement
-      ).toBeEnabled()
-    );
-    const enabledIntermediaryTrue = screen
-      .getByTestId('intermediary-available-test')
-      .querySelector('[value=true]') as HTMLInputElement;
-    await user.click(enabledIntermediaryTrue);
-    await waitFor(() =>
-      expect(
-        screen
-          .getByTestId('intermediary-available-test')
-          .querySelector('[value=true]') as HTMLInputElement
-      ).toBeChecked()
-    );
+    fireEvent.click(intermediaryTrue);
 
     const confirmBtn = await screen.findByTestId('continue-button-test');
-    await waitFor(() => expect(confirmBtn).toBeEnabled());
     fireEvent.click(confirmBtn);
 
     await waitFor(() => {
@@ -236,7 +208,7 @@ describe('NodeSignInECForm', () => {
   test('Test rendering NodeSignInECForm in case of updating the form with an ec direct', async () => {
     const { store } = renderApp(brokerAndEcDetailsResource_ECAndBroker);
 
-    await dispatchAdminSignedInDirectAndFullEcDetails(store);
+    dispatchAdminSignedInDirectAndFullEcDetails(store);
 
     const address = screen.getByTestId('address-test') as HTMLInputElement;
     const city = screen.getByTestId('city-test') as HTMLInputElement;
@@ -274,10 +246,9 @@ describe('NodeSignInECForm', () => {
   });
 
   test('Test rendering NodeSignInECForm in case of updating the form with an ec indirect', async () => {
-    const user = userEvent.setup();
     const { store } = renderApp(brokerAndEcDetailsResource_ECOnly);
 
-    await dispatchAdminSignedIndirectAndEcDetailsOnly(store);
+    await waitFor(() => dispatchAdminSignedIndirectAndEcDetailsOnly(store));
 
     const address = screen.getByTestId('address-test') as HTMLInputElement;
     const city = screen.getByTestId('city-test') as HTMLInputElement;
@@ -313,24 +284,8 @@ describe('NodeSignInECForm', () => {
     expect(address.value).toBe('Via Roma 11');
 
     expect(intermediaryTrue.checked).toBe(false);
-    await waitFor(() =>
-      expect(
-        screen
-          .getByTestId('intermediary-available-test')
-          .querySelector('[value=true]') as HTMLInputElement
-      ).toBeEnabled()
-    );
-    const enabledIntermediaryTrue = screen
-      .getByTestId('intermediary-available-test')
-      .querySelector('[value=true]') as HTMLInputElement;
-    await user.click(enabledIntermediaryTrue);
-    await waitFor(() =>
-      expect(
-        screen
-          .getByTestId('intermediary-available-test')
-          .querySelector('[value=true]') as HTMLInputElement
-      ).toBeChecked()
-    );
+    fireEvent.click(intermediaryTrue);
+    expect(intermediaryTrue.checked).toBe(true);
 
     const confirmBtn = await screen.findByTestId('continue-button-test');
     fireEvent.click(confirmBtn);

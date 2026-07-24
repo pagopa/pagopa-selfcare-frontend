@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from '@testing-library/react';
+import {render, screen, waitFor} from '@testing-library/react';
 import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
 import {createMemoryHistory} from 'history';
@@ -18,20 +18,11 @@ import {mockedParties} from '../services/__mocks__/partyService';
 import {mockedPartyProducts} from '../services/__mocks__/productService';
 
 const mockSignOutFn = jest.fn();
-const mockUseTOSAgreementLocalStorage = jest.fn();
 
 jest.mock('../decorators/withLogin');
 jest.mock('../decorators/withParties');
 jest.mock('../decorators/withSelectedParty');
 jest.mock('../decorators/withSelectedPartyProducts');
-jest.mock('../hooks/useTOSAgreementLocalStorage', () => ({
-    __esModule: true,
-    default: () => mockUseTOSAgreementLocalStorage(),
-}));
-jest.mock('../decorators/withFeatureFlags', () => ({
-    __esModule: true,
-    default: (WrappedComponent: React.ComponentType<any>) => WrappedComponent,
-}));
 
 jest.setTimeout(10000);
 
@@ -64,11 +55,12 @@ const renderApp = (
 };
 
 test('Test rendering', () => {
-    mockUseTOSAgreementLocalStorage.mockReturnValue({
+
+    jest.mock('../hooks/useTOSAgreementLocalStorage', () => () => ({
         isTOSAccepted: true,
         acceptTOS: mockSignOutFn,
         acceptedTOS: '',
-    });
+    }));
 
     const {store} = renderApp();
 
@@ -78,9 +70,10 @@ test('Test rendering', () => {
 });
 
 test('Test rendering tosNotAccepted', () => {
-    mockUseTOSAgreementLocalStorage.mockReturnValue({
+
+    jest.mock('../hooks/useTOSAgreementLocalStorage', () => () => ({
         isTOSAccepted: false
-    });
+    }));
 
     const store = createStore();
     const history = createMemoryHistory();
@@ -100,9 +93,10 @@ test('Test rendering tosNotAccepted', () => {
 });
 
 test('Test rendering tos', () => {
-    mockUseTOSAgreementLocalStorage.mockReturnValue({
+
+    jest.mock('../hooks/useTOSAgreementLocalStorage', () => () => ({
         isTOSAccepted: false
-    });
+    }));
 
     const store = createStore();
     const history = createMemoryHistory();
@@ -122,9 +116,10 @@ test('Test rendering tos', () => {
 });
 
 test('Test rendering privacy', () => {
-    mockUseTOSAgreementLocalStorage.mockReturnValue({
+
+    jest.mock('../hooks/useTOSAgreementLocalStorage', () => () => ({
         isTOSAccepted: false
-    });
+    }));
 
     const store = createStore();
     const history = createMemoryHistory();

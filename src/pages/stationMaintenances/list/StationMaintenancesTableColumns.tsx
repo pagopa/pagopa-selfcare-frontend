@@ -1,9 +1,8 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-let */
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-import {TFunction} from 'i18next';
+import { TFunction } from 'react-i18next';
 import { Cancel, Delete, Edit, Info } from '@mui/icons-material';
-import { ComponentType } from 'react';
 import {
   colorType,
   renderCell,
@@ -19,8 +18,6 @@ import {
 import { StationMaintenanceResource } from '../../../api/generated/portal/StationMaintenanceResource';
 
 const componentPath = 'stationMaintenancesPage.table.columns';
-const GridActionsCellItemAny = GridActionsCellItem as ComponentType<any>;
-
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
   filterState: StationMaintenanceState,
@@ -130,7 +127,7 @@ export const getRowActions = (
   }) => void
 ) => {
   const baseActions = [
-    <GridActionsCellItemAny
+    <GridActionsCellItem
       key="detailAction"
       label={t(`${componentPath}.actions.details`)}
       onClick={() =>
@@ -146,7 +143,7 @@ export const getRowActions = (
 
   if (maintenanceState !== StationMaintenanceState.FINISHED) {
     baseActions.push(
-      <GridActionsCellItemAny
+      <GridActionsCellItem
         key="editAction"
         label={t(`${componentPath}.actions.edit`)}
         onClick={() =>
@@ -166,7 +163,7 @@ export const getRowActions = (
     const actionType =
       maintenanceState === StationMaintenanceState.IN_PROGRESS ? 'terminate' : 'delete';
     baseActions.push(
-      <GridActionsCellItemAny
+      <GridActionsCellItem
         key={`${actionType}Action`}
         label={t(`${componentPath}.actions.${actionType}`)}
         onClick={() => handleOnRowActionClick({ maintenance, routeAction: false })}

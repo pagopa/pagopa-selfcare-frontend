@@ -1,8 +1,7 @@
 import {Box, Drawer, Stack, IconButton, Grid} from '@mui/material';
-import react, {Dispatch, SetStateAction, useEffect} from 'react';
+import react, {Dispatch, SetStateAction} from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBack from '@mui/icons-material/ArrowBack';
-import {lockBodyScroll, unlockBodyScroll} from '../utils/dom-utility';
 
 export const PaddedDrawer = ({
                                  openDrawer,
@@ -22,18 +21,9 @@ export const PaddedDrawer = ({
     onClose?: () => void;
     drawerButtons?: React.ReactNode;
     paddingX?: number;
-}) => {
-    useEffect(() => {
-        if (openDrawer) {
-            lockBodyScroll();
-            return () => unlockBodyScroll();
-        }
-        return undefined;
-    }, [openDrawer]);
-
-    return (
+}) => (
     <Drawer open={openDrawer} onClose={() => onClose()} anchor="right" data-testid="padded-drawer"
-            disableScrollLock style={{zIndex: 499}}>
+            style={{zIndex: 499}}>
         <Box p={3} py={1} px={paddingX} sx={{maxWidth: '420px', minWidth: '420px', minHeight: '65vh', height: "100%"}}>
             <Stack direction="row" justifyContent="space-between">
                 <Box display="flex" justifyContent="flex-start" mb={1}>
@@ -61,5 +51,4 @@ export const PaddedDrawer = ({
             </Grid>
         </Box>
     </Drawer>
-    );
-};
+);

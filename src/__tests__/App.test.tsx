@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from '@testing-library/react';
+import {render, waitFor} from '@testing-library/react';
 import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
 import {createMemoryHistory} from 'history';
@@ -119,6 +119,28 @@ test('Test rendering tos', () => {
         </Provider>
     );
 
+});
+
+test('locks body scroll while a MUI modal is open', async () => {
+    mockUseTOSAgreementLocalStorage.mockReturnValue({
+        isTOSAccepted: true,
+        acceptTOS: mockSignOutFn,
+        acceptedTOS: '',
+    });
+
+    renderApp();
+
+    expect(document.body.style.overflow).toBe('');
+
+    const modalRoot = document.createElement('div');
+    modalRoot.className = 'MuiModal-root';
+    document.body.appendChild(modalRoot);
+
+    await waitFor(() => expect(document.body.style.overflow).toBe('hidden'));
+
+    document.body.removeChild(modalRoot);
+
+    await waitFor(() => expect(document.body.style.overflow).toBe(''));
 });
 
 test('Test rendering privacy', () => {

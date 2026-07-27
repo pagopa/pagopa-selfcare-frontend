@@ -37,6 +37,7 @@ import { createIban, handleBulkIbanOperations, updateIban } from '../../../servi
 import { isIbanValidityDateEditable, isValidIBANNumber } from '../../../utils/common-utils';
 import { validateIbanCsvData, ValidationResult } from '../../../utils/iban-csv-to-upload-parser';
 import { OperationEnum } from '../../../api/generated/portal/IbanOperation';
+import { ENV } from '../../../utils/env';
 import AddEditIbanFormSectionTitle from './components/AddEditIbanFormSectionTitle';
 
 type Props = {
@@ -444,7 +445,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                             {t('handleMultiIbanEditIbanPage.helpText')}{' '}
                             <Link
                                 download="esempio_iban.csv"
-                                href={process.env.PUBLIC_URL + '/file/multipleIbanExample.csv'}
+                                href={ENV.PUBLIC_URL + '/file/multipleIbanExample.csv'}
                             >{t('handleMultiIbanEditIbanPage.helpLink')}</Link>
                         </Typography>
                     </Box>

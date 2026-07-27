@@ -1,10 +1,9 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-let */
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-
-const GridActionsCellItemAny = GridActionsCellItem as any;
 import { TFunction } from 'i18next';
 import { Cancel, Delete, Edit, Info } from '@mui/icons-material';
+import { ComponentType } from 'react';
 import {
   colorType,
   renderCell,
@@ -20,6 +19,8 @@ import {
 import { StationMaintenanceResource } from '../../../api/generated/portal/StationMaintenanceResource';
 
 const componentPath = 'stationMaintenancesPage.table.columns';
+const GridActionsCellItemAny = GridActionsCellItem as ComponentType<any>;
+
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,
   filterState: StationMaintenanceState,

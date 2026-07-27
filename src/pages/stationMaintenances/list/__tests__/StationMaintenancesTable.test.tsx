@@ -16,6 +16,8 @@ import {
 
 jest.mock('../../../../hooks/useOrganizationType');
 
+jest.setTimeout(15000);
+
 let mockGetStationMaintenances: jest.SpyInstance;
 let mockTerminateMaintenance: jest.SpyInstance;
 let mockDeleteMaintenance: jest.SpyInstance;

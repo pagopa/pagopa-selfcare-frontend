@@ -220,7 +220,7 @@ const buildAvailableProduct = (
   data: InstitutionApiKeysResource,
   products: Array<ConfiguredProductKeys>,
   setAvailableProduct: any,
-  t: TFunction
+  t: (key: string) => string
 ) => {
   if (data?.institution_api_key_list?.some((el) => el.id.includes(API_KEY_PRODUCTS.NODOAUTH.key))) {
     // if nodeAuth was created, elements that are present in both lists will be disabled

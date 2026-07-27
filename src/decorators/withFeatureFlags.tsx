@@ -36,4 +36,3 @@ export default function withFeatureFlags<T extends WithFeatureFlagsProps>(
     return ComponentWithFeatureFlags;
 
 }
-

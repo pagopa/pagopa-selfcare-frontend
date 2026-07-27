@@ -37,6 +37,7 @@ import { createIban, handleBulkIbanOperations, updateIban } from '../../../servi
 import { isIbanValidityDateEditable, isValidIBANNumber } from '../../../utils/common-utils';
 import { validateIbanCsvData, ValidationResult } from '../../../utils/iban-csv-to-upload-parser';
 import { OperationEnum } from '../../../api/generated/portal/IbanOperation';
+import { ENV } from '../../../utils/env';
 import AddEditIbanFormSectionTitle from './components/AddEditIbanFormSectionTitle';
 
 type Props = {
@@ -47,6 +48,9 @@ type Props = {
 
 const defaultValidityDate = add(new Date(), { days: 1 });
 const defaultDueDate = add(new Date(), { years: 1 });
+
+const getDateFieldHelperText = (touched: unknown, error: unknown) =>
+    touched ? String(error ?? '') : undefined;
 
 const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
     const { t } = useTranslation();
@@ -356,7 +360,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                         <Box sx={inputGroupStyle}>
                             <AddEditIbanFormSectionTitle
                                 title={t('addEditIbanPage.addForm.sections.validityPeriod')}
-                                icon={<CalendarTodayIcon />}
+                                icon={<CalendarTodayIcon/>}
                             />
                             <Grid container spacing={2} mt={1}>
                                 <Grid container item xs={3}>
@@ -379,7 +383,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                                                     name: 'validityDate',
                                                     size: 'small',
                                                     error: formik.touched.validity_date && Boolean(formik.errors.validity_date),
-                                                    helperText: (formik.touched.validity_date && formik.errors.validity_date) as string | undefined,
+                                                    helperText: getDateFieldHelperText(formik.touched.validity_date, formik.errors.validity_date),
                                                 },
                                             }}
                                             shouldDisableDate={(date: Date) => date < new Date()}
@@ -403,7 +407,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                                                     name: 'dueDate',
                                                     size: 'small',
                                                     error: formik.touched.due_date && Boolean(formik.errors.due_date),
-                                                    helperText: (formik.touched.due_date && formik.errors.due_date) as string | undefined,
+                                                    helperText: getDateFieldHelperText(formik.touched.due_date, formik.errors.due_date),
                                                 },
                                             }}
                                             shouldDisableDate={(date: Date) => date < formik.values.validity_date}
@@ -441,7 +445,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                             {t('handleMultiIbanEditIbanPage.helpText')}{' '}
                             <Link
                                 download="esempio_iban.csv"
-                                href={process.env.PUBLIC_URL + '/file/multipleIbanExample.csv'}
+                                href={ENV.PUBLIC_URL + '/file/multipleIbanExample.csv'}
                             >{t('handleMultiIbanEditIbanPage.helpLink')}</Link>
                         </Typography>
                     </Box>

@@ -71,7 +71,7 @@ describe('<StationECTable />', () => {
       expect(screen.getAllByRole('menuitem')[0]).toBeInTheDocument();
     });
 
-    const menuButton = screen.getAllByRole('menuitem')[0];
+    const menuButton = (await screen.findAllByRole('menuitem'))[0];
     fireEvent.click(menuButton);
 
     let dissociateButton;
@@ -145,7 +145,7 @@ describe('<StationECTable />', () => {
       expect(screen.getAllByRole('menuitem')[0]).toBeInTheDocument();
     });
 
-    const menuButton = screen.getAllByRole('menuitem')[0];
+    const menuButton = (await screen.findAllByRole('menuitem'))[0];
     fireEvent.click(menuButton);
 
     let dissociateButton;

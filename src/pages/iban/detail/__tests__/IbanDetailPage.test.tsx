@@ -306,7 +306,7 @@ describe('IbanDetailPage', () => {
             expect(getIbanDeletionRequestsSpy).toHaveBeenCalled();
         });
 
-        const cancelButton = screen.queryByTestId('button-edit-deletion');
+        const cancelButton = await screen.findByTestId('button-edit-deletion');
         expect(cancelButton).toBeInTheDocument();
         if (cancelButton) {
             fireEvent.click(cancelButton);
@@ -334,7 +334,7 @@ describe('IbanDetailPage', () => {
             expect(getIbanDeletionRequestsSpy).toHaveBeenCalled();
         });
 
-        const cancelButton = screen.queryByTestId('button-edit-deletion');
+        const cancelButton = await screen.findByTestId('button-edit-deletion');
         expect(cancelButton).toBeInTheDocument();
         if (cancelButton) {
             fireEvent.click(cancelButton);
@@ -567,6 +567,10 @@ describe('IbanDetailPage', () => {
         const dateInput = await screen.findByLabelText('addEditIbanPage.delete-modal.deletionDateLabel');
 
         fireEvent.change(dateInput, { target: { value: '01/01/2099' } });
+
+        expect(
+            await screen.findByText('addEditIbanPage.delete-modal.alert')
+        ).toBeInTheDocument();
 
         const confirmButton = screen.getByText(
             'addEditIbanPage.delete-modal.confirmButton'

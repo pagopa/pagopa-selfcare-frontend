@@ -7,16 +7,8 @@ import { theme } from "@pagopa/mui-italia";
 import { ConsentEnum, ServiceIdEnum } from "../../../../api/generated/portal/ServiceConsentInfo";
 import { partiesActions } from "../../../../redux/slices/partiesSlice";
 import { ecAdminSignedDirect, ecOperatorSignedDirect } from "../../../../services/__mocks__/partyService";
-import i18n, { configureI18n } from "@pagopa/selfcare-common-frontend/locale/locale-utils";
-import ita from '../../../../locale/it.json';
 import ServiceSettingsCard, { ServiceStatus, rtpServiceChipStatusConf, ServiceInfo, UserFeedback } from "../ServiceSettingsCard";
 import { getSaveConsentResponseMock } from "../../../../services/__mocks__/institutionsService";
-import { act } from 'react-dom/test-utils';
-
-beforeAll(() => {
-    configureI18n({ i18n, ita });
-
-});
 
 afterEach(() => {
     cleanup();
@@ -175,11 +167,13 @@ describe('Service setting page card rendering', () => {
         // click on action button
         fireEvent.click(serviceModalActionButton);
         // and check that this time api call is performed with expected request body
-        await waitFor(() => expect(onSuccessUserFeedback).toHaveBeenCalledTimes(1));
-        expect(onErrorUserFeedbackSpy).toHaveBeenCalledTimes(0);
-        expect(onAdminPermissionNeededUserFeedbackSpy).toHaveBeenCalledTimes(0);
-        expect(saveServiceConsentSpy).toHaveBeenCalledTimes(1);
-        expect(saveServiceConsentSpy).toHaveBeenNthCalledWith(1, ecAdminSignedDirect.partyId, serviceInfo.serviceId, expectedConsentSentInSaveAction);
+        await waitFor(() => {
+            expect(onSuccessUserFeedback).toHaveBeenCalledTimes(1);
+            expect(onErrorUserFeedbackSpy).toHaveBeenCalledTimes(0);
+            expect(onAdminPermissionNeededUserFeedbackSpy).toHaveBeenCalledTimes(0);
+            expect(saveServiceConsentSpy).toHaveBeenCalledTimes(1);
+            expect(saveServiceConsentSpy).toHaveBeenNthCalledWith(1, ecAdminSignedDirect.partyId, serviceInfo.serviceId, expectedConsentSentInSaveAction);
+        });
     });
 
     it.each([
@@ -249,11 +243,13 @@ describe('Service setting page card rendering', () => {
         fireEvent.click(serviceModalActionButton);
 
         // and check that this time api call is performed with expected request body
-        await waitFor(() => expect(onErrorUserFeedbackSpy).toHaveBeenCalledTimes(1));
-        expect(saveServiceConsentSpy).toHaveBeenCalledTimes(1);
-        expect(saveServiceConsentSpy).toHaveBeenNthCalledWith(1, ecAdminSignedDirect.partyId, serviceInfo.serviceId, expectedConsentSentInSaveAction);
-        expect(onSuccessUserFeedback).toHaveBeenCalledTimes(0);
-        expect(onAdminPermissionNeededUserFeedbackSpy).toHaveBeenCalledTimes(0);
+        await waitFor(() => {
+            expect(saveServiceConsentSpy).toHaveBeenCalledTimes(1);
+            expect(saveServiceConsentSpy).toHaveBeenNthCalledWith(1, ecAdminSignedDirect.partyId, serviceInfo.serviceId, expectedConsentSentInSaveAction);
+            expect(onSuccessUserFeedback).toHaveBeenCalledTimes(0);
+            expect(onErrorUserFeedbackSpy).toHaveBeenCalledTimes(1);
+            expect(onAdminPermissionNeededUserFeedbackSpy).toHaveBeenCalledTimes(0);
+        });
     });
 
 
@@ -379,22 +375,20 @@ describe('Service setting page card rendering', () => {
         )
         // assertions
 
-        await act(async () => {
-            let serviceActionButton;
-            // search for service enable/disable button
-            if (serviceEnabled) {
-                serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-disableButton`);
-            } else {
-                serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-enableButton`);
-            }
-            // check that service enable/disable button is visible and enabled
-            expect(serviceActionButton).toBeVisible();
-            expect(serviceActionButton).toBeEnabled();
-            // click on service action button and perform checks on opened modal
-            fireEvent.click(serviceActionButton);
-        });
+        let serviceActionButton;
+        // search for service enable/disable button
+        if (serviceEnabled) {
+            serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-disableButton`);
+        } else {
+            serviceActionButton = await screen.findByTestId(`settingCard-${serviceInfo.serviceId}-enableButton`);
+        }
+        // check that service enable/disable button is visible and enabled
+        expect(serviceActionButton).toBeVisible();
+        expect(serviceActionButton).toBeEnabled();
+        // click on service action button and perform checks on opened modal
+        fireEvent.click(serviceActionButton);
         expect(onSuccessUserFeedback).toHaveBeenCalledTimes(0);
         expect(onErrorUserFeedbackSpy).toHaveBeenCalledTimes(0);
         expect(onAdminPermissionNeededUserFeedbackSpy).toHaveBeenCalledTimes(1);
     });
-});  
+});

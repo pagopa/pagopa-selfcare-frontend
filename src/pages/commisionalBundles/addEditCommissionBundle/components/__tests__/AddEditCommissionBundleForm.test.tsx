@@ -349,7 +349,9 @@ describe('<AddEditCommissionBundleForm />', () => {
 
     //Test onUs flag
     fireEvent.mouseDown(
-      screen.getByLabelText('commissionBundlesPage.addEditCommissionBundle.form.paymentType')
+      screen.getByRole('combobox', {
+        name: 'commissionBundlesPage.addEditCommissionBundle.form.paymentType',
+      })
     );
     fireEvent.click(screen.getByText(new RegExp('.*PostePay - PPAY.*', 'i')));
     expect(input.paymentType).toHaveTextContent('PostePay - PPAY');

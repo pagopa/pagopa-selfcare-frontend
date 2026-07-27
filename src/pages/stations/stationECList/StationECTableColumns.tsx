@@ -1,7 +1,6 @@
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-
-const GridActionsCellItemAny = GridActionsCellItem as any;
 import { TFunction } from 'i18next';
+import { ComponentType } from 'react';
 import { formatBooleanValueToYesOrNo, formatCodeInDoubleDigit } from '../../../utils/common-utils';
 import {
   renderCell,
@@ -10,6 +9,8 @@ import {
 } from '../../../components/Table/TableUtils';
 import { CreditorInstitutionResource } from '../../../api/generated/portal/CreditorInstitutionResource';
 import { getAuxDigit } from '../../../utils/station-utils';
+
+const GridActionsCellItemAny = GridActionsCellItem as ComponentType<any>;
 
 export function buildColumnDefs(
   t: TFunction<'translation', undefined>,

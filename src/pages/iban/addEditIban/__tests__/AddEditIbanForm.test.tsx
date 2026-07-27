@@ -76,6 +76,7 @@ jest.mock('../../../../utils/iban-csv-to-upload-parser');
  */
 
 beforeEach(() => {
+    jest.clearAllMocks();
     createIbanSpy = jest.spyOn(require('../../../../services/ibanService'), 'createIban');
     updateIbanSpy = jest.spyOn(require('../../../../services/ibanService'), 'updateIban');
     handleBulkIbanOperationsSpy = jest.spyOn(require('../../../../services/ibanService'), 'handleBulkIbanOperations');
@@ -166,8 +167,8 @@ describe('AddEditIbanForm', () => {
         // fireEvent.click(holderMe);
 
         const submitBtn = screen.getByTestId('submit-button-test');
-        fireEvent.click(submitBtn);
-        fireEvent.submit(submitBtn);
+        await waitFor(() => expect(submitBtn).toBeEnabled());
+        fireEvent.submit(screen.getByTestId('iban-form'));
         await waitFor(() => {
             expect(createIbanSpy).toBeCalled();
             expect(updateIbanSpy).not.toBeCalled();
@@ -202,8 +203,8 @@ describe('AddEditIbanForm', () => {
         fireEvent.change(endDateInput, {target: {value: formatDateToDDMMYYYY(add(new Date(), {days: 2}))}});
 
         const submitBtn = screen.getByTestId('submit-button-test');
-        fireEvent.click(submitBtn);
-        fireEvent.submit(submitBtn);
+        await waitFor(() => expect(submitBtn).toBeEnabled());
+        fireEvent.submit(screen.getByTestId('iban-form'));
         await waitFor(() => {
             expect(updateIbanSpy).toBeCalled();
             expect(createIbanSpy).not.toBeCalled();
@@ -240,8 +241,8 @@ describe('AddEditIbanForm', () => {
         fireEvent.change(endDateInput, {target: {value: formatDateToDDMMYYYY(add(new Date(), {days: 2}))}});
 
         const submitBtn = screen.getByTestId('submit-button-test');
-        fireEvent.click(submitBtn);
-        fireEvent.submit(submitBtn);
+        await waitFor(() => expect(submitBtn).toBeEnabled());
+        fireEvent.submit(screen.getByTestId('iban-form'));
         expect(createIbanSpy).not.toBeCalled();
         expect(updateIbanSpy).not.toBeCalled();
 
@@ -285,8 +286,8 @@ describe('AddEditIbanForm', () => {
         fireEvent.change(endDateInput, {target: {value: formatDateToDDMMYYYY(add(new Date(), {days: 2}))}});
 
         const submitBtn = screen.getByTestId('submit-button-test');
-        fireEvent.click(submitBtn);
-        fireEvent.submit(submitBtn);
+        await waitFor(() => expect(submitBtn).toBeEnabled());
+        fireEvent.submit(screen.getByTestId('iban-form'));
         await waitFor(() => {
             expect(createIbanSpy).toBeCalled();
             expect(updateIbanSpy).not.toBeCalled();
@@ -327,8 +328,8 @@ describe('AddEditIbanForm', () => {
         fireEvent.change(endDateInput, {target: {value: formatDateToDDMMYYYY(add(new Date(), {days: 2}))}});
 
         const submitBtn = screen.getByTestId('submit-button-test');
-        fireEvent.click(submitBtn);
-        fireEvent.submit(submitBtn);
+        await waitFor(() => expect(submitBtn).toBeEnabled());
+        fireEvent.submit(screen.getByTestId('iban-form'));
         await waitFor(() => {
             expect(createIbanSpy).toBeCalled();
             expect(updateIbanSpy).not.toBeCalled();

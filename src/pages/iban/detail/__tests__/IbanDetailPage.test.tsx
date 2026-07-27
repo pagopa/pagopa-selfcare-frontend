@@ -9,7 +9,6 @@ import {mockedIban} from '../../../../services/__mocks__/ibanService';
 import * as ibanService from '../../../../services/ibanService';
 import {partiesActions} from '../../../../redux/slices/partiesSlice';
 import { Party } from '../../../../model/Party';
-import userEvent from '@testing-library/user-event';
 
 let getIbanListSpy: jest.SpyInstance;
 let deleteIbanSpy: jest.SpyInstance;
@@ -555,7 +554,6 @@ describe('IbanDetailPage', () => {
     it('should delete an ibanDeletionRequest and navigate back', async () => {
 
         createIbanDeletionRequestSpy.mockResolvedValue({});
-        const user = userEvent.setup();
 
         renderComponent();
 
@@ -565,10 +563,10 @@ describe('IbanDetailPage', () => {
         expect(
             await screen.findByText('addEditIbanPage.delete-modal.title')
         ).toBeInTheDocument();
-        
+
         const dateInput = await screen.findByLabelText('addEditIbanPage.delete-modal.deletionDateLabel');
-        
-        await user.type(dateInput, '01/01/2099');
+
+        fireEvent.change(dateInput, { target: { value: '01/01/2099' } });
 
         const confirmButton = screen.getByText(
             'addEditIbanPage.delete-modal.confirmButton'

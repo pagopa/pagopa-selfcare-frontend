@@ -15,7 +15,8 @@ import { theme } from '@pagopa/mui-italia';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
-import { Trans, useTranslation, TFunction } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
+import { TFunction } from 'i18next';
 import { useHistory } from 'react-router-dom';
 import { InstitutionApiKeysResource } from '../../api/generated/portal/InstitutionApiKeysResource';
 import {

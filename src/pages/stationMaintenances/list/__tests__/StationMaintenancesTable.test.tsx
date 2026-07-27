@@ -16,16 +16,41 @@ import {
 
 jest.mock('../../../../hooks/useOrganizationType');
 
+let mockGetStationMaintenances: jest.SpyInstance;
+let mockTerminateMaintenance: jest.SpyInstance;
+let mockDeleteMaintenance: jest.SpyInstance;
+
+// jsdom reports 0-sized layout boxes; @mui/x-data-grid uses real
+// measurements to decide how many rows fit, so without this the grid
+// renders no rows in tests even though the data is there.
+const originalGetBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
+
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
+  mockGetStationMaintenances = jest.spyOn(StationMaintenanceService, 'getStationMaintenances');
+  mockTerminateMaintenance = jest.spyOn(StationMaintenanceService, 'finishStationMaintenance');
+  mockDeleteMaintenance = jest.spyOn(StationMaintenanceService, 'deleteStationMaintenance');
+  HTMLElement.prototype.getBoundingClientRect = () =>
+    ({
+      width: 1000,
+      height: 1000,
+      top: 0,
+      left: 0,
+      right: 1000,
+      bottom: 1000,
+      x: 0,
+      y: 0,
+      toJSON() {
+        return this;
+      },
+    }) as DOMRect;
 });
 
-const mockGetStationMaintenances = jest.spyOn(StationMaintenanceService, 'getStationMaintenances');
-const mockTerminateMaintenance = jest.spyOn(StationMaintenanceService, 'finishStationMaintenance');
-const mockDeleteMaintenance = jest.spyOn(StationMaintenanceService, 'deleteStationMaintenance');
-
-afterEach(cleanup);
+afterEach(() => {
+  HTMLElement.prototype.getBoundingClientRect = originalGetBoundingClientRect;
+  cleanup();
+});
 
 describe('<StationMaintenancesTable />', () => {
   test('render component StationMaintenancesTable SCHEDULED', async () => {
@@ -301,7 +326,7 @@ describe('<StationMaintenancesTable />', () => {
     const list = mockStationMaintenancesList;
     list.station_maintenance_list = [...getMockMaintenanceInProgress(1)];
     mockGetStationMaintenances.mockResolvedValue(list);
-    mockDeleteMaintenance.mockRejectedValueOnce('error');
+    mockTerminateMaintenance.mockRejectedValueOnce('error');
 
     render(
       <Provider store={store}>

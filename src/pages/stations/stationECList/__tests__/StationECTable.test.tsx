@@ -10,16 +10,38 @@ import React from 'react';
 import { mockedStationECs } from '../../../../services/__mocks__/stationService';
 
 let spyApi: jest.SpyInstance;
-const getECListByStationCodeSpy = jest.spyOn(stationService, 'getECListByStationCode');
-const dissociateEcSpy = jest.spyOn(stationService, "dissociateECfromStation");
+let getECListByStationCodeSpy: jest.SpyInstance;
+let dissociateEcSpy: jest.SpyInstance;
+
+// jsdom reports 0-sized layout boxes; @mui/x-data-grid uses real
+// measurements to decide how many rows fit, so without this the grid
+// renders no rows in tests even though the data is there.
+const originalGetBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
+  getECListByStationCodeSpy = jest.spyOn(stationService, 'getECListByStationCode');
+  dissociateEcSpy = jest.spyOn(stationService, "dissociateECfromStation");
   spyApi = jest.spyOn(stationService, 'dissociateECfromStation');
+  HTMLElement.prototype.getBoundingClientRect = () =>
+    ({
+      x: 0,
+      y: 0,
+      width: 1000,
+      height: 1000,
+      top: 0,
+      left: 0,
+      right: 1000,
+      bottom: 1000,
+      toJSON: () => '',
+    }) as DOMRect;
 });
 
-afterEach(cleanup);
+afterEach(() => {
+  HTMLElement.prototype.getBoundingClientRect = originalGetBoundingClientRect;
+  cleanup();
+});
 
 describe('<StationECTable />', () => {
   const stationId = 'XPAY_03_ONUS';
@@ -46,6 +68,7 @@ describe('<StationECTable />', () => {
     await waitFor(() => {
       const table = screen.getByTestId('data-grid');
       expect(table).toBeInTheDocument();
+      expect(screen.getAllByRole('menuitem')[0]).toBeInTheDocument();
     });
 
     const menuButton = screen.getAllByRole('menuitem')[0];
@@ -119,6 +142,7 @@ describe('<StationECTable />', () => {
     await waitFor(() => {
       const table = screen.getByTestId('data-grid');
       expect(table).toBeInTheDocument();
+      expect(screen.getAllByRole('menuitem')[0]).toBeInTheDocument();
     });
 
     const menuButton = screen.getAllByRole('menuitem')[0];

@@ -1,7 +1,9 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-let */
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-import { TFunction } from 'react-i18next';
+
+const GridActionsCellItemAny = GridActionsCellItem as any;
+import { TFunction } from 'i18next';
 import { Cancel, Delete, Edit, Info } from '@mui/icons-material';
 import {
   colorType,
@@ -127,7 +129,7 @@ export const getRowActions = (
   }) => void
 ) => {
   const baseActions = [
-    <GridActionsCellItem
+    <GridActionsCellItemAny
       key="detailAction"
       label={t(`${componentPath}.actions.details`)}
       onClick={() =>
@@ -143,7 +145,7 @@ export const getRowActions = (
 
   if (maintenanceState !== StationMaintenanceState.FINISHED) {
     baseActions.push(
-      <GridActionsCellItem
+      <GridActionsCellItemAny
         key="editAction"
         label={t(`${componentPath}.actions.edit`)}
         onClick={() =>
@@ -163,7 +165,7 @@ export const getRowActions = (
     const actionType =
       maintenanceState === StationMaintenanceState.IN_PROGRESS ? 'terminate' : 'delete';
     baseActions.push(
-      <GridActionsCellItem
+      <GridActionsCellItemAny
         key={`${actionType}Action`}
         label={t(`${componentPath}.actions.${actionType}`)}
         onClick={() => handleOnRowActionClick({ maintenance, routeAction: false })}

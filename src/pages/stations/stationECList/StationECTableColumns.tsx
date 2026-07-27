@@ -1,5 +1,7 @@
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-import { TFunction } from 'react-i18next';
+
+const GridActionsCellItemAny = GridActionsCellItem as any;
+import { TFunction } from 'i18next';
 import { formatBooleanValueToYesOrNo, formatCodeInDoubleDigit } from '../../../utils/common-utils';
 import {
   renderCell,
@@ -174,14 +176,14 @@ export const gridLinkActionEdit = ({
   onRowClick: (ec_code: string) => void;
   onLinkClick: (ci: CreditorInstitutionResource) => void;
 }) => [
-  <GridActionsCellItem
+  <GridActionsCellItemAny
     key="editAction"
     label={t('general.modify')}
     showInMenu
     onClick={() => onLinkClick(ci)}
     data-testid="editAction"
   />,
-  <GridActionsCellItem
+  <GridActionsCellItemAny
     label={t('stationECList.stationsTableColumns.headerFields.action')}
     onClick={() => onRowClick(ci.ciTaxCode)}
     key="dissociateAction"

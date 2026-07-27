@@ -1,6 +1,6 @@
 // import { useTranslation } from 'react-i18next';
 import {ArrowBack} from '@mui/icons-material';
-import {Alert, Box, Breadcrumbs, Divider, Grid, Paper, Stack, TextField, Typography} from '@mui/material';
+import {Alert, Box, Breadcrumbs, Divider, Grid, Paper, Stack, Typography} from '@mui/material';
 import {ButtonNaked} from '@pagopa/mui-italia';
 import {TitleBox, useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
 import {useHistory, useParams} from 'react-router';
@@ -84,7 +84,6 @@ const IbanDetailPage = () => {
     };
 
     const cancelIbanDeletionRequestHandler = async (id: string) => {
-        console.log('cancelIbanDeletionRequestHandler called with id:', id);
             setLoadingDelete(true);
         try {
             await cancelIbanDeletionRequests(selectedParty?.fiscalCode ?? '', id);
@@ -282,16 +281,16 @@ const IbanDetailPage = () => {
                             <Box maxWidth={'50%'}>
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DesktopDatePicker
-                                        label={t('addEditIbanPage.delete-modal.deletionDateLabel')} 
-                                        inputFormat="dd/MM/yyyy"
+                                        label={t('addEditIbanPage.delete-modal.deletionDateLabel')}
+                                        format="dd/MM/yyyy"
                                         minDate={(() => {
-                                            const tomorrow = new Date(); 
-                                            tomorrow.setDate(tomorrow.getDate() + 1); 
+                                            const tomorrow = new Date();
+                                            tomorrow.setDate(tomorrow.getDate() + 1);
                                             return tomorrow;
                                         })()}
                                         value={ibanDeletionDate}
                                         onChange={(newDate: Date|null) => setIbanDeletionDate(newDate||null)}
-                                        renderInput={(params) => <TextField {...params} fullWidth />}
+                                        slotProps={{ textField: { fullWidth: true } }}
                                     />
                                 </LocalizationProvider>
                             </Box>

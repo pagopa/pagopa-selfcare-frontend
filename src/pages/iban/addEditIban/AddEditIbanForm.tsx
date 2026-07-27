@@ -13,7 +13,6 @@ import {
     RadioGroup,
     Stack,
     TextField,
-    TextFieldProps,
     Typography,
 } from '@mui/material';
 import { Box } from '@mui/system';
@@ -367,25 +366,22 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                                                 !isIbanValidityDateEditable(ibanBody) && formAction === IbanFormAction.Edit
                                             }
                                             label={t('addEditIbanPage.addForm.fields.dates.start')}
-                                            inputFormat="dd/MM/yyyy"
+                                            format="dd/MM/yyyy"
                                             value={formik.values.validity_date}
                                             onChange={(e) => formik.setFieldValue('validity_date', e)}
-                                            renderInput={(params: TextFieldProps) => (
-                                                <TextField
-                                                    {...params}
-                                                    inputProps={{
-                                                        ...params.inputProps,
+                                            slotProps={{
+                                                textField: {
+                                                    inputProps: {
                                                         placeholder: 'dd/mm/aaaa',
                                                         'data-testid': 'start-date-test',
-                                                    }}
-                                                    id="validityDate"
-                                                    name="validityDate"
-                                                    type="date"
-                                                    size="small"
-                                                    error={formik.touched.validity_date && Boolean(formik.errors.validity_date)}
-                                                    helperText={formik.touched.validity_date && formik.errors.validity_date}
-                                                />
-                                            )}
+                                                    },
+                                                    id: 'validityDate',
+                                                    name: 'validityDate',
+                                                    size: 'small',
+                                                    error: formik.touched.validity_date && Boolean(formik.errors.validity_date),
+                                                    helperText: (formik.touched.validity_date && formik.errors.validity_date) as string | undefined,
+                                                },
+                                            }}
                                             shouldDisableDate={(date: Date) => date < new Date()}
                                         />
                                     </LocalizationProvider>
@@ -394,25 +390,22 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                                         <DesktopDatePicker
                                             label={t('addEditIbanPage.addForm.fields.dates.end')}
-                                            inputFormat="dd/MM/yyyy"
+                                            format="dd/MM/yyyy"
                                             value={formik.values.due_date}
                                             onChange={(e) => formik.setFieldValue('due_date', e)}
-                                            renderInput={(params: TextFieldProps) => (
-                                                <TextField
-                                                    {...params}
-                                                    inputProps={{
-                                                        ...params.inputProps,
+                                            slotProps={{
+                                                textField: {
+                                                    inputProps: {
                                                         placeholder: 'dd/mm/aaaa',
                                                         'data-testid': 'end-date-test',
-                                                    }}
-                                                    id="dueDate"
-                                                    name="dueDate"
-                                                    type="date"
-                                                    size="small"
-                                                    error={formik.touched.due_date && Boolean(formik.errors.due_date)}
-                                                    helperText={formik.touched.due_date && formik.errors.due_date}
-                                                />
-                                            )}
+                                                    },
+                                                    id: 'dueDate',
+                                                    name: 'dueDate',
+                                                    size: 'small',
+                                                    error: formik.touched.due_date && Boolean(formik.errors.due_date),
+                                                    helperText: (formik.touched.due_date && formik.errors.due_date) as string | undefined,
+                                                },
+                                            }}
                                             shouldDisableDate={(date: Date) => date < formik.values.validity_date}
                                         />
                                     </LocalizationProvider>
@@ -439,6 +432,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                             onFileSelected={handleFileSelect}
                             onFileRemoved={handleFileRemove}
                             dropzoneLabel={t('handleMultiIbanEditIbanPage.csvForm.dropzoneLabel')}
+                            dropzoneButton={t('handleMultiIbanEditIbanPage.csvForm.dropzoneButton')}
                             rejectedLabel={t('handleMultiIbanEditIbanPage.csvForm.rejectedLabel')}
                         />
                     </Box>

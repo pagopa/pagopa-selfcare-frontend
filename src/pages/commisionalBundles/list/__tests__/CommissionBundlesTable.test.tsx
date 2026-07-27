@@ -11,6 +11,8 @@ import * as useOrganizationType from '../../../../hooks/useOrganizationType';
 import { mockedCommissionBundlePspList } from '../../../../services/__mocks__/bundleService';
 
 let getCommissionBundlePspSpy: jest.SpyInstance;
+let mock: jest.SpyInstance;
+let mockEC: jest.SpyInstance;
 
 jest.mock('../../../../hooks/useOrganizationType');
 
@@ -24,10 +26,9 @@ beforeEach(() => {
   );
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
+  mock = jest.spyOn(BundleService, 'getBundleListByPSP');
+  mockEC = jest.spyOn(BundleService, 'getCisBundles');
 });
-
-const mock = jest.spyOn(BundleService, 'getBundleListByPSP');
-const mockEC = jest.spyOn(BundleService, 'getCisBundles');
 
 afterEach(cleanup);
 

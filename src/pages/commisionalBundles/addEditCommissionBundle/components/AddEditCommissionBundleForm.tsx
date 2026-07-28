@@ -160,7 +160,12 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
           setPaymentOptions(paymentTypes);
         }
         if (touchpoints) {
-          setTouchpointList(touchpoints);
+          setTouchpointList({
+            ...touchpoints,
+            touchpoints: [...(touchpoints.touchpoints ?? [])].sort(
+              (a, b) => (a.name === 'ANY' ? -1 : b.name === 'ANY' ? 1 : 0)
+            ),
+          });
         }
         let listBroker = brokerDelegation?.delegation_list
           ? [...brokerDelegation.delegation_list]
@@ -428,13 +433,11 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                     }
                   >
                    
-                   {[...(touchpointList?.touchpoints ?? [])]
-                    .sort((a, b) => (a.name === 'ANY' ? -1 : b.name === 'ANY' ? 1 : 0))
-                    .map((el) => (
-                      <MenuItem key={`touchpoint${el.name}`} value={el.name}>
-                        {el.name}
-                      </MenuItem>
-                    ))}
+                  {(touchpointList?.touchpoints ?? []).map((el) => (
+                    <MenuItem key={`touchpoint${el.name}`} value={el.name}>
+                      {el.name}
+                    </MenuItem>
+                  ))}
                   </Select>
                 </FormControl>
               </Grid>

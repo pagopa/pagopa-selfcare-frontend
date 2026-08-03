@@ -122,7 +122,7 @@ const CommissionBundlesTable = ({ filtersValue, bundleType }: Props) => {
             const formattedBundles = res.bundles?.map((el: BundleResource) => ({
               ...el,
               touchpoint: el.touchpoint ?? 'ANY',
-              paymentType: el.paymentType ?? 'ANY',
+              paymentType: el.paymentType ?? '',
             }));
             setListFiltered({
               bundles: formattedBundles,

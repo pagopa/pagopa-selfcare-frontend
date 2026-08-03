@@ -383,4 +383,43 @@ describe('<AddEditCommissionBundlePage />', () => {
             expect(spyOnUpdateBundle).toHaveBeenCalledWith('', mockedCommissionBundlePspDetailGlobal.idBundle, requestBundle);
         });
     });
+    
+    test('PaymentType dropdown does NOT show "ALL" (ANY) option', async () => {
+        spyOnUpdateBundle.mockReturnValueOnce(new Promise<void>((resolve) => resolve()));
+        const name = 'someNameId';
+        const initialEntries = `/comm-bundles/${name}/${FormAction.Edit}`;
+        const path = '/comm-bundles/:bundleId/:actionId';
+        
+        const bundle = {
+            ...mockedCommissionBundlePspDetailGlobal,
+            touchpoint: 'ANY',
+            paymentType: 'CP',
+            bundleTaxonomies: [],
+        };
+
+        render(
+            <Provider store={store}>
+                <RenderComponent
+                    initialEntries={initialEntries}
+                    path={path}
+                    bundle={bundle}
+                />
+            </Provider>
+        );
+
+        let bundleFormDiv;
+        await waitFor(() => {
+            bundleFormDiv = screen.queryByTestId('bundle-form-div');
+            expect(bundleFormDiv).toBeInTheDocument();
+        });
+
+        const paymentTypeDropdown = screen.getByLabelText(
+            'commissionBundlesPage.addEditCommissionBundle.form.paymentType'
+        );
+        fireEvent.mouseDown(paymentTypeDropdown);
+
+        expect(
+            screen.queryByText('commissionBundlesPage.addEditCommissionBundle.form.all')
+        ).not.toBeInTheDocument();
+    });
 });

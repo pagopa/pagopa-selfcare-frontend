@@ -226,12 +226,11 @@ describe('<CommissionBundlesTable />', () => {
       orgIsPspSigned: false,
     });
 
-    // Mock con dati senza paymentType
     const mockBundlesWithoutPaymentType = {
       bundles: [
         {
           ...mockedCommissionBundlePspList.bundles[0],
-          paymentType: undefined, // Simula il caso senza paymentType
+          paymentType: undefined,
         },
       ],
       pageInfo: mockedCommissionBundlePspList.pageInfo,
@@ -259,10 +258,9 @@ describe('<CommissionBundlesTable />', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
     });
-
-    // Verifica che paymentType sia stato normalizzato a stringa vuota
+ 
     expect(mock).toHaveBeenCalled();
     const callArgs = mock.mock.results[0].value;
-    // Puoi aggiungere ulteriori asserzioni se accedi ai dati della grid
+   
   });
 });

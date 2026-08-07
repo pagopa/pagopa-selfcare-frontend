@@ -69,6 +69,7 @@
     "ecAdmin": "Referente dei Pagamenti",
     "ecOperator": "Referente Tecnico",
     "pagopaOperator": "Operatore PagoPA",
+    "ptAdmin": "Partner Tecnologico",
     "ptOperator": "Partner Tecnologico"
   },
   "profileItem": {

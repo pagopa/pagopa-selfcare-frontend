@@ -16,7 +16,7 @@ export type ProfileOption = {
   selected: boolean;
 };
 
-const PT_ROLE_KEY = 'operator-pt';
+const PT_ROLE_KEYS = ['admin-pt', 'operator-pt'];
 const PSP_ROLE_KEYS = ['admin-psp', 'operator-psp'];
 const EC_ROLE_KEYS = ['admin', 'operator'];
 
@@ -91,7 +91,7 @@ export const getProfileContext = (
   roleKey?: string,
   institutionType?: string
 ): ProfileContext => {
-  if (roleKey === PT_ROLE_KEY) {
+  if (PT_ROLE_KEYS.includes(roleKey ?? '')) {
     return 'PT';
   }
 
@@ -141,7 +141,11 @@ export const getProfileInitials = (roleKey?: string, institutionType?: string): 
 };
 
 export const getRoleLabelKey = (roleKey?: string, institutionType?: string): string => {
-  if (roleKey === PT_ROLE_KEY) {
+  if (roleKey === 'admin-pt') {
+    return 'roles.ptAdmin';
+  }
+
+  if (roleKey === 'operator-pt') {
     return 'roles.ptOperator';
   }
 

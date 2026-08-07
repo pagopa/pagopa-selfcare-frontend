@@ -131,6 +131,7 @@ describe('getActiveRoleKeyFromCurrentToken', () => {
 
 describe('getProfileContext', () => {
   test.each([
+    ['admin-pt', undefined, 'PT'],
     ['operator-pt', undefined, 'PT'],
     [undefined, 'PT', 'PT'],
     ['admin-psp', undefined, 'PSP'],
@@ -162,6 +163,7 @@ describe('getPartyProfileContext', () => {
 
 describe('getProfileLabel', () => {
   test.each([
+    ['admin-pt', undefined, 'Partner Tecnologico'],
     ['operator-pt', undefined, 'Partner Tecnologico'],
     ['admin-psp', undefined, 'Prestatore Servizi di Pagamento'],
     ['admin', 'EC', 'Ente Creditore'],
@@ -175,6 +177,7 @@ describe('getProfileInitials', () => {
   test.each([
     ['admin', 'EC', 'EC'],
     ['admin-psp', undefined, 'PSP'],
+    ['admin-pt', undefined, 'PT'],
     ['operator-pt', undefined, 'PT'],
     [undefined, undefined, 'AR'],
   ] as const)('roleKey=%s institutionType=%s => %s', (roleKey, institutionType, expected) => {
@@ -184,6 +187,7 @@ describe('getProfileInitials', () => {
 
 describe('getRoleLabelKey', () => {
   test.each([
+    ['admin-pt', undefined, 'roles.ptAdmin'],
     ['operator-pt', undefined, 'roles.ptOperator'],
     ['admin-psp', undefined, 'roles.pspAdmin'],
     ['admin', 'PSP', 'roles.pspAdmin'],

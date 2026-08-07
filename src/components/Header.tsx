@@ -62,6 +62,9 @@ const roleKey2LanguageKey = (party: Party): string => {
     if ((party.institutionType === 'PSP' && roleKey === 'admin') || roleKey === 'admin-psp') {
         return roleLabel ?? 'roles.pspAdmin';
     }
+    if (roleKey === 'admin-pt') {
+        return roleLabel ?? 'roles.ptAdmin';
+    }
     if (roleKey === 'operator-pt') {
         return roleLabel ?? 'roles.ptOperator';
     }

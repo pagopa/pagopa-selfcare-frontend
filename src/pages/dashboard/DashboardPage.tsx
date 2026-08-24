@@ -78,7 +78,6 @@ const DashboardPage = () => {
                 </Grid>
 
                 {selectedParty &&
-                    profileContext !== 'PT' &&
                     userHasPermission('operation-table-read-write') && (
                         <OperationTable ecCode={selectedParty.fiscalCode} />
                     )}

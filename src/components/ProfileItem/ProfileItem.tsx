@@ -44,13 +44,11 @@ const ProfileItem = () => {
   }
 
   const openDialog = () => {
-    if (!canSwitchProfile) {
-      return;
+    if (canSwitchProfile) {
+      setSelectedRole(activeOption?.roleKey ?? options[0].roleKey);
+      setError(undefined);
+      setOpen(true);
     }
-
-    setSelectedRole(activeOption?.roleKey ?? options[0].roleKey);
-    setError(undefined);
-    setOpen(true);
   };
 
   const closeDialog = () => {

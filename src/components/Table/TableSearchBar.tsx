@@ -21,6 +21,7 @@ type Props = {
   listTabFilter?: Array<TabFilter>;
   setActiveTab?: (index: number) => void;
   activeTab?: number;
+  endButtonDisabled?: boolean;
 };
 
 const a11yProps = (index: number) => ({
@@ -45,6 +46,7 @@ export default function TableSearchBar({
   setActiveTab,
   // Controlled active tab value
   activeTab,
+  endButtonDisabled = false
 }: Readonly<Props>) {
   const { t } = useTranslation();
   const [internalSearchValue, setInternalSearchValue] = useState('');
@@ -98,6 +100,7 @@ export default function TableSearchBar({
                 handleSearchTrigger !== undefined && handleSearchTrigger(internalSearchValue)
               }
               variant={resetFilters ? 'outlined' : 'contained'}
+              disabled={endButtonDisabled}
               data-testid="button-search"
               sx={{ ml: 1, whiteSpace: 'nowrap', minWidth: 'auto', height: 'auto' }}
             >

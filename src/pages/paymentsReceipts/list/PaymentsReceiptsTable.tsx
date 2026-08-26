@@ -3,22 +3,17 @@ import {Box} from '@mui/system';
 import {GridColDef} from '@mui/x-data-grid';
 import {useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
 import {useTranslation} from 'react-i18next';
-import {useState, useEffect, ChangeEvent} from 'react';
-import {Pagination} from '@mui/material';
-import {CustomDataGrid} from '../../../components/Table/TableDataGrid';
+import {useState, useEffect } from 'react';
+import TableDataGrid from '../../../components/Table/TableDataGrid';
 import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {LOADING_TASK_PAYMENTS_RECEIPTS} from '../../../utils/constants';
-import TableEmptyState from '../../../components/Table/TableEmptyState';
 import {
     getPaymentReceiptDetail,
     getPaymentsReceipts,
 } from '../../../services/paymentsReceiptsService';
 import {PaymentsResult} from '../../../api/generated/portal/PaymentsResult';
 import {buildColumnDefs} from './PaymentsReceiptsTableColumns';
-
-const rowHeight = 64;
-const headerHeight = 56;
 
 const emptyList: PaymentsResult = {
     results: [],
@@ -107,7 +102,6 @@ export default function PaymentsReceiptsTable({
     }, [searchTrigger]);
 
     const columns: Array<GridColDef> = buildColumnDefs(t, downloadReceiptXML);
-    // TODO generalize table box
     return (
         <Box
             id="paymentsReceiptsTable"
@@ -118,43 +112,15 @@ export default function PaymentsReceiptsTable({
             }}
             justifyContent="start"
         >
-            {!receiptsList?.results || receiptsList.results.length === 0 ? (
-                <TableEmptyState componentName="paymentsReceiptsPage"/>
-            ) : (
-                <div data-testid="data-grid">
-                    <CustomDataGrid
-                        disableColumnFilter
-                        disableColumnSelector
-                        disableDensitySelector
-                        disableSelectionOnClick
-                        onPageChange={(newPage) => getReceipts(newPage - 1)}
-                        autoHeight={true}
-                        className="CustomDataGrid"
-                        components={{
-                            Pagination: () => (
-                                <>
-                                    <Pagination
-                                        color="primary"
-                                        count={receiptsList?.totalPages ?? 1}
-                                        page={page + 1}
-                                        onChange={(_event: ChangeEvent<unknown>, value: number) =>
-                                            getReceipts(value - 1)
-                                        }
-                                    />
-                                </>
-                            ),
-                        }}
-                        columnBuffer={5}
-                        columns={columns}
-                        headerHeight={headerHeight}
-                        hideFooterSelectedRowCount={true}
-                        rowCount={receiptsList?.results?.length}
-                        getRowId={(el) => el.iuv}
-                        rowHeight={rowHeight}
-                        rows={receiptsList.results ?? []}
-                    />
-                </div>
-            )}
+            <TableDataGrid
+                componentPath={"paymentsReceiptsPage"}
+                rows={receiptsList.results ? [...receiptsList.results] : []}
+                columns={columns}
+                totalPages={receiptsList?.totalPages}
+                page={page}
+                handleChangePage={(newPage: number) => getReceipts(newPage)}
+                getRowId={(el) => el.iuv}
+            />
         </Box>
     );
 }

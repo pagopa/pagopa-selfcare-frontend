@@ -98,6 +98,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
         });
         store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
         const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
+        jest.spyOn(stationService, 'getStationCodeV2').mockResolvedValue(mockedStationCode);
 
         render(
             <Provider store={store}>
@@ -122,7 +123,9 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
         const primitiveVersion = screen.getByTestId('primitive-version-test') as HTMLInputElement;
         const targetPofConcat = screen.getByTestId('targetPofConcat-test') as HTMLInputElement;
 
-        expect(stationCode.value).toBe(mockedStationCode.stationCode);
+        fireEvent.change(stationCode, {target: {value: 'station Code'}});
+        expect(stationCode.value).toBe('station Code');
+
         expect(primitiveVersion.value).toBe('2');
         expect(targetPofConcat.value).toBe('');
 

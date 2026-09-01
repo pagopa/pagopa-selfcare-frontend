@@ -25,10 +25,7 @@ beforeEach(() => {
   jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
-afterEach(() => {
-  cleanup();
-  jest.restoreAllMocks();
-});
+afterEach(cleanup);
 
 describe('<CommissionBundlesTable />', () => {
   test('render component CommissionBundlesTable with bundle list for PSP', async () => {

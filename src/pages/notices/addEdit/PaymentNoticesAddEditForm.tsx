@@ -393,7 +393,9 @@ const PaymentNoticesAddEditForm = ({goBack, data}: Props) => {
                                                 dropzoneLabel={t(
                                                     'addEditInstitutionsDataPage.addForm.dropFileText'
                                                 )}
-                                                dropzoneButton={t('general.upload')}
+                                                dropzoneButton={t(
+                                                    'addEditInstitutionsDataPage.addForm.dropFileButton'
+                                                )}
                                                 rejectedLabel={t(
                                                     'addEditInstitutionsDataPage.addForm.rejectedFile'
                                                 )}

@@ -17,7 +17,7 @@ import { BundleRequest } from '../../../../../api/generated/portal/BundleRequest
 import { FormAction } from '../../../../../model/CommissionBundle';
 import { mockedDelegatedPSP } from '../../../../../services/__mocks__/institutionsService';
 import { formatDateToDDMMYYYY } from '../../../../../utils/common-utils';
-import * as useErrorDispatcher from '@pagopa/selfcare-common-frontend';
+import { useErrorDispatcher } from '@pagopa/selfcare-common-frontend';
 import * as useFeatureFlags from '../../../../../hooks/useFeatureFlags';
 import * as useUserRole from '../../../../../hooks/useUserRole';
 import { ROLE } from '../../../../../model/RolePermission';
@@ -25,9 +25,14 @@ import { TypeEnum } from '../../../../../api/generated/portal/PSPBundleResource'
 import * as useOrganizationType from '../../../../../hooks/useOrganizationType';
 import { mockedChannels } from '../../../../../services/__mocks__/channelService';
 
-jest.mock('@pagopa/selfcare-common-frontend', () => ({
-  useErrorDispatcher: jest.fn(),
-  useLoading: () => jest.fn(),
+// useErrorDispatcher is a named export of a real ES module in the newer
+// @pagopa/selfcare-common-frontend build, whose namespace properties are
+// non-configurable, so jest.spyOn can't redefine it directly; mock just its
+// own module (index.js re-exports it from here) instead of the whole
+// package, which avoids a circular-import crash from jest.requireActual.
+jest.mock('@pagopa/selfcare-common-frontend/hooks/useErrorDispatcher', () => ({
+  __esModule: true,
+  default: jest.fn(),
 }));
 
 let spyOnGetPaymentTypes: jest.SpyInstance<any, unknown[]>;
@@ -97,9 +102,8 @@ describe('<AddEditCommissionBundleForm />', () => {
       require('../../../../../services/channelService'),
       'getChannels'
     );
-    spyOnErrorHook = jest
-      .spyOn(useErrorDispatcher, 'useErrorDispatcher')
-      .mockReturnValue(jest.fn());
+    spyOnErrorHook = useErrorDispatcher as unknown as jest.SpyInstance<any, unknown[]>;
+    spyOnErrorHook.mockReturnValue(jest.fn());
     spyOnUseFlagValue = jest.spyOn(useFeatureFlags, 'useFlagValue');
     jest.spyOn(useUserRole, 'useUserRole').mockReturnValue({
       userRole: ROLE.PSP_ADMIN,
@@ -465,13 +469,13 @@ describe('<AddEditCommissionBundleForm />', () => {
     );
 
     // Check broker code list
-    await waitFor(() =>
+    await waitFor(() => {
       expect(input.brokerCodeList.value).toBe(
         mockedDelegatedPSP.delegation_list!.find(
           (el) => el.broker_tax_code === mockedBundleRequestForEdit.idBrokerPsp
         )?.broker_name
-      )
-    );
+      );
+    });
 
     // Check channel id
     expect(input.channelList.value).toBe(mockedBundleRequest.idChannel);

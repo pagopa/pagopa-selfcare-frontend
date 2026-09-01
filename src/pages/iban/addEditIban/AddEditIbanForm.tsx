@@ -436,7 +436,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                             onFileSelected={handleFileSelect}
                             onFileRemoved={handleFileRemove}
                             dropzoneLabel={t('handleMultiIbanEditIbanPage.csvForm.dropzoneLabel')}
-                            dropzoneButton={t('general.upload')}
+                            dropzoneButton={t('handleMultiIbanEditIbanPage.csvForm.dropzoneButton')}
                             rejectedLabel={t('handleMultiIbanEditIbanPage.csvForm.rejectedLabel')}
                         />
                     </Box>

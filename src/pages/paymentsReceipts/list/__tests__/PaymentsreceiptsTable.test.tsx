@@ -12,6 +12,11 @@ import {mockedPaymentsReceiptsList} from '../../../../services/__mocks__/payment
 let mock: jest.SpyInstance;
 let mockDetails: jest.SpyInstance;
 
+// jsdom reports 0-sized layout boxes; @mui/x-data-grid uses real
+// measurements to decide how many rows fit, so without this the grid
+// renders no rows in tests even though the data is there.
+const originalGetBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
+
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
     });
@@ -19,9 +24,13 @@ beforeEach(() => {
     });
     mock = jest.spyOn(PaymentsReceiptsService, 'getPaymentsReceipts');
     mockDetails = jest.spyOn(PaymentsReceiptsService, 'getPaymentReceiptDetail');
+    HTMLElement.prototype.getBoundingClientRect = () => new DOMRect(0, 0, 1000, 1000);
 });
 
-afterEach(cleanup);
+afterEach(() => {
+    HTMLElement.prototype.getBoundingClientRect = originalGetBoundingClientRect;
+    cleanup();
+});
 
 describe('<PaymentsReceiptsTable />', () => {
     global.URL.createObjectURL = jest.fn();
@@ -43,6 +52,7 @@ describe('<PaymentsReceiptsTable />', () => {
         await waitFor(() => {
             expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
             expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
+            expect(screen.queryAllByTestId('download-receipt')?.[0]).toBeInTheDocument();
         });
 
         const downloadReceipt = (await screen.findAllByTestId("download-receipt"))[0];
@@ -117,6 +127,7 @@ describe('<PaymentsReceiptsTable />', () => {
         await waitFor(() => {
             expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
             expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
+            expect(screen.queryAllByTestId('download-receipt')?.[0]).toBeInTheDocument();
         });
 
         const downloadReceipt = (await screen.findAllByTestId("download-receipt"))[0];

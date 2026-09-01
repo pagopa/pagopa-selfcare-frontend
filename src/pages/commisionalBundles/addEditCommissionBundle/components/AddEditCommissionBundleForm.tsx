@@ -775,9 +775,9 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                         name: 'validityDateFrom',
                         size: 'small',
                         error:
-                          formik.touched.validityDateFrom && Boolean(formik.errors.validityDateFrom)
-                        ,
-                        helperText: formik.touched.validityDateFrom && formik.errors.validityDateFrom,
+                          formik.touched.validityDateFrom && Boolean(formik.errors.validityDateFrom),
+                        helperText: (formik.touched.validityDateFrom &&
+                          formik.errors.validityDateFrom) as string | undefined,
                       },
                     }}
                     shouldDisableDate={(date: Date) => {
@@ -806,7 +806,8 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                         name: 'validityDateTo',
                         size: 'small',
                         error: formik.touched.validityDateTo && Boolean(formik.errors.validityDateTo),
-                        helperText: formik.touched.validityDateTo && formik.errors.validityDateTo,
+                        helperText: (formik.touched.validityDateTo &&
+                          formik.errors.validityDateTo) as string | undefined,
                       },
                     }}
                     shouldDisableDate={(date: Date) =>

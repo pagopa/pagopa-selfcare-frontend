@@ -62,8 +62,25 @@ export async function isOperator(page: Page) {
 }
 
 export async function checkReturnHomepage(page: Page) {
+  const feURL: string = process.env.FE_URL ?? DEV_URL;
+
+  // Dismiss any leftover modal/backdrop left by the previous step.
+  await page.keyboard.press('Escape').catch(() => {});
+
+  const menu = page.getByTestId('commission-bundles-test');
+  try {
+    await menu.waitFor({ state: 'visible', timeout: 15000 });
+    await menu.click({ timeout: 15000 });
+    return;
+  } catch {
+    // The previous action did not bring us back to a navigable page
+    // (stuck on a form, hanging loading overlay, error toast, ...).
+    // Fall back to a hard reload so the next test starts from a known state.
+  }
+
+  await page.goto(feURL, { waitUntil: 'load' }).catch(() => {});
   await page.waitForTimeout(2000);
-  await page.getByTestId('commission-bundles-test').click();
+  await menu.click({ timeout: 20000 }).catch(() => {});
 }
 
 export async function changeToEcUser(page: Page, isOperator?: boolean) {

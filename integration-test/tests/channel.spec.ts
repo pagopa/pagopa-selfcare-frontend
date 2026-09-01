@@ -42,26 +42,30 @@ test.describe.serial('Channel flow', () => {
 
     await test.step('Create new channel', async () => {
       await page.getByTestId('create-channel').click();
-      await page.waitForTimeout(2000);
 
-      channelId = await page.getByTestId('channel-code-test').inputValue();
+      const channelCodeInput = page.getByTestId('channel-code-test');
+      await channelCodeInput.waitFor({ state: 'visible' });
+      channelId = await channelCodeInput.inputValue();
 
       await page.getByTestId('target-union-test').click();
       await page.getByTestId('target-union-test').fill(endpoint);
 
-      await page.waitForTimeout(1000);
+      // Payment type: MUI Select opens a listbox in a portal. Pick the first
+      // available option instead of matching a specific label (which changes
+      // depending on what the backend returns).
       await page.locator('#payment_types0_select').click();
-      await page.waitForTimeout(1000);
+      const paymentOption = page.getByRole('option').first();
+      await paymentOption.waitFor({ state: 'visible' });
+      await paymentOption.click();
+      await page.keyboard.press('Escape').catch(() => {});
 
-      try {
-        await page.getByRole('option', { name: /bancomat pay/i }).click({ timeout: 5000 });
-      } catch (error) {
-        console.error('Error occurred:', error);
-      }
-
-      await page.waitForTimeout(1000);
+      // Submit -> confirm modal -> confirm.
       await page.getByRole('button', { name: 'Conferma' }).click();
-      await page.getByTestId('confirm-button-modal-test').click();
+
+      const modalConfirm = page.getByTestId('confirm-button-modal-test');
+      await modalConfirm.waitFor({ state: 'visible' });
+      await modalConfirm.click();
+
       await checkReturnHomepage(page);
     });
   });

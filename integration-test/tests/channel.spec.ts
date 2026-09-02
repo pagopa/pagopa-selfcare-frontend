@@ -252,17 +252,18 @@ test.describe.serial('Channel flow', () => {
 
       await page.waitForLoadState('networkidle', { timeout: 15000 });
 
-      await page.waitForSelector('[data-testid="request-edit-button"]', {
-        state: 'visible',
-        timeout: 15000
-      });
-
       const requestEditButton = page.getByTestId('request-edit-button');
-      const isVisible = await requestEditButton.isVisible();
+      const isVisible = await requestEditButton
+        .waitFor({ state: 'visible', timeout: 15000 })
+        .then(() => true)
+        .catch(() => false);
 
       if (!isVisible) {
-        console.log('Request edit button not visible, skipping test');
-        test.skip();
+        throw new Error(
+          'request-edit-button not visible on the channel detail page. ' +
+            'Likely the test user is not recognised as a PagoPA operator on DEV ' +
+            '(isOperator feature flag). Check the DEV operator allowlist / feature-flags endpoint.'
+        );
       }
 
       await requestEditButton.click({ force: true, timeout: 10000 });

@@ -83,6 +83,61 @@ export async function checkReturnHomepage(page: Page) {
   await menu.click({ timeout: 20000 }).catch(() => {});
 }
 
+/**
+ * MUI X v6.19+ `DesktopTimePicker` renders a `MultiSectionDigitalClock`
+ * (columns of hour/minute `option`s) instead of the old analog `.MuiClock`
+ * face. Call this right after the "Choose time" button opened the popup.
+ * `hours`/`minutes` are 24h numbers (the app uses `ampm={false}`).
+ */
+export async function selectDigitalClockTime(page: Page, hours: number, minutes: number) {
+  // The digital clock is portalled; options live in the a11y tree as `option`s
+  // named e.g. "8 hours" / "30 minutes".
+  await page.getByRole('option', { name: `${hours} hours`, exact: true }).waitFor({
+    state: 'visible',
+    timeout: 10000,
+  });
+  await page.getByRole('option', { name: `${hours} hours`, exact: true }).click();
+  await page.getByRole('option', { name: `${minutes} minutes`, exact: true }).click();
+  await page.waitForTimeout(300);
+}
+
+/**
+ * Navigates an open MUI X `DesktopDatePicker` popup (English locale) to
+ * `target` and clicks the day.
+ */
+export async function selectDatePickerDate(page: Page, target: Date) {
+  const header = page.locator('.MuiPickersCalendarHeader-label');
+  await header.waitFor({ state: 'visible', timeout: 10000 });
+
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
+  ];
+  const wantMonth = monthNames[target.getMonth()];
+  const wantYear = target.getFullYear();
+
+  // eslint-disable-next-line functional/no-let
+  for (let i = 0; i < 24; i++) {
+    const label = ((await header.textContent()) ?? '').trim();
+    if (label.includes(wantMonth) && label.includes(String(wantYear))) {
+      break;
+    }
+    const labelYear = parseInt(label.match(/\d{4}/)?.[0] ?? '0', 10);
+    const labelMonth = monthNames.findIndex((m) => label.includes(m));
+    const forward =
+      wantYear > labelYear || (wantYear === labelYear && target.getMonth() > labelMonth);
+    await page.locator(`button[aria-label="${forward ? 'Next month' : 'Previous month'}"]`).click();
+    await page.waitForTimeout(300);
+  }
+
+  await page
+    .locator('button.MuiPickersDay-root')
+    .filter({ hasText: new RegExp(`^${target.getDate()}$`) })
+    .first()
+    .click();
+  await page.waitForTimeout(300);
+}
+
 export async function changeToEcUser(page: Page, isOperator?: boolean) {
   await login(page, ORG.EC_DEMO_DIRECT, isOperator);
 }

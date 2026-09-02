@@ -59,7 +59,19 @@ test.describe.serial('Station flow', () => {
 
     await page.getByTestId('edit-button').click();
 
-    await page.getByTestId('password-test').waitFor({ state: 'visible', timeout: 10000 });
+    const passwordVisible = await page
+      .getByTestId('password-test')
+      .waitFor({ state: 'visible', timeout: 10000 })
+      .then(() => true)
+      .catch(() => false);
+
+    if (!passwordVisible) {
+      throw new Error(
+        'password-test not visible after opening the station edit form. ' +
+          'Likely the test user is not recognised as a PagoPA operator on DEV ' +
+          '(isOperator feature flag). Check the DEV operator allowlist / feature-flags endpoint.'
+      );
+    }
 
     try {
       await page.getByTestId('password-test').clear();

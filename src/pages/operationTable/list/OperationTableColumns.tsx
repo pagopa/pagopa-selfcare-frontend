@@ -1,6 +1,6 @@
 import {Box, IconButton} from '@mui/material';
 import {GridColDef} from '@mui/x-data-grid';
-import {TFunction} from 'react-i18next';
+import {TFunction} from 'i18next';
 import {ArrowForwardIos} from '@mui/icons-material';
 import {renderCell, showCustomHeader} from '../../../components/Table/TableUtils';
 

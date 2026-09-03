@@ -1,41 +1,57 @@
 import { ThemeProvider } from '@mui/system';
 import { theme } from '@pagopa/mui-italia';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import React from 'react';
+
 import { store } from '../../../../redux/store';
 import StationECTable from '../StationECTable';
 import * as stationService from '../../../../services/stationService';
-import React from 'react';
 import { mockedStationECs } from '../../../../services/__mocks__/stationService';
 
-let spyApi: jest.SpyInstance;
-const getECListByStationCodeSpy = jest.spyOn(stationService, 'getECListByStationCode');
-const dissociateEcSpy = jest.spyOn(stationService, "dissociateECfromStation");
+let getECListByStationCodeSpy: jest.SpyInstance;
+let dissociateEcSpy: jest.SpyInstance;
 
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
-  spyApi = jest.spyOn(stationService, 'dissociateECfromStation');
+
+  getECListByStationCodeSpy = jest.spyOn(
+    stationService,
+    'getECListByStationCode'
+  );
+
+  dissociateEcSpy = jest.spyOn(
+    stationService,
+    'dissociateECfromStation'
+  );
 });
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  jest.restoreAllMocks();
+});
 
-describe('<StationECTable />', () => {
+describe('StationECTable', () => {
   const stationId = 'XPAY_03_ONUS';
-  test('Render StationECTable', async () => {
-    getECListByStationCodeSpy.mockReturnValueOnce(Promise.resolve(mockedStationECs));
-    dissociateEcSpy.mockReturnValueOnce(Promise.resolve());
- 
+
+  const renderComponent = () =>
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/stations/${stationId}`]}>
           <Route path="/stations/:stationId">
             <ThemeProvider theme={theme}>
               <StationECTable
-                setAlertMessage={() => ''}
-                ciNameOrFiscalCodeFilter={''}
-                setNoValidCi={() => jest.fn()}
+                setAlertMessage={jest.fn()}
+                ciNameOrFiscalCodeFilter=""
+                setNoValidCi={jest.fn()}
               />
             </ThemeProvider>
           </Route>
@@ -43,104 +59,80 @@ describe('<StationECTable />', () => {
       </Provider>
     );
 
-    await waitFor(() => {
-      const table = screen.getByTestId('data-grid');
-      expect(table).toBeInTheDocument();
-    });
+  test('Render StationECTable', async () => {
+    getECListByStationCodeSpy.mockResolvedValue(mockedStationECs);
+    dissociateEcSpy.mockResolvedValue(undefined);
 
-    const menuButton = screen.getAllByRole('menuitem')[0];
-    fireEvent.click(menuButton);
+    renderComponent();
 
-    let dissociateButton;
-    await waitFor(() => {
-      expect(screen.queryByTestId('editAction')).toBeInTheDocument();
-      dissociateButton = screen.getByTestId("dissociate-action");
-    });
+    expect(await screen.findByTestId('data-grid')).toBeInTheDocument();
+
+    const menuButtons = await screen.findAllByRole('menuitem');
+    fireEvent.click(menuButtons[0]);
+
+    const dissociateButton = await screen.findByTestId(
+      'dissociate-action'
+    );
 
     fireEvent.click(dissociateButton);
 
-    let confirmButton;
-    await waitFor(() => {
-      confirmButton = screen.getByTestId("confirm-button-modal-test");
-    });
+    const confirmButton = await screen.findByTestId(
+      'confirm-button-modal-test'
+    );
 
     fireEvent.click(confirmButton);
 
     await waitFor(() => {
       expect(dissociateEcSpy).toHaveBeenCalledTimes(1);
+    });
+    await waitFor(() => {
+      expect(getECListByStationCodeSpy).toHaveBeenCalledTimes(2);
     });
   });
 
   test('error getECListByStationCodeSpy', async () => {
-    getECListByStationCodeSpy.mockRejectedValueOnce(new Error(""));
-
-    render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[`/stations/${stationId}`]}>
-          <Route path="/stations/:stationId">
-            <ThemeProvider theme={theme}>
-              <StationECTable
-                setAlertMessage={() => ''}
-                ciNameOrFiscalCodeFilter={''}
-                setNoValidCi={() => jest.fn()}
-              />
-            </ThemeProvider>
-          </Route>
-        </MemoryRouter>
-      </Provider>
+    getECListByStationCodeSpy.mockRejectedValue(
+      new Error('Error loading EC list')
     );
 
+    renderComponent();
+
+    expect(await screen.findByTestId('data-grid')).toBeInTheDocument();
+
     await waitFor(() => {
-      const table = screen.getByTestId('data-grid');
-      expect(table).toBeInTheDocument();
+      expect(getECListByStationCodeSpy).toHaveBeenCalledTimes(1);
     });
   });
 
   test('error dissociateECfromStation', async () => {
-    getECListByStationCodeSpy.mockReturnValueOnce(Promise.resolve(mockedStationECs));
-    dissociateEcSpy.mockRejectedValueOnce("");
- 
-    render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[`/stations/${stationId}`]}>
-          <Route path="/stations/:stationId">
-            <ThemeProvider theme={theme}>
-              <StationECTable
-                setAlertMessage={() => ''}
-                ciNameOrFiscalCodeFilter={''}
-                setNoValidCi={() => jest.fn()}
-              />
-            </ThemeProvider>
-          </Route>
-        </MemoryRouter>
-      </Provider>
+    getECListByStationCodeSpy.mockResolvedValue(mockedStationECs);
+
+    dissociateEcSpy.mockRejectedValue(
+      new Error('Error dissociating EC from station')
     );
 
-    await waitFor(() => {
-      const table = screen.getByTestId('data-grid');
-      expect(table).toBeInTheDocument();
-    });
+    renderComponent();
 
-    const menuButton = screen.getAllByRole('menuitem')[0];
-    fireEvent.click(menuButton);
+    expect(await screen.findByTestId('data-grid')).toBeInTheDocument();
 
-    let dissociateButton;
-    await waitFor(() => {
-      expect(screen.queryByTestId('editAction')).toBeInTheDocument();
-      dissociateButton = screen.getByTestId("dissociate-action");
-    });
+    const menuButtons = await screen.findAllByRole('menuitem');
+    fireEvent.click(menuButtons[0]);
+
+    const dissociateButton = await screen.findByTestId(
+      'dissociate-action'
+    );
 
     fireEvent.click(dissociateButton);
 
-    let confirmButton;
-    await waitFor(() => {
-      confirmButton = screen.getByTestId("confirm-button-modal-test");
-    });
+    const confirmButton = await screen.findByTestId(
+      'confirm-button-modal-test'
+    );
 
     fireEvent.click(confirmButton);
 
     await waitFor(() => {
       expect(dissociateEcSpy).toHaveBeenCalledTimes(1);
     });
+    expect(getECListByStationCodeSpy).toHaveBeenCalledTimes(1);
   });
 });

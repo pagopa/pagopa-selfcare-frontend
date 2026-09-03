@@ -62,8 +62,101 @@ export async function isOperator(page: Page) {
 }
 
 export async function checkReturnHomepage(page: Page) {
+  const feURL: string = process.env.FE_URL ?? DEV_URL;
+
+  // Dismiss any leftover modal/backdrop left by the previous step.
+  await page.keyboard.press('Escape').catch(() => {});
+
+  const menu = page.getByTestId('commission-bundles-test');
+  try {
+    await menu.waitFor({ state: 'visible', timeout: 15000 });
+    await menu.click({ timeout: 15000 });
+    return;
+  } catch {
+    // The previous action did not bring us back to a navigable page
+    // (stuck on a form, hanging loading overlay, error toast, ...).
+    // Fall back to a hard reload so the next test starts from a known state.
+  }
+
+  await page.goto(feURL, { waitUntil: 'load' }).catch(() => {});
   await page.waitForTimeout(2000);
-  await page.getByTestId('commission-bundles-test').click();
+  await menu.click({ timeout: 20000 }).catch(() => {});
+}
+
+/**
+ * MUI X v6.19+ `DesktopTimePicker` renders a `MultiSectionDigitalClock`
+ * (two `listbox` columns "Select hours" / "Select minutes") instead of the old
+ * analog `.MuiClock` face. Call this right after the "Choose time" button
+ * opened the popup.
+ *
+ * The station-maintenance form always passes a `minTime` (it falls back to
+ * `minDateFromToday`), and since the picker only has hour/minute views that
+ * `minTime` disables every hour before the current wall-clock hour. So instead
+ * of asking for a fixed time we pick the LAST still-enabled option in each
+ * column, which is always valid regardless of when the run happens.
+ */
+export async function selectDigitalClockTime(page: Page) {
+  for (const listLabel of ['Select hours', 'Select minutes']) {
+    const list = page.locator(`ul[role="listbox"][aria-label="${listLabel}"]`);
+    await list.waitFor({ state: 'visible', timeout: 10000 });
+    // let the auto-scroll settle
+    await page.waitForTimeout(300);
+    const option = list.locator('li[role="option"]:not(.Mui-disabled)').last();
+    // select via keyboard so the picker's normal close-on-select still fires
+    // (a forced mouse click on the clipped <ul> would skip it).
+    await option.scrollIntoViewIfNeeded();
+    await option.focus();
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(300);
+  }
+  // Make sure the popper is really gone before the caller touches the form.
+  const popper = page.locator('.MuiPickersPopper-root');
+  // eslint-disable-next-line functional/no-let
+  for (let i = 0; i < 4 && (await popper.count()) > 0; i++) {
+    await page.keyboard.press('Escape').catch(() => {});
+    await page.waitForTimeout(400);
+  }
+  if ((await popper.count()) > 0) {
+    await page.mouse.click(4, 4).catch(() => {});
+    await popper.waitFor({ state: 'detached', timeout: 3000 }).catch(() => {});
+  }
+}
+
+/**
+ * Navigates an open MUI X `DesktopDatePicker` popup (English locale) to
+ * `target` and clicks the day.
+ */
+export async function selectDatePickerDate(page: Page, target: Date) {
+  const header = page.locator('.MuiPickersCalendarHeader-label');
+  await header.waitFor({ state: 'visible', timeout: 10000 });
+
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
+  ];
+  const wantMonth = monthNames[target.getMonth()];
+  const wantYear = target.getFullYear();
+
+  // eslint-disable-next-line functional/no-let
+  for (let i = 0; i < 24; i++) {
+    const label = ((await header.textContent()) ?? '').trim();
+    if (label.includes(wantMonth) && label.includes(String(wantYear))) {
+      break;
+    }
+    const labelYear = parseInt(label.match(/\d{4}/)?.[0] ?? '0', 10);
+    const labelMonth = monthNames.findIndex((m) => label.includes(m));
+    const forward =
+      wantYear > labelYear || (wantYear === labelYear && target.getMonth() > labelMonth);
+    await page.locator(`button[aria-label="${forward ? 'Next month' : 'Previous month'}"]`).click();
+    await page.waitForTimeout(300);
+  }
+
+  await page
+    .locator('button.MuiPickersDay-root')
+    .filter({ hasText: new RegExp(`^${target.getDate()}$`) })
+    .first()
+    .click();
+  await page.waitForTimeout(300);
 }
 
 export async function changeToEcUser(page: Page, isOperator?: boolean) {

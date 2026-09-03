@@ -13,7 +13,6 @@ import {
     RadioGroup,
     Stack,
     TextField,
-    TextFieldProps,
     Typography,
 } from '@mui/material';
 import { Box } from '@mui/system';
@@ -38,6 +37,7 @@ import { createIban, handleBulkIbanOperations, updateIban } from '../../../servi
 import { isIbanValidityDateEditable, isValidIBANNumber } from '../../../utils/common-utils';
 import { validateIbanCsvData, ValidationResult } from '../../../utils/iban-csv-to-upload-parser';
 import { OperationEnum } from '../../../api/generated/portal/IbanOperation';
+import { ENV } from '../../../utils/env';
 import AddEditIbanFormSectionTitle from './components/AddEditIbanFormSectionTitle';
 
 type Props = {
@@ -48,6 +48,9 @@ type Props = {
 
 const defaultValidityDate = add(new Date(), { days: 1 });
 const defaultDueDate = add(new Date(), { years: 1 });
+
+const getDateFieldHelperText = (touched: unknown, error: unknown) =>
+    touched ? String(error ?? '') : undefined;
 
 const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
     const { t } = useTranslation();
@@ -357,7 +360,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                         <Box sx={inputGroupStyle}>
                             <AddEditIbanFormSectionTitle
                                 title={t('addEditIbanPage.addForm.sections.validityPeriod')}
-                                icon={<CalendarTodayIcon />}
+                                icon={<CalendarTodayIcon/>}
                             />
                             <Grid container spacing={2} mt={1}>
                                 <Grid container item xs={3}>
@@ -367,25 +370,22 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                                                 !isIbanValidityDateEditable(ibanBody) && formAction === IbanFormAction.Edit
                                             }
                                             label={t('addEditIbanPage.addForm.fields.dates.start')}
-                                            inputFormat="dd/MM/yyyy"
+                                            format="dd/MM/yyyy"
                                             value={formik.values.validity_date}
                                             onChange={(e) => formik.setFieldValue('validity_date', e)}
-                                            renderInput={(params: TextFieldProps) => (
-                                                <TextField
-                                                    {...params}
-                                                    inputProps={{
-                                                        ...params.inputProps,
+                                            slotProps={{
+                                                textField: {
+                                                    inputProps: {
                                                         placeholder: 'dd/mm/aaaa',
                                                         'data-testid': 'start-date-test',
-                                                    }}
-                                                    id="validityDate"
-                                                    name="validityDate"
-                                                    type="date"
-                                                    size="small"
-                                                    error={formik.touched.validity_date && Boolean(formik.errors.validity_date)}
-                                                    helperText={formik.touched.validity_date && formik.errors.validity_date}
-                                                />
-                                            )}
+                                                    },
+                                                    id: 'validityDate',
+                                                    name: 'validityDate',
+                                                    size: 'small',
+                                                    error: formik.touched.validity_date && Boolean(formik.errors.validity_date),
+                                                    helperText: getDateFieldHelperText(formik.touched.validity_date, formik.errors.validity_date),
+                                                },
+                                            }}
                                             shouldDisableDate={(date: Date) => date < new Date()}
                                         />
                                     </LocalizationProvider>
@@ -394,25 +394,22 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                                         <DesktopDatePicker
                                             label={t('addEditIbanPage.addForm.fields.dates.end')}
-                                            inputFormat="dd/MM/yyyy"
+                                            format="dd/MM/yyyy"
                                             value={formik.values.due_date}
                                             onChange={(e) => formik.setFieldValue('due_date', e)}
-                                            renderInput={(params: TextFieldProps) => (
-                                                <TextField
-                                                    {...params}
-                                                    inputProps={{
-                                                        ...params.inputProps,
+                                            slotProps={{
+                                                textField: {
+                                                    inputProps: {
                                                         placeholder: 'dd/mm/aaaa',
                                                         'data-testid': 'end-date-test',
-                                                    }}
-                                                    id="dueDate"
-                                                    name="dueDate"
-                                                    type="date"
-                                                    size="small"
-                                                    error={formik.touched.due_date && Boolean(formik.errors.due_date)}
-                                                    helperText={formik.touched.due_date && formik.errors.due_date}
-                                                />
-                                            )}
+                                                    },
+                                                    id: 'dueDate',
+                                                    name: 'dueDate',
+                                                    size: 'small',
+                                                    error: formik.touched.due_date && Boolean(formik.errors.due_date),
+                                                    helperText: getDateFieldHelperText(formik.touched.due_date, formik.errors.due_date),
+                                                },
+                                            }}
                                             shouldDisableDate={(date: Date) => date < formik.values.validity_date}
                                         />
                                     </LocalizationProvider>
@@ -439,6 +436,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                             onFileSelected={handleFileSelect}
                             onFileRemoved={handleFileRemove}
                             dropzoneLabel={t('handleMultiIbanEditIbanPage.csvForm.dropzoneLabel')}
+                            dropzoneButton={t('general.upload')}
                             rejectedLabel={t('handleMultiIbanEditIbanPage.csvForm.rejectedLabel')}
                         />
                     </Box>
@@ -447,7 +445,7 @@ const AddEditIbanForm = ({ goBack, ibanBody, formAction }: Props) => {
                             {t('handleMultiIbanEditIbanPage.helpText')}{' '}
                             <Link
                                 download="esempio_iban.csv"
-                                href={process.env.PUBLIC_URL + '/file/multipleIbanExample.csv'}
+                                href={ENV.PUBLIC_URL + '/file/multipleIbanExample.csv'}
                             >{t('handleMultiIbanEditIbanPage.helpLink')}</Link>
                         </Typography>
                     </Box>

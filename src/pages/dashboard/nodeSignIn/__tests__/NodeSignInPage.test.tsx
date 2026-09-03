@@ -1,5 +1,5 @@
 import React from 'react';
-import {fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 
 import {Provider} from 'react-redux';
 import {createMemoryHistory} from 'history';
@@ -44,40 +44,33 @@ const renderApp = (
 
 test('Test rendering with psp', async () => {
     const {store} = renderApp();
-    await waitFor(() => {
-        store.dispatch({
-            type: 'parties/setPartySelected',
-            payload: pspAdminSignedDirect,
-        });
-
-        store.dispatch({
-            type: 'parties/setSigninData',
-            payload: pspDetails,
-        });
+    store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: pspAdminSignedDirect,
     });
-    expect(screen.getByText(/Marca da bollo digitale/i)).toBeVisible();
+    store.dispatch({
+        type: 'parties/setSigninData',
+        payload: pspDetails,
+    });
+    expect(await screen.findByText(/Marca da bollo digitale/i)).toBeVisible();
 });
 
 test('Test rendering with ec', async () => {
     const {store} = renderApp();
-    await waitFor(() =>
-        store.dispatch({
-            type: 'parties/setPartySelected',
-            payload: ecPartySelected,
-        })
-    );
-    expect(screen.getAllByText(/Domicilio Fiscale/i).length).toBeGreaterThan(0);
+    store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: ecPartySelected,
+    });
+    expect((await screen.findAllByText(/Domicilio Fiscale/i)).length).toBeGreaterThan(0);
 });
 
 test('Test rendering with pt', async () => {
     const {store} = renderApp();
-    await waitFor(() =>
-        store.dispatch({
-            type: 'parties/setPartySelected',
-            payload: PTECSigned,
-        })
-    );
-    expect(screen.getByText(/Che tipologia di ente vuoi intermediare?/i)).toBeVisible();
+    store.dispatch({
+        type: 'parties/setPartySelected',
+        payload: PTECSigned,
+    });
+    expect(await screen.findByText(/Che tipologia di ente vuoi intermediare?/i)).toBeVisible();
     fireEvent.click(screen.getByText(/Esci/i));
 });
 

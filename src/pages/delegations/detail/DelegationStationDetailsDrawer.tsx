@@ -3,7 +3,7 @@ import { Button, Chip, Grid, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';
-import { TFunction } from 'react-i18next';
+import {TFunction} from 'i18next';
 import { generatePath, useHistory } from 'react-router-dom';
 import { CIBrokerStationResource } from '../../../api/generated/portal/CIBrokerStationResource';
 import { PaddedDrawer } from '../../../components/PaddedDrawer';

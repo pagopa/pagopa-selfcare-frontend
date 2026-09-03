@@ -88,6 +88,17 @@ const renderApp = (
     return {store, history, name, businessName, pspCheckbox, ecCheckbox, continueBtn};
 };
 
+const waitForPartyData = async (
+    name: HTMLInputElement,
+    businessName: HTMLInputElement,
+    party: typeof PTUnsigned
+) => {
+    await waitFor(() => {
+        expect(name.value).toBe(party.fiscalCode);
+        expect(businessName.value).toBe(party.description);
+    });
+};
+
 describe('<NodeSignInPTForm />', () => {
     test('Test Render NodeSignInPTForm with PT unsigned', async () => {
         jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
@@ -117,8 +128,7 @@ describe('<NodeSignInPTForm />', () => {
             })
         );
 
-        expect(name.value).toBe(PTUnsigned.fiscalCode);
-        expect(businessName.value).toBe(PTUnsigned.description);
+        await waitForPartyData(name, businessName, PTUnsigned);
         expect(pspCheckbox).not.toBeChecked();
         expect(ecCheckbox).not.toBeChecked();
         expect(continueBtn).toBeDisabled();
@@ -163,8 +173,7 @@ describe('<NodeSignInPTForm />', () => {
             })
         );
 
-        expect(name.value).toBe(PTECPSPSigned.fiscalCode);
-        expect(businessName.value).toBe(PTECPSPSigned.description);
+        await waitForPartyData(name, businessName, PTECPSPSigned);
         expect(pspCheckbox).toBeChecked();
         expect(ecCheckbox).toBeChecked();
         expect(continueBtn).toBeDisabled();
@@ -211,8 +220,7 @@ describe('<NodeSignInPTForm />', () => {
             });
         });
 
-        expect(name.value).toBe(PTPSPSigned.fiscalCode);
-        expect(businessName.value).toBe(PTPSPSigned.description);
+        await waitForPartyData(name, businessName, PTPSPSigned);
 
         expect(pspCheckbox).toBeChecked();
         expect(ecCheckbox).not.toBeChecked();
@@ -272,8 +280,7 @@ describe('<NodeSignInPTForm />', () => {
             });
         });
 
-        expect(name.value).toBe(PTECSigned.fiscalCode);
-        expect(businessName.value).toBe(PTECSigned.description);
+        await waitForPartyData(name, businessName, PTECSigned);
 
         expect(pspCheckbox).not.toBeChecked();
         expect(ecCheckbox).toBeChecked();
@@ -327,8 +334,7 @@ describe('<NodeSignInPTForm />', () => {
             })
         );
 
-        expect(name.value).toBe(PTUnsigned.fiscalCode);
-        expect(businessName.value).toBe(PTUnsigned.description);
+        await waitForPartyData(name, businessName, PTUnsigned);
 
         expect(pspCheckbox).not.toBeChecked();
         expect(ecCheckbox).not.toBeChecked();
@@ -384,8 +390,7 @@ describe('<NodeSignInPTForm />', () => {
             })
         );
 
-        expect(name.value).toBe(PTUnsigned.fiscalCode);
-        expect(businessName.value).toBe(PTUnsigned.description);
+        await waitForPartyData(name, businessName, PTUnsigned);
 
         expect(pspCheckbox).not.toBeChecked();
         expect(ecCheckbox).not.toBeChecked();
@@ -441,8 +446,7 @@ describe('<NodeSignInPTForm />', () => {
             })
         );
 
-        expect(name.value).toBe(PTUnsigned.fiscalCode);
-        expect(businessName.value).toBe(PTUnsigned.description);
+        await waitForPartyData(name, businessName, PTUnsigned);
 
         expect(pspCheckbox).not.toBeChecked();
         expect(ecCheckbox).not.toBeChecked();
@@ -712,7 +716,9 @@ describe('<NodeSignInPTForm />', () => {
             })
         );
 
-        expect(pspCheckbox).toBeDisabled();
-        expect(ecCheckbox).not.toBeDisabled();
+        await waitFor(() => {
+            expect(pspCheckbox).toBeDisabled();
+            expect(ecCheckbox).not.toBeDisabled();
+        });
     });
 });

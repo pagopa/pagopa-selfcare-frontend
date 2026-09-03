@@ -1,7 +1,7 @@
 import {IconButton} from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {GridColDef} from '@mui/x-data-grid';
-import {TFunction} from 'react-i18next';
+import {TFunction} from 'i18next';
 import {renderCell, showCustomHeader} from '../../../../../components/Table/TableUtils';
 import {SubscriptionStateType} from '../../../../../model/CommissionBundle';
 import {getSubscriptionStatusChip} from './CommissionBundleDetailSubscriptionDrawer';

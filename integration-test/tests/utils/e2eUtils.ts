@@ -85,20 +85,28 @@ export async function checkReturnHomepage(page: Page) {
 
 /**
  * MUI X v6.19+ `DesktopTimePicker` renders a `MultiSectionDigitalClock`
- * (columns of hour/minute `option`s) instead of the old analog `.MuiClock`
- * face. Call this right after the "Choose time" button opened the popup.
- * `hours`/`minutes` are 24h numbers (the app uses `ampm={false}`).
+ * (two `listbox` columns "Select hours" / "Select minutes") instead of the old
+ * analog `.MuiClock` face. Call this right after the "Choose time" button
+ * opened the popup.
+ *
+ * The station-maintenance form always passes a `minTime` (it falls back to
+ * `minDateFromToday`), and since the picker only has hour/minute views that
+ * `minTime` disables every hour before the current wall-clock hour. So instead
+ * of asking for a fixed time we pick the LAST still-enabled option in each
+ * column, which is always valid regardless of when the run happens.
  */
-export async function selectDigitalClockTime(page: Page, hours: number, minutes: number) {
-  // The digital clock is portalled; options live in the a11y tree as `option`s
-  // named e.g. "8 hours" / "30 minutes".
-  await page.getByRole('option', { name: `${hours} hours`, exact: true }).waitFor({
-    state: 'visible',
-    timeout: 10000,
-  });
-  await page.getByRole('option', { name: `${hours} hours`, exact: true }).click();
-  await page.getByRole('option', { name: `${minutes} minutes`, exact: true }).click();
-  await page.waitForTimeout(300);
+export async function selectDigitalClockTime(page: Page) {
+  for (const listLabel of ['Select hours', 'Select minutes']) {
+    const list = page.locator(`ul[role="listbox"][aria-label="${listLabel}"]`);
+    await list.waitFor({ state: 'visible', timeout: 10000 });
+    // let the auto-scroll settle
+    await page.waitForTimeout(300);
+    const option = list.locator('li[role="option"]:not(.Mui-disabled)').last();
+    await option.scrollIntoViewIfNeeded();
+    // the <ul> is a scroll container and steals pointer events near its edges
+    await option.click({ force: true });
+    await page.waitForTimeout(300);
+  }
 }
 
 /**

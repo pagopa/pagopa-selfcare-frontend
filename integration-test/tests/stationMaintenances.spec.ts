@@ -38,9 +38,9 @@ test.describe.serial('Station Maintenances flow', () => {
       .filter({ hasText: /^Dalle ore$/ })
       .getByLabel('Choose time')
       .click();
-    await selectDigitalClockTime(page, 8, 0);
+    await selectDigitalClockTime(page);
     await page.getByRole('button', { name: 'Choose time', exact: true }).click();
-    await selectDigitalClockTime(page, 18, 0);
+    await selectDigitalClockTime(page);
 
     await page.getByRole('button', { name: 'Choose date', exact: true }).first().click();
     await selectDatePickerDate(page, startDate);
@@ -69,7 +69,7 @@ test.describe.serial('Station Maintenances flow', () => {
       .filter({ hasText: /^Dalle ore$/ })
       .getByLabel('Choose time')
       .click();
-    await selectDigitalClockTime(page, 9, 0);
+    await selectDigitalClockTime(page);
     await page.waitForTimeout(1000);
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);

@@ -107,6 +107,14 @@ export async function selectDigitalClockTime(page: Page) {
     await option.click({ force: true });
     await page.waitForTimeout(300);
   }
+  // force:true bypasses the picker's close-on-select, so dismiss it ourselves
+  // otherwise the popup keeps covering the rest of the form.
+  await page.keyboard.press('Escape').catch(() => {});
+  await page
+    .locator('.MuiMultiSectionDigitalClock-root, .MuiPickersPopper-root')
+    .last()
+    .waitFor({ state: 'hidden', timeout: 5000 })
+    .catch(() => {});
 }
 
 /**

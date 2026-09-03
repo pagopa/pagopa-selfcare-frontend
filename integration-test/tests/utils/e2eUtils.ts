@@ -102,19 +102,24 @@ export async function selectDigitalClockTime(page: Page) {
     // let the auto-scroll settle
     await page.waitForTimeout(300);
     const option = list.locator('li[role="option"]:not(.Mui-disabled)').last();
+    // select via keyboard so the picker's normal close-on-select still fires
+    // (a forced mouse click on the clipped <ul> would skip it).
     await option.scrollIntoViewIfNeeded();
-    // the <ul> is a scroll container and steals pointer events near its edges
-    await option.click({ force: true });
+    await option.focus();
+    await page.keyboard.press('Enter');
     await page.waitForTimeout(300);
   }
-  // force:true bypasses the picker's close-on-select, so dismiss it ourselves
-  // otherwise the popup keeps covering the rest of the form.
-  await page.keyboard.press('Escape').catch(() => {});
-  await page
-    .locator('.MuiMultiSectionDigitalClock-root, .MuiPickersPopper-root')
-    .last()
-    .waitFor({ state: 'hidden', timeout: 5000 })
-    .catch(() => {});
+  // Make sure the popper is really gone before the caller touches the form.
+  const popper = page.locator('.MuiPickersPopper-root');
+  // eslint-disable-next-line functional/no-let
+  for (let i = 0; i < 4 && (await popper.count()) > 0; i++) {
+    await page.keyboard.press('Escape').catch(() => {});
+    await page.waitForTimeout(400);
+  }
+  if ((await popper.count()) > 0) {
+    await page.mouse.click(4, 4).catch(() => {});
+    await popper.waitFor({ state: 'detached', timeout: 3000 }).catch(() => {});
+  }
 }
 
 /**

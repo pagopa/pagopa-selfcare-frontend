@@ -33,19 +33,19 @@ test.describe.serial('Station Maintenances flow', () => {
     const startDate = add(new Date(), { days: 5 });
     const endDate = add(new Date(), { days: 6 });
 
-    await page
-      .locator('div')
-      .filter({ hasText: /^Dalle ore$/ })
-      .getByLabel('Choose time')
-      .click();
+    const timeButtons = page.locator('button[aria-label^="Choose time"]');
+    const dateButtons = page.locator('button[aria-label^="Choose date"]');
+
+    // "Dalle ore" then "Alle ore"
+    await timeButtons.nth(0).click();
     await selectDigitalClockTime(page);
-    await page.getByRole('button', { name: 'Choose time', exact: true }).click();
+    await timeButtons.nth(1).click();
     await selectDigitalClockTime(page);
 
-    await page.getByRole('button', { name: 'Choose date', exact: true }).first().click();
+    // start date then end date
+    await dateButtons.nth(0).click();
     await selectDatePickerDate(page, startDate);
-
-    await page.getByRole('button', { name: 'Choose date', exact: true }).click();
+    await dateButtons.nth(1).click();
     await selectDatePickerDate(page, endDate);
 
     await page.getByTestId('confirm-button-test').click();
@@ -64,11 +64,7 @@ test.describe.serial('Station Maintenances flow', () => {
     await page.waitForTimeout(2000);
     await page.getByRole('menuitem', { name: 'more' }).click();
     await page.getByTestId('edit-action').click();
-    await page
-      .locator('div')
-      .filter({ hasText: /^Dalle ore$/ })
-      .getByLabel('Choose time')
-      .click();
+    await page.locator('button[aria-label^="Choose time"]').nth(0).click();
     await selectDigitalClockTime(page);
     await page.waitForTimeout(1000);
     await page.getByTestId('confirm-button-test').click();

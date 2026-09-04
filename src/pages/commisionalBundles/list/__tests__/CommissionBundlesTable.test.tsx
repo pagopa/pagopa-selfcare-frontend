@@ -201,4 +201,62 @@ describe('<CommissionBundlesTable />', () => {
     expect(await screen.findByText('Commission Bundle Name')).toBeInTheDocument();
     expect(getCisBundlesSpy).toBeCalledTimes(2);
   });
+
+  test('should normalize paymentType to empty string when missing', async () => {
+    jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
+      orgInfo: {
+        isSigned: true,
+        types: {
+          isPsp: true,
+          isPspBroker: true,
+          isEc: false,
+          isEcBroker: false,
+        },
+      },
+      orgIsBrokerSigned: false,
+      orgIsEcBrokerSigned: false,
+      orgIsEcDirect: false,
+      orgIsEcSigned: false,
+      orgIsPspBrokerSigned: false,
+      orgIsPspDirect: false,
+      orgIsPspSigned: false,
+    });
+
+    const mockBundlesWithoutPaymentType = {
+      bundles: [
+        {
+          ...mockedCommissionBundlePspList.bundles[0],
+          paymentType: undefined,
+        },
+      ],
+      pageInfo: mockedCommissionBundlePspList.pageInfo,
+    };
+
+    mock.mockReturnValueOnce(
+      new Promise((resolve) => resolve(mockBundlesWithoutPaymentType))
+    );
+
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/comm-bundles`]}>
+          <Route path="/comm-bundles">
+            <ThemeProvider theme={theme}>
+              <CommissionBundlesTable
+                filtersValue={''}
+                bundleType={'commissionBundlesPage.globalBundles'}
+              />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
+    });
+ 
+    expect(mock).toHaveBeenCalled();
+    const callArgs = mock.mock.results[0].value;
+   
+  });
 });

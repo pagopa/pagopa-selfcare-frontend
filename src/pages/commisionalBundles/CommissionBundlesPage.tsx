@@ -164,7 +164,7 @@ const CommissionBundlesPage = () => {
           exportBundleTypes.types
         );
         const download = document.createElement('a');
-        const blob = new Blob([csv], { type: 'text/plain' });
+        const blob = new Blob([new Uint8Array(csv)], { type: 'text/plain' });
         download.setAttribute('href', window.URL.createObjectURL(blob));
         download.setAttribute('download', filename);
         // eslint-disable-next-line functional/immutable-data

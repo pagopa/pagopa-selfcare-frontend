@@ -15,10 +15,15 @@ import { mockedStations } from '../../../../services/__mocks__/stationService';
 import { add } from 'date-fns';
 import { formatDateToDDMMYYYY } from '../../../../utils/common-utils';
 
-const mockCreate = jest.spyOn(StationMaintenanceService, 'createStationMaintenance');
-const mockUpdate = jest.spyOn(StationMaintenanceService, 'updateStationMaintenance');
+let mockCreate: jest.SpyInstance;
+let mockUpdate: jest.SpyInstance;
+let mockGetStations: jest.SpyInstance;
 
-const mockGetStations = jest.spyOn(StationService, 'getStations');
+beforeEach(() => {
+  mockCreate = jest.spyOn(StationMaintenanceService, 'createStationMaintenance');
+  mockUpdate = jest.spyOn(StationMaintenanceService, 'updateStationMaintenance');
+  mockGetStations = jest.spyOn(StationService, 'getStations');
+});
 
 const ComponentRender = ({
   action,

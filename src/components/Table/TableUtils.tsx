@@ -39,6 +39,7 @@ export function renderCell({
       }}
     >
       <Typography
+        component="div"
         variant="body2"
         color={color ? color : mainCell ? 'primary' : undefined}
         fontWeight={mainCell ? 'fontWeightBold' : '16px'}

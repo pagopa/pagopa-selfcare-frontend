@@ -14,6 +14,39 @@
     "noUnusedLocals": false,
     "noImplicitReturns": true,
     "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@pagopa/selfcare-common-frontend/components/*": [
+        "node_modules/@pagopa/selfcare-common-frontend/lib/components/*"
+      ],
+      "@pagopa/selfcare-common-frontend/config/*": [
+        "node_modules/@pagopa/selfcare-common-frontend/lib/config/*"
+      ],
+      "@pagopa/selfcare-common-frontend/decorators/*": [
+        "node_modules/@pagopa/selfcare-common-frontend/lib/decorators/*"
+      ],
+      "@pagopa/selfcare-common-frontend/hooks/*": [
+        "node_modules/@pagopa/selfcare-common-frontend/lib/hooks/*"
+      ],
+      "@pagopa/selfcare-common-frontend/locale/*": [
+        "node_modules/@pagopa/selfcare-common-frontend/lib/locale/*"
+      ],
+      "@pagopa/selfcare-common-frontend/model/*": [
+        "node_modules/@pagopa/selfcare-common-frontend/lib/model/*"
+      ],
+      "@pagopa/selfcare-common-frontend/redux/*": [
+        "node_modules/@pagopa/selfcare-common-frontend/lib/redux/*"
+      ],
+      "@pagopa/selfcare-common-frontend/services/*": [
+        "node_modules/@pagopa/selfcare-common-frontend/lib/services/*"
+      ],
+      "@pagopa/selfcare-common-frontend/utils/*": [
+        "node_modules/@pagopa/selfcare-common-frontend/lib/utils/*"
+      ],
+      "@pagopa/selfcare-common-frontend/consentManagementConfigure": [
+        "node_modules/@pagopa/selfcare-common-frontend/lib/consentManagementConfigure"
+      ]
+    },
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -28,7 +61,8 @@
     "resolveJsonModule": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "vite.config.mts"
   ],
   "exclude": [
     "**/__mocks__/**",

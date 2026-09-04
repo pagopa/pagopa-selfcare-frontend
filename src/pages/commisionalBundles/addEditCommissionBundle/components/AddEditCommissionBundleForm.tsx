@@ -160,7 +160,12 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
           setPaymentOptions(paymentTypes);
         }
         if (touchpoints) {
-          setTouchpointList(touchpoints);
+          setTouchpointList({
+            ...touchpoints,
+            touchpoints: [...(touchpoints.touchpoints ?? [])].sort(
+              (a, b) => (a.name === 'ANY' ? -1 : b.name === 'ANY' ? 1 : 0)
+            ),
+          });
         }
         let listBroker = brokerDelegation?.delegation_list
           ? [...brokerDelegation.delegation_list]
@@ -391,9 +396,7 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                       !(paymentOptions?.payment_types && paymentOptions.payment_types.length > 0)
                     }
                   >
-                    <MenuItem key={`payment_types$all`} value={'ANY'}>
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.all')}
-                    </MenuItem>
+                    
                     {paymentOptions?.payment_types &&
                       sortPaymentType(paymentOptions.payment_types)?.map((option: any) => (
                         <MenuItem key={option.payment_type} value={option.payment_type}>
@@ -414,8 +417,14 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                     name={'touchpoint'}
                     label={t('commissionBundlesPage.addEditCommissionBundle.form.touchpoint')}
                     placeholder={t('commissionBundlesPage.addEditCommissionBundle.form.touchpoint')}
-                    size="small"
-                    value={formik.values.touchpoint ?? ''}
+                    size="small"                   
+                    value={
+                        touchpointList?.touchpoints?.some(
+                          (el) => el.name === formik.values.touchpoint
+                        )
+                          ? formik.values.touchpoint
+                          : ''
+                      }
                     onChange={formik.handleChange}
                     error={formik.touched.touchpoint && Boolean(formik.errors.touchpoint)}
                     data-testid="touchpoint-test"
@@ -423,14 +432,12 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                       !(touchpointList?.touchpoints && touchpointList.touchpoints.length > 0)
                     }
                   >
-                    <MenuItem key={`touchpoint$all`} value={'ANY'}>
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.all')}
+                   
+                  {(touchpointList?.touchpoints ?? []).map((el) => (
+                    <MenuItem key={`touchpoint${el.name}`} value={el.name}>
+                      {el.name}
                     </MenuItem>
-                    {touchpointList?.touchpoints?.map((el) => (
-                      <MenuItem key={`touchpoint${el.name}`} value={el.name}>
-                        {el.name}
-                      </MenuItem>
-                    ))}
+                  ))}
                   </Select>
                 </FormControl>
               </Grid>

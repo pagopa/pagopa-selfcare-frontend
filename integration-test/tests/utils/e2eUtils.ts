@@ -39,9 +39,9 @@ export async function login(
     ({ jwt, isOperator }) => {
       const user = {
         uid: '5096e4c6-25a1-45d5-9bdf-2fb974a7c1c8',
-        name: 'Anselmo',
-        surname: 'Sartori',
-        email: isOperator ? 'operatorePagopa@test.it' : 'furiovitale@martino.it',
+        name: isOperator ? 'a.canova' : 'Anselmo',
+        surname: isOperator ? 'canova' : 'Sartori',
+        email: isOperator ? 'a.canova@test.email.it' : 'operatorePagopa@test.it',
       };
       const tos = {
         id: '5096e4c6-25a1-45d5-9bdf-2fb974a7c1c8',

@@ -261,12 +261,12 @@ test.describe.serial('Channel flow', () => {
       if (!isVisible) {
         // `request-edit-button` only renders for a PagoPA operator on a
         // TO_CHECK channel. "Operator" comes purely from the `isOperator`
-        // feature flag the backend returns for operatorePagopa@test.it; when
+        // feature flag the backend returns for a.canova@test.email.it; when
         // it is missing on DEV every operator-only control disappears. That is
         // a DEV environment issue, not a test bug, so skip loudly.
         console.warn(
           '⚠️  SKIPPING "Pagopa Operator request edit": operator UI unavailable on DEV ' +
-            '(isOperator feature flag not active for operatorePagopa@test.it). ' +
+            '(isOperator feature flag not active for a.canova@test.email.it). ' +
             'Re-enable once the DEV feature-flags / operator allowlist is fixed.'
         );
         test.skip();

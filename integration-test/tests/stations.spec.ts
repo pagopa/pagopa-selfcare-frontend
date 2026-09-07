@@ -69,11 +69,11 @@ test.describe.serial('Station flow', () => {
       // The station validation sub-form (which holds password-test) only
       // renders when `userIsPagopaOperator` is true, and that comes purely
       // from the `isOperator` feature flag the backend returns for
-      // operatorePagopa@test.it. When it is missing on DEV this whole flow
+      // a.canova@test.email.it. When it is missing on DEV this whole flow
       // breaks - a DEV environment issue, not a test bug, so skip loudly.
       console.warn(
         '⚠️  SKIPPING "Pagopa Operator approves station": operator UI unavailable on DEV ' +
-          '(isOperator feature flag not active for operatorePagopa@test.it). ' +
+          '(isOperator feature flag not active for a.canova@test.email.it). ' +
           'Re-enable once the DEV feature-flags / operator allowlist is fixed.'
       );
       test.skip();
@@ -120,7 +120,7 @@ test.describe.serial('Station flow', () => {
       console.warn(
         '⚠️  SKIPPING "EC modify already existing station from sync to async": ' +
           'no station row available on DEV (needs an operator-approved station; ' +
-          'isOperator feature flag not active for operatorePagopa@test.it).'
+          'isOperator feature flag not active for a.canova@test.email.it).'
       );
       test.skip();
       return;
@@ -171,7 +171,7 @@ test.describe.serial('Station flow', () => {
       console.warn(
         '⚠️  SKIPPING "Pagopa Operator request edit" (stations): station not found / ' +
           'operator UI unavailable on DEV (isOperator feature flag not active for ' +
-          'operatorePagopa@test.it).'
+          'a.canova@test.email.it).'
       );
       test.skip();
       return;

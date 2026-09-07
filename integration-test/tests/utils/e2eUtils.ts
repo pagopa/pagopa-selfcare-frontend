@@ -41,7 +41,7 @@ export async function login(
         uid: '5096e4c6-25a1-45d5-9bdf-2fb974a7c1c8',
         name: isOperator ? 'a.canova' : 'Anselmo',
         surname: isOperator ? 'canova' : 'Sartori',
-        email: isOperator ? 'a.canova@test.email.it' : 'operatorePagopa@test.it',
+        email: isOperator ? 'a.canova@test.email.it' : 'furiovitale@martino.it',
       };
       const tos = {
         id: '5096e4c6-25a1-45d5-9bdf-2fb974a7c1c8',
@@ -99,13 +99,20 @@ export async function selectDigitalClockTime(page: Page) {
   for (const listLabel of ['Select hours', 'Select minutes']) {
     const list = page.locator(`ul[role="listbox"][aria-label="${listLabel}"]`);
     await list.waitFor({ state: 'visible', timeout: 10000 });
-    // let the auto-scroll settle
+
+    const enabled = list.locator('li[role="option"]:not(.Mui-disabled)');
+    // the minutes column is rendered lazily after the hour is picked, and its
+    // options may all start disabled until minTime is re-evaluated.
+    await enabled.first().waitFor({ state: 'attached', timeout: 10000 }).catch(() => {});
     await page.waitForTimeout(300);
-    const option = list.locator('li[role="option"]:not(.Mui-disabled)').last();
+
+    const option = (await enabled.count()) > 0
+      ? enabled.last()
+      : list.locator('li[role="option"]').last();
     // select via keyboard so the picker's normal close-on-select still fires
     // (a forced mouse click on the clipped <ul> would skip it).
-    await option.scrollIntoViewIfNeeded();
-    await option.focus();
+    await option.scrollIntoViewIfNeeded().catch(() => {});
+    await option.focus().catch(() => {});
     await page.keyboard.press('Enter');
     await page.waitForTimeout(300);
   }

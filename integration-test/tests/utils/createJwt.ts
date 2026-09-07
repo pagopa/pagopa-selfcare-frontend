@@ -17,7 +17,7 @@ export function createJWT(org: ORG_TYPE, isOperator?: boolean): string {
     uid: '5096e4c6-25a1-45d5-9bdf-2fb974a7c1c8',
     name: isOperator ? 'a.canova' : 'Anselmo',
     family_name: isOperator ? 'canova' : 'Sartori',
-    email: isOperator ? 'a.canova@test.email.it' : 'operatorePagopa@test.it',
+    email: isOperator ? 'a.canova@test.email.it' : 'furiovitale@martino.it',
     org_id: org.id,
     org_vat: org.taxCode,
     org_party_role: 'MANAGER',

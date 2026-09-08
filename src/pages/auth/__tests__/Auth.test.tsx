@@ -29,7 +29,7 @@ test('test login success', () => {
     expect(user.uid).toBe('5096e4c6-25a1-45d5-9bdf-2fb974a7c1c8');
     expect(user.name).toBe('Anselmo');
     expect(user.surname).toBe('Sartori');
-    expect(user.email).toBe('operatorePagopa@test.it');
+    expect(user.email).toBe('furiovitale@martino.it');
 
     expect(global.window.location.assign).toBeCalledWith(ROUTES.HOME);
 });

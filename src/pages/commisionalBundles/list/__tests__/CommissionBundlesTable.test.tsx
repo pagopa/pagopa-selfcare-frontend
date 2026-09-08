@@ -232,7 +232,7 @@ describe('<CommissionBundlesTable />', () => {
       pageInfo: mockedCommissionBundlePspList.pageInfo,
     };
 
-    mock.mockReturnValueOnce(
+    getBundleListByPSPSpy.mockReturnValueOnce(
       new Promise((resolve) => resolve(mockBundlesWithoutPaymentType))
     );
 
@@ -255,8 +255,6 @@ describe('<CommissionBundlesTable />', () => {
       expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
     });
  
-    expect(mock).toHaveBeenCalled();
-    const callArgs = mock.mock.results[0].value;
-   
+    expect(getBundleListByPSPSpy).toHaveBeenCalled();
   });
 });

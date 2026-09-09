@@ -377,23 +377,47 @@ const SecuredRoutes = withLogin(
 
 const App = () => {
   useEffect(() => {
-    const syncBodyScrollLock = () => {
+    /* eslint-disable functional/no-let, functional/immutable-data */
+    let rafId: number | null = null;
+    // true only while the overflow lock was applied by this effect, so we never
+    // clear a lock owned by something else (OneTrust banner, TOS wall, ...)
+    let lockedByUs = false;
+
+    const applyBodyScrollLock = () => {
+      rafId = null;
       const hasOpenModal = document.querySelector('.MuiModal-root:not([aria-hidden="true"])');
-      const desiredOverflow = hasOpenModal ? 'hidden' : '';
-      if (document.body.style.overflow !== desiredOverflow) {
-        // eslint-disable-next-line functional/immutable-data
-        document.body.style.overflow = desiredOverflow;
+      if (hasOpenModal) {
+        if (document.body.style.overflow !== 'hidden') {
+          document.body.style.overflow = 'hidden';
+          lockedByUs = true;
+        }
+      } else if (lockedByUs) {
+        document.body.style.overflow = '';
+        lockedByUs = false;
       }
     };
-    const observer = new MutationObserver(syncBodyScrollLock);
+
+    const scheduleSync = () => {
+      if (rafId === null) {
+        rafId = requestAnimationFrame(applyBodyScrollLock);
+      }
+    };
+    /* eslint-enable functional/no-let, functional/immutable-data */
+
+    const observer = new MutationObserver(scheduleSync);
     observer.observe(document.body, {
       childList: true,
       subtree: true,
       attributes: true,
       attributeFilter: ['aria-hidden', 'style', 'class'],
     });
-    syncBodyScrollLock();
-    return () => observer.disconnect();
+    scheduleSync();
+    return () => {
+      observer.disconnect();
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+    };
   }, []);
 
   return (

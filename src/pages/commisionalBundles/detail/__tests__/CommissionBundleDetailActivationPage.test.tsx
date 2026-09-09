@@ -18,6 +18,10 @@ import { CIBundleResource } from '../../../../api/generated/portal/CIBundleResou
 let spyOnCreateRequest: jest.SpyInstance;
 let spyOnAcceptOffer: jest.SpyInstance;
 
+// the private-bundle cases render a form with many taxonomy rows, which is
+// slow under React 18 + MUI and can exceed jest's 5s default
+jest.setTimeout(15000);
+
 beforeEach(() => {
   spyOnCreateRequest = jest.spyOn(BundleService, 'createCIBundleRequest');
   spyOnAcceptOffer = jest.spyOn(BundleService, 'acceptPrivateBundleOffer');

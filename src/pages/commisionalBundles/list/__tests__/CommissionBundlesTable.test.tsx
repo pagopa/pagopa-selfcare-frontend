@@ -232,9 +232,7 @@ describe('<CommissionBundlesTable />', () => {
       pageInfo: mockedCommissionBundlePspList.pageInfo,
     };
 
-    mock.mockReturnValueOnce(
-      new Promise((resolve) => resolve(mockBundlesWithoutPaymentType))
-    );
+    getBundleListByPSPSpy.mockResolvedValue(mockBundlesWithoutPaymentType);
 
     render(
       <Provider store={store}>
@@ -252,11 +250,12 @@ describe('<CommissionBundlesTable />', () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
+      expect(screen.getByTestId('data-grid')).toBeInTheDocument();
     });
- 
-    expect(mock).toHaveBeenCalled();
-    const callArgs = mock.mock.results[0].value;
-   
+
+    expect(getBundleListByPSPSpy).toHaveBeenCalled();
+    // the bundle came back with paymentType undefined: the row still renders,
+    // i.e. CommissionBundlesTable normalized it to '' instead of crashing
+    expect(await screen.findByText('Commission Bundle Name')).toBeInTheDocument();
   });
 });

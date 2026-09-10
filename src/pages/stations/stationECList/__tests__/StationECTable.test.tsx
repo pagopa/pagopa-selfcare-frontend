@@ -11,10 +11,22 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import React from 'react';
 
+import { handleErrors } from '@pagopa/selfcare-common-frontend/services/errorService';
 import { store } from '../../../../redux/store';
 import StationECTable from '../StationECTable';
 import * as stationService from '../../../../services/stationService';
 import { mockedStationECs } from '../../../../services/__mocks__/stationService';
+
+const mockAddError = jest.fn();
+
+jest.mock('@pagopa/selfcare-common-frontend', () => ({
+  useErrorDispatcher: () => mockAddError,
+  useLoading: () => jest.fn(),
+}));
+
+jest.mock('@pagopa/selfcare-common-frontend/services/errorService', () => ({
+  handleErrors: jest.fn(),
+}));
 
 let getECListByStationCodeSpy: jest.SpyInstance;
 let dissociateEcSpy: jest.SpyInstance;
@@ -26,6 +38,9 @@ const originalGetBoundingClientRect =
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  mockAddError.mockClear();
+  (handleErrors as jest.Mock).mockClear();
 
   getECListByStationCodeSpy = jest.spyOn(
     stationService,
@@ -63,16 +78,24 @@ afterEach(() => {
 describe('StationECTable', () => {
   const stationId = 'XPAY_03_ONUS';
 
-  const renderComponent = () =>
+  const renderComponent = (
+    props: {
+      setAlertMessage?: jest.Mock;
+      setNoValidCi?: jest.Mock;
+    } = {}
+  ) => {
+    const setAlertMessage = props.setAlertMessage ?? jest.fn();
+    const setNoValidCi = props.setNoValidCi ?? jest.fn();
+
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/stations/${stationId}`]}>
           <Route path="/stations/:stationId">
             <ThemeProvider theme={theme}>
               <StationECTable
-                setAlertMessage={jest.fn()}
+                setAlertMessage={setAlertMessage}
                 ciNameOrFiscalCodeFilter=""
-                setNoValidCi={jest.fn()}
+                setNoValidCi={setNoValidCi}
               />
             </ThemeProvider>
           </Route>
@@ -80,11 +103,14 @@ describe('StationECTable', () => {
       </Provider>
     );
 
+    return { setAlertMessage, setNoValidCi };
+  };
+
   test('Render StationECTable', async () => {
     getECListByStationCodeSpy.mockResolvedValue(mockedStationECs);
     dissociateEcSpy.mockResolvedValue(undefined);
 
-    renderComponent();
+    const { setAlertMessage } = renderComponent();
 
     expect(await screen.findByTestId('data-grid')).toBeInTheDocument();
 
@@ -110,6 +136,10 @@ describe('StationECTable', () => {
     await waitFor(() => {
       expect(getECListByStationCodeSpy).toHaveBeenCalledTimes(2);
     });
+    await waitFor(() => {
+      expect(setAlertMessage).toHaveBeenCalledTimes(1);
+    });
+    expect(mockAddError).not.toHaveBeenCalled();
   });
 
   test('error getECListByStationCodeSpy', async () => {
@@ -124,6 +154,14 @@ describe('StationECTable', () => {
     await waitFor(() => {
       expect(getECListByStationCodeSpy).toHaveBeenCalledTimes(1);
     });
+    // the rejection is surfaced through the shared error handler, not swallowed
+    await waitFor(() => {
+      expect(handleErrors as jest.Mock).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({ id: 'FETCH_STATIONS_ERROR' }),
+        ])
+      );
+    });
   });
 
   test('error dissociateECfromStation', async () => {
@@ -133,7 +171,7 @@ describe('StationECTable', () => {
       new Error('Error dissociating EC from station')
     );
 
-    renderComponent();
+    const { setAlertMessage } = renderComponent();
 
     expect(await screen.findByTestId('data-grid')).toBeInTheDocument();
 
@@ -155,7 +193,13 @@ describe('StationECTable', () => {
     await waitFor(() => {
       expect(dissociateEcSpy).toHaveBeenCalledTimes(1);
     });
-
+    // on failure the error is dispatched and the success alert is never shown
+    await waitFor(() => {
+      expect(mockAddError).toHaveBeenCalledWith(
+        expect.objectContaining({ id: 'STATION_DELETE_RELATIONSHIP' })
+      );
+    });
+    expect(setAlertMessage).not.toHaveBeenCalled();
     expect(getECListByStationCodeSpy).toHaveBeenCalledTimes(1);
   });
 });

@@ -682,7 +682,6 @@ const HoursInput = ({
           sx: { width: '100%' },
           id: 'hours',
           name: 'hours',
-          type: 'time',
           size: 'small',
           helperText: error,
           error: disabled ? false : Boolean(error),

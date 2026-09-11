@@ -20,7 +20,7 @@ test.describe('Settings Page - Service Consents', () => {
     console.log('🚀 STARTING TEST: Render the list of services');
     await page.getByTestId('settings-nav-test').click();
     await expect(page.getByRole('heading', { name: /Impostazioni/i })).toBeVisible();
-    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(page.getByRole('alert').first()).toBeVisible();
     await expect(page.getByRole('heading', { name: /SEPA Request to Pay/})).toBeVisible();
   });
 

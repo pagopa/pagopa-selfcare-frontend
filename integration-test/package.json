@@ -4,7 +4,9 @@
   "license": "MIT",
   "scripts": {
     "dep": "npx playwright install --with-deps",
-    "test": "npx playwright test --workers=1 --max-failures=1 --project=chromium --headed"
+    "test": "npx playwright test --workers=1 --max-failures=6 --project=chromium",
+    "test:headed": "npx playwright test --workers=1 --max-failures=1 --project=chromium --headed",
+    "report": "npx playwright show-report"
   },
   "devDependencies": {
     "@playwright/test": "^1.44.1",

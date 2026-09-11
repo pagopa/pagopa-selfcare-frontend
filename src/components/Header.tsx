@@ -1,5 +1,5 @@
 import {ProductEntity} from '@pagopa/mui-italia';
-import {PartySwitchItem} from '@pagopa/mui-italia/dist/components/PartySwitch';
+import {PartySwitchItem} from '@pagopa/mui-italia/components/PartySwitch';
 
 import {useTranslation} from 'react-i18next';
 import {User} from '@pagopa/selfcare-common-frontend/model/User';

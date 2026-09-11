@@ -1,5 +1,6 @@
 import { Alert, AlertTitle, CircularProgress, Link, Typography } from '@mui/material';
-import { TFunction, Trans, useTranslation } from "react-i18next";
+import {TFunction} from 'i18next';
+import {Trans, useTranslation} from 'react-i18next';
 import { TitleBox, useErrorDispatcher } from '@pagopa/selfcare-common-frontend';
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useState } from 'react';
@@ -22,7 +23,6 @@ const SettingsPage = () => {
     const addError = useErrorDispatcher();
     const fetchServices = useCallback(async () => {
         if (!selectedParty?.partyId){
-            console.error("Cannot retrieve service consent for selectedParty.partyId:", selectedParty?.partyId);
             return;
         } 
         setIsLoadingList(true);
@@ -108,4 +108,4 @@ const onError = (error:Error, addError:(error: AppError) => void, t: TFunction<"
   });
 };
 
-export default SettingsPage; 
+export default SettingsPage;

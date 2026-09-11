@@ -11,7 +11,8 @@ import {
     Typography,
 } from '@mui/material';
 import { Box, fontSize, margin } from '@mui/system';
-import { TFunction, Trans, useTranslation } from 'react-i18next';
+import {TFunction} from 'i18next';
+import {Trans, useTranslation} from 'react-i18next';
 import LaunchIcon from '@mui/icons-material/Launch';
 import DoDisturbAltIcon from '@mui/icons-material/DoDisturbAlt';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';

@@ -82,24 +82,19 @@ describe('<StationECTable />', () => {
       creditor_institution_info_list: [],
     });
 
-    await waitFor(() => {
-      render(
-        <Provider store={store}>
-          <MemoryRouter initialEntries={[`/stations/${stationId}/ec-list`]}>
-            <Route path="/stations/:stationId/ec-list">
-              <ThemeProvider theme={theme}>
-                <StationECPage />
-              </ThemeProvider>
-            </Route>
-          </MemoryRouter>
-        </Provider>
-      );
-    });
+    render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/stations/${stationId}/ec-list`]}>
+          <Route path="/stations/:stationId/ec-list">
+            <ThemeProvider theme={theme}>
+              <StationECPage />
+            </ThemeProvider>
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
 
-    const alert = screen.getByTestId('alert-warning-test');
-    await waitFor(() => {
-      expect(alert).toBeInTheDocument();
-    });
+    expect(await screen.findByTestId('alert-warning-test')).toBeInTheDocument();
   });
 
   test('render component StationECTable error', async () => {

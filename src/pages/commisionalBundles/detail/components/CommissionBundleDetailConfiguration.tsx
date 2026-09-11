@@ -1,5 +1,6 @@
 import { Divider, Typography, Paper, Grid } from '@mui/material';
-import { useTranslation, TFunction } from 'react-i18next';
+import {TFunction} from 'i18next';
+import {useTranslation} from 'react-i18next';
 import { Box } from '@mui/system';
 import { ButtonNaked } from '@pagopa/mui-italia';
 import { TitleBox } from '@pagopa/selfcare-common-frontend';

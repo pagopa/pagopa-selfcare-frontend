@@ -21,6 +21,7 @@ jobs:
     env:
       ENVIRONMENT: ${{ inputs.environment }}
       BACKEND_REPO: pagopa/pagopa-selfcare-ms-backoffice-backend
+      NODE_VERSION: 22.20.0
 
     steps:
       - name: Checkout
@@ -35,10 +36,10 @@ jobs:
           git status
           git --no-pager branch -vv
 
-      - name: Set Node.js 16.14.0
-        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
+      - name: Set Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
-          node-version: 16.14.0
+          node-version: ${{ env.NODE_VERSION }}
           cache: yarn
 
       - name: Cache Yarn

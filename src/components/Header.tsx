@@ -1,5 +1,5 @@
 import {ProductEntity} from '@pagopa/mui-italia';
-import {PartySwitchItem} from '@pagopa/mui-italia/dist/components/PartySwitch';
+import {PartySwitchItem} from '@pagopa/mui-italia/components/PartySwitch';
 
 import {useTranslation} from 'react-i18next';
 import {User} from '@pagopa/selfcare-common-frontend/model/User';
@@ -61,6 +61,12 @@ const roleKey2LanguageKey = (party: Party): string => {
     }
     if ((party.institutionType === 'PSP' && roleKey === 'admin') || roleKey === 'admin-psp') {
         return roleLabel ?? 'roles.pspAdmin';
+    }
+    if (roleKey === 'admin-pt') {
+        return roleLabel ?? 'roles.ptAdmin';
+    }
+    if (roleKey === 'operator-pt') {
+        return roleLabel ?? 'roles.ptOperator';
     }
     if (roleKey === 'operator') {
         return roleLabel ?? 'roles.ecOperator';

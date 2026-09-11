@@ -41,7 +41,7 @@ const reduceTaxonomies = (taxonomies: Array<PSPBundleTaxonomyWithFromFile>) =>
         return newResult;
     }, {});
 
-// eslint-disable-next-line @typescript-eslint/semi
+// eslint-disable-next-line semi
 const mapTaxonomyToPspBundleTaxonomy = (
     taxonomy: TaxonomyWithFromFile
 ): PSPBundleTaxonomyWithFromFile => ({
@@ -276,7 +276,7 @@ const AddEditCommissionBundleTaxonomies = ({bundleTaxonomies, formik}: Props) =>
                 <Typography variant="body1" mb={1} mt={1}>
                   {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.dontKnowHow')}
                   <a
-                    href={process.env.PUBLIC_URL + '/file/taxonomiesExample.csv'}
+                    href={`${import.meta.env.BASE_URL}file/taxonomiesExample.csv`}
                     download="taxonomiesExample.csv"
                   >
                     {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.downloadExample')}{' '}

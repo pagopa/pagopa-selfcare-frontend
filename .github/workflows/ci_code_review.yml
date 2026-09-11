@@ -18,6 +18,7 @@ on:
 
 env:
   PROJECT_KEY: pagopa_pagopa-selfcare-frontend
+  NODE_VERSION: 22.20.0
 
 permissions:
   id-token: write
@@ -40,10 +41,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set Node.js 16.14.0
+      - name: Set Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
-          node-version: 16.14.0
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
 
       - name: Cache Yarn
@@ -105,7 +106,7 @@ jobs:
           export REACT_APP_URL_FE_SELFCARE='https://dev.selfcare.pagopa.it/dashboard/'
           export REACT_APP_URL_FE_TOKEN_EXCHANGE='https://dev.selfcare.pagopa.it/token-exchange'
 
-          export REACT_APP_URL_API_TOKEN='https://api.dev.platform.pagopa.it/api/token/token'
+          export REACT_APP_URL_API_TOKEN='https://api.dev.platform.pagopa.it/backoffice/selfcare/sso/v1/tokens'
           export REACT_APP_URL_BACKOFFICE='https://api.dev.platform.pagopa.it/backoffice/v1'
           export REACT_APP_PUBLIC_URL='/ui'
           export REACT_APP_URL_BETA='false'
@@ -216,10 +217,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set Node.js 16
-        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
+      - name: Set Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
-          node-version: 16.14.0
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Lint
         run: |
@@ -235,10 +236,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set Node.js 16
-        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
+      - name: Set Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
-          node-version: 16.14.0
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Unit Tests
         run: |

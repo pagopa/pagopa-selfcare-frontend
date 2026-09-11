@@ -248,7 +248,7 @@ function StationAssociateECPage() {
         </Grid>
         <Grid item xs={12} mb={4} display="flex" justifyContent="center">
           <Typography variant="body1" align="center">
-            {t('stationAssociateECPage.subTitle') + ' '}
+            {`${String(t('stationAssociateECPage.subTitle'))} `}
             <Typography component="span" fontWeight={'fontWeightMedium'}>
               {stationId}
             </Typography>

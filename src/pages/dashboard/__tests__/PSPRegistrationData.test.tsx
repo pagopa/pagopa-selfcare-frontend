@@ -91,7 +91,7 @@ test('Test rendering ', async () => {
             payload: pspAdminUnsigned,
         })
     );
-    expect(screen.queryByText('PSP Admin unsigned')).toBeVisible();
+    expect(await screen.findByText('PSP Admin unsigned')).toBeVisible();
 });
 
 test('Test rendering digitalStamp false, bic undefined ', async () => {
@@ -144,7 +144,7 @@ test('Test rendering digitalStamp false, bic undefined ', async () => {
             },
         })
     );
-    expect(screen.queryAllByText('No').length).toBe(1);
+    expect(await screen.findByText('No')).toBeVisible();
 });
 
 test('Test rendering digitalStamp undefined ', async () => {
@@ -195,7 +195,9 @@ test('Test rendering digitalStamp undefined ', async () => {
         })
     );
 
-    expect(screen.queryAllByText('-').length).toBe(3);
+    await waitFor(() => {
+        expect(screen.queryAllByText('-')).toHaveLength(3);
+    });
 });
 
 test('Test onClick modify button', async () => {

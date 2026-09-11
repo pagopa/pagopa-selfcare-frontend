@@ -48,11 +48,13 @@ export default function TableEmptyState({
           justifyContent={'center'}
         >
           <Typography variant="body2">
-            {t(
-              `${componentName}.table.emptyState${
-                translationPathSuffix ? `.${translationPathSuffix}` : ''
-              }`,
-              translationArgs
+            {String(
+              t(
+                `${componentName}.table.emptyState${
+                  translationPathSuffix ? `.${translationPathSuffix}` : ''
+                }`,
+                translationArgs
+              )
             )}
             {linkToRedirect && (
               <Link

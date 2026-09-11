@@ -17,7 +17,6 @@ import {
   Radio,
   RadioGroup,
   TextField,
-  TextFieldProps,
   Typography,
 } from '@mui/material';
 import { ArrowBack, ArrowOutward } from '@mui/icons-material';
@@ -667,30 +666,27 @@ const HoursInput = ({
     <DesktopTimePicker
       label={label}
       views={['hours', 'minutes']}
-      onChange={(value) => setHours(value)}
-      value={hours}
+      onChange={(value: Date | null) => setHours(value ? value.toString() : null)}
+      value={hours ? new Date(hours) : null}
       ampm={false}
       minutesStep={15}
-      minTime={minTime ? minTime : minDateFromToday}
+      minTime={new Date(minTime ? minTime : minDateFromToday)}
       disabled={disabled}
-      renderInput={(params: TextFieldProps) => (
-        <TextField
-          {...params}
-          inputProps={{
-            ...params.inputProps,
+      slotProps={{
+        textField: {
+          inputProps: {
             placeholder: '00:00',
             'data-testid': 'select-hours',
             readOnly: true,
-          }}
-          sx={{ width: '100%' }}
-          id="hours"
-          name="hours"
-          type="time"
-          size="small"
-          helperText={error}
-          error={disabled ? false : Boolean(error)}
-        />
-      )}
+          },
+          sx: { width: '100%' },
+          id: 'hours',
+          name: 'hours',
+          size: 'small',
+          helperText: error,
+          error: disabled ? false : Boolean(error),
+        },
+      }}
     />
   </LocalizationProvider>
 );
@@ -713,30 +709,27 @@ const DatePicker = ({
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DesktopDatePicker
         label={t(`${componentPath}.configuration.hoursSection.ofDay`)}
-        value={date ? new Date(date).toString() : null}
-        inputFormat="dd/MM/yyyy"
-        onChange={(value) => setDate(value)}
-        minDate={minDate ? minDate : minDateFromToday}
-        maxDate={add(new Date(), { months: 6 }).toDateString()}
+        value={date ? new Date(date) : null}
+        format="dd/MM/yyyy"
+        onChange={(value: Date | null) => setDate(value ? value.toString() : null)}
+        minDate={new Date(minDate ? minDate : minDateFromToday)}
+        maxDate={add(new Date(), { months: 6 })}
         disabled={disabled}
-        renderInput={(params: TextFieldProps) => (
-          <TextField
-            {...params}
-            inputProps={{
-              ...params.inputProps,
+        slotProps={{
+          textField: {
+            inputProps: {
               placeholder: 'dd/MM/aaaa',
               'data-testid': 'date-test',
               readOnly: true,
-            }}
-            sx={{ width: '100%' }}
-            id="date"
-            name="date"
-            type="date"
-            size="small"
-            error={disabled ? false : Boolean(error)}
-            helperText={error}
-          />
-        )}
+            },
+            sx: { width: '100%' },
+            id: 'date',
+            name: 'date',
+            size: 'small',
+            error: disabled ? false : Boolean(error),
+            helperText: error,
+          },
+        }}
       />
     </LocalizationProvider>
   );

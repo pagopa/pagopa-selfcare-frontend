@@ -8,14 +8,8 @@ import {
     mockedTaxonomyGroups,
 } from '../../../../../../services/__mocks__/taxonomyService';
 
-const spyOnGetTaxonomiesGroup = jest.spyOn(
-    require('../../../../../../services/taxonomyService.ts'),
-    'getTaxonomyGroups'
-);
-const spyOnGetTaxonomiesListByGroup = jest.spyOn(
-    require('../../../../../../services/taxonomyService.ts'),
-    'getTaxonomies'
-);
+let spyOnGetTaxonomiesGroup: jest.SpyInstance;
+let spyOnGetTaxonomiesListByGroup: jest.SpyInstance;
 const spyOnAddAction = jest.fn();
 
 beforeEach(() => {
@@ -23,6 +17,14 @@ beforeEach(() => {
     });
     jest.spyOn(console, 'warn').mockImplementation(() => {
     });
+    spyOnGetTaxonomiesGroup = jest.spyOn(
+        require('../../../../../../services/taxonomyService.ts'),
+        'getTaxonomyGroups'
+    );
+    spyOnGetTaxonomiesListByGroup = jest.spyOn(
+        require('../../../../../../services/taxonomyService.ts'),
+        'getTaxonomies'
+    );
 });
 
 afterEach(cleanup);

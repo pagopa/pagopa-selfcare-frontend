@@ -22,20 +22,24 @@ import { BundleResource } from '../../../../model/CommissionBundle';
 import { CiBundleStatusEnum } from '../../../../api/generated/portal/CIBundleResource';
 import { add } from 'date-fns';
 
+let deleteMock: jest.SpyInstance;
+let deleteCISubscription: jest.SpyInstance;
+let deleteCIRequest: jest.SpyInstance;
+let rejectCIOffer: jest.SpyInstance;
+
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
+  deleteMock = jest.spyOn(BundleService, 'deletePSPBundle');
+  deleteCISubscription = jest.spyOn(BundleService, 'deleteCIBundleSubscription');
+  deleteCIRequest = jest.spyOn(BundleService, 'deleteCIBundleRequest');
+  rejectCIOffer = jest.spyOn(BundleService, 'rejectPrivateBundleOffer');
 });
 
 afterEach(cleanup);
 jest.mock('../../../../hooks/usePermissions');
 jest.mock('../../../../hooks/useUserRole');
 jest.mock('../../../../hooks/useOrganizationType');
-
-const deleteMock = jest.spyOn(BundleService, 'deletePSPBundle');
-const deleteCISubscription = jest.spyOn(BundleService, 'deleteCIBundleSubscription');
-const deleteCIRequest = jest.spyOn(BundleService, 'deleteCIBundleRequest');
-const rejectCIOffer = jest.spyOn(BundleService, 'rejectPrivateBundleOffer');
 
 const idBundle = 'idBundle';
 

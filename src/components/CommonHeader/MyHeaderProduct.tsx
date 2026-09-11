@@ -3,7 +3,9 @@ import { Avatar, Box, Chip, Container, Stack, TextField, Typography } from '@mui
 import { ProductEntity, ProductSwitch, ProductSwitchItem } from '@pagopa/mui-italia';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { trackEvent } from '@pagopa/selfcare-common-frontend/services/analyticsService';
+import { useErrorDispatcher } from '@pagopa/selfcare-common-frontend';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSigninData } from '../../hooks/useSigninData';
 import { Party } from '../../model/Party';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -48,6 +50,8 @@ const HeaderProduct = ({
   const dispatch = useAppDispatch();
   const updateSigninData = useSigninData();
   const signinData = useAppSelector(partiesSelectors.selectSigninData);
+  const addError = useErrorDispatcher();
+  const { t } = useTranslation();
 
   const updateState = (institution: InstitutionBase) => {
     fetchPartyDetails(institution.id)
@@ -62,9 +66,20 @@ const HeaderProduct = ({
         if (partyResponse) {
           void updateSigninData(partyResponse);
         }
-        setDrawerIsOpened(false);
       })
-      .catch((error) => {});
+      .catch((error) =>
+        addError({
+          id: 'PARTY_SELECTION',
+          blocking: false,
+          error,
+          techDescription: 'An error occurred while retrieving party details',
+          toNotify: true,
+          displayableTitle: t('general.errorTitle'),
+          displayableDescription: t('general.errorDescription'),
+          component: 'Toast',
+        })
+      )
+      .finally(() => setDrawerIsOpened(false));
   };
 
   const ChipComponent = (

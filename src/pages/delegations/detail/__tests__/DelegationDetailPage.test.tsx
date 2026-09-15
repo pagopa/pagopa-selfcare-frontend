@@ -6,7 +6,7 @@ import {Provider} from 'react-redux';
 import {MemoryRouter, Route} from 'react-router-dom';
 import {store} from '../../../../redux/store';
 import DelegationDetailPage from '../DelegationDetailPage';
-import {delegationDetailActions} from '../../../../redux/slices/delegationDetailSlice';
+import {brokersActions} from '../../../../redux/slices/brokersSlide';
 import {mockedCIDelegations} from '../../../../services/__mocks__/brokerService';
 import {useAppDispatch} from '../../../../redux/hooks';
 
@@ -21,7 +21,7 @@ afterEach(cleanup);
 
 const ComponentRender = () => {
     const dispatcher = useAppDispatch();
-    dispatcher(delegationDetailActions.setDelegationDetailState(mockedCIDelegations[0]));
+    dispatcher(brokersActions.setSelectedDelegation(mockedCIDelegations[0]));
 
     return (
         <MemoryRouter initialEntries={[`/delegations-list/detail`]}>

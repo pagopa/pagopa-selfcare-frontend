@@ -30,7 +30,7 @@ import ECSelection from '../../../components/Form/ECSelection';
 import { StationECAssociateActionType } from '../../../model/Station';
 import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { stationCISelectors } from '../../../redux/slices/stationCISlice';
+import { stationsSelectors } from '../../../redux/slices/stationsSlice';
 import ROUTES from '../../../routes';
 import { getAvailableCreditorInstitutionsForStation } from '../../../services/creditorInstitutionService';
 import {
@@ -60,7 +60,7 @@ function StationAssociateECPage() {
   const [loadingCiList, setLoadingCiList] = useState<boolean>(false);
   const [inputCiName, setInputCiName] = useState<string>('');
   const reduxCiRelation: CreditorInstitutionResource = useAppSelectorWithRedirect({
-    selector: stationCISelectors.selectStationCI,
+    selector: stationsSelectors.selectSelectedStationCreditInstitution,
     routeToRedirect: isEditMode
       ? generatePath(ROUTES.STATION_EC_LIST, {
           stationId,
@@ -248,7 +248,7 @@ function StationAssociateECPage() {
         </Grid>
         <Grid item xs={12} mb={4} display="flex" justifyContent="center">
           <Typography variant="body1" align="center">
-            {t('stationAssociateECPage.subTitle') + ' '}
+            {`${String(t('stationAssociateECPage.subTitle'))} `}
             <Typography component="span" fontWeight={'fontWeightMedium'}>
               {stationId}
             </Typography>

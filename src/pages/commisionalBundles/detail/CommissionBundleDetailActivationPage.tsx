@@ -10,7 +10,7 @@ import EuroIcon from '@mui/icons-material/Euro';
 import ROUTES from '../../../routes';
 import GenericModal from '../../../components/Form/GenericModal';
 import { useAppSelector, useAppSelectorWithRedirect } from '../../../redux/hooks';
-import { bundleDetailsSelectors } from '../../../redux/slices/bundleDetailsSlice';
+import { bundlesSelectors } from '../../../redux/slices/bundlesSlice';
 import { LOADING_TASK_COMMISSION_BUNDLE_ACTIVATION } from '../../../utils/constants';
 import {
   acceptPrivateBundleOffer,
@@ -61,7 +61,7 @@ export default function CommissionBundleDetailActivationPage() {
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
   const bundleDetails: CIBundleResource =
     useAppSelectorWithRedirect({
-      selector: bundleDetailsSelectors.selectBundleDetails,
+      selector: bundlesSelectors.selectBundle,
       routeToRedirect: ROUTES.COMMISSION_BUNDLES,
       conditionToRedirect: (el: BundleResource) => el.type === TypeEnum.GLOBAL,
     }) ?? {};

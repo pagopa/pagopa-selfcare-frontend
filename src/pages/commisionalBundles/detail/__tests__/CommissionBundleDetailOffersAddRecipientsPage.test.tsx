@@ -3,7 +3,7 @@ import CommissionBundleDetailOffersAddRecipientsPage from '../CommissionBundleDe
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { useAppDispatch } from '../../../../redux/hooks.ts';
-import { bundleDetailsActions } from '../../../../redux/slices/bundleDetailsSlice.ts';
+import { bundlesActions } from '../../../../redux/slices/bundlesSlice.ts';
 import { mockedCommissionBundlePspDetailPrivate } from '../../../../services/__mocks__/bundleService.ts';
 import { store } from '../../../../redux/store.ts';
 import { Provider } from 'react-redux';
@@ -11,12 +11,17 @@ import * as BundleService from '../../../../services/bundleService';
 import * as CIService from '../../../../services/creditorInstitutionService.ts';
 import { mockedCreditorInstitutionsResource } from '../../../../services/__mocks__/creditorInstitutionService.ts';
 
-const spyOnGetCreditorInstitutions = jest.spyOn(CIService, 'getCreditorInstitutions');
-const spyOnGetAddRecipients = jest.spyOn(BundleService, 'createCIBundleOffers');
+let spyOnGetCreditorInstitutions: jest.SpyInstance;
+let spyOnGetAddRecipients: jest.SpyInstance;
+
+beforeEach(() => {
+  spyOnGetCreditorInstitutions = jest.spyOn(CIService, 'getCreditorInstitutions');
+  spyOnGetAddRecipients = jest.spyOn(BundleService, 'createCIBundleOffers');
+});
 
 const ComponentToRender = () => {
   const dispatcher = useAppDispatch();
-  dispatcher(bundleDetailsActions.setBundleDetailsState(mockedCommissionBundlePspDetailPrivate));
+  dispatcher(bundlesActions.setSelectedBundle(mockedCommissionBundlePspDetailPrivate));
 
   return (
     <MemoryRouter initialEntries={[`/comm-bundles/activate-bundle`]}>

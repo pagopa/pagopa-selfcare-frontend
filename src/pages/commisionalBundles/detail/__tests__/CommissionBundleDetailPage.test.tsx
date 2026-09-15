@@ -13,7 +13,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { store } from '../../../../redux/store';
 import { Provider } from 'react-redux';
 import { useAppDispatch } from '../../../../redux/hooks';
-import { bundleDetailsActions } from '../../../../redux/slices/bundleDetailsSlice';
+import { bundlesActions } from '../../../../redux/slices/bundlesSlice';
 import * as usePermissions from '../../../../hooks/usePermissions';
 import * as useUserRole from '../../../../hooks/useUserRole';
 import * as useOrganizationType from '../../../../hooks/useOrganizationType';
@@ -22,9 +22,18 @@ import { BundleResource } from '../../../../model/CommissionBundle';
 import { CiBundleStatusEnum } from '../../../../api/generated/portal/CIBundleResource';
 import { add } from 'date-fns';
 
+let deleteMock: jest.SpyInstance;
+let deleteCISubscription: jest.SpyInstance;
+let deleteCIRequest: jest.SpyInstance;
+let rejectCIOffer: jest.SpyInstance;
+
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
+  deleteMock = jest.spyOn(BundleService, 'deletePSPBundle');
+  deleteCISubscription = jest.spyOn(BundleService, 'deleteCIBundleSubscription');
+  deleteCIRequest = jest.spyOn(BundleService, 'deleteCIBundleRequest');
+  rejectCIOffer = jest.spyOn(BundleService, 'rejectPrivateBundleOffer');
 });
 
 afterEach(cleanup);
@@ -32,16 +41,11 @@ jest.mock('../../../../hooks/usePermissions');
 jest.mock('../../../../hooks/useUserRole');
 jest.mock('../../../../hooks/useOrganizationType');
 
-const deleteMock = jest.spyOn(BundleService, 'deletePSPBundle');
-const deleteCISubscription = jest.spyOn(BundleService, 'deleteCIBundleSubscription');
-const deleteCIRequest = jest.spyOn(BundleService, 'deleteCIBundleRequest');
-const rejectCIOffer = jest.spyOn(BundleService, 'rejectPrivateBundleOffer');
-
 const idBundle = 'idBundle';
 
 const ComponentToRender = ({ bundle }: { bundle: BundleResource }) => {
   const dispatcher = useAppDispatch();
-  dispatcher(bundleDetailsActions.setBundleDetailsState(bundle));
+  dispatcher(bundlesActions.setSelectedBundle(bundle));
 
   return (
     <MemoryRouter initialEntries={[`/comm-bundles/${idBundle}/`]}>
@@ -64,6 +68,7 @@ describe('<CommissionBundleDetailPage /> for PSP', () => {
       userIsPspDirectAdmin: true,
       userIsPagopaOperator: true,
       userIsAdmin: true,
+      userIsPspOperator: false,
     });
     jest.spyOn(useOrganizationType, 'useOrganizationType').mockReturnValue({
       orgInfo: {
@@ -240,6 +245,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
     userIsPspDirectAdmin: false,
     userIsPagopaOperator: true,
     userIsAdmin: true,
+    userIsPspOperator: false,
   });
 
   describe('Bundle GLOBAL', () => {
@@ -252,6 +258,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
 
       render(
@@ -285,6 +292,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>
@@ -315,6 +323,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>
@@ -355,6 +364,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>
@@ -395,6 +405,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>
@@ -426,6 +437,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>
@@ -460,6 +472,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>
@@ -500,6 +513,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>
@@ -540,6 +554,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>
@@ -570,6 +585,7 @@ describe('<CommissionBundleDetailPage /> for EC', () => {
         userIsPspDirectAdmin: false,
         userIsPagopaOperator: true,
         userIsAdmin: true,
+        userIsPspOperator: false,
       });
       render(
         <Provider store={store}>

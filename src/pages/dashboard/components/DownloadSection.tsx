@@ -15,7 +15,10 @@ type Props = {
 const downloadIbansAsCSV = (brokerCode: string) => {
     exportIbanToCSV(brokerCode)
         .then((response) => {
-            downloadBlobAsCSV(new Blob([response], {type: 'text/csv'}), 'export-ibans.csv');
+            downloadBlobAsCSV(
+                new Blob([new Uint8Array(response)], {type: 'text/csv'}),
+                'export-ibans.csv'
+            );
         })
         .catch((error) => {
             console.error(error);
@@ -25,7 +28,10 @@ const downloadIbansAsCSV = (brokerCode: string) => {
 const downloadCreditorInstitutionsAsCSV = (brokerCode: string) => {
     exportCreditorInstitutionToCSV(brokerCode)
         .then((response) => {
-            downloadBlobAsCSV(new Blob([response], {type: 'text/csv'}), 'export-ci.csv');
+            downloadBlobAsCSV(
+                new Blob([new Uint8Array(response)], {type: 'text/csv'}),
+                'export-ci.csv'
+            );
         })
         .catch((error) => {
             console.error(error);

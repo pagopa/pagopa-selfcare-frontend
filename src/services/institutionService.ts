@@ -2,7 +2,16 @@ import {BackofficeApi} from '../api/BackofficeClient';
 import {DelegationResource} from '../api/generated/portal/DelegationResource';
 import { InstitutionBaseResources } from '../api/generated/portal/InstitutionBaseResources';
 import { InstitutionDetail } from '../api/generated/portal/InstitutionDetail';
-import {getBrokerDelegationMock, getInstitutionDetailMock, getInstitutionsMock} from './__mocks__/institutionsService';
+import { ServiceConsentResponse } from '../api/generated/portal/ServiceConsentResponse';
+import { ConsentEnum } from '../api/generated/portal/ServiceConsentRequest';
+import { ServiceConsentsResponse } from '../api/generated/portal/ServiceConsentsResponse';
+import {
+  getBrokerDelegationMock,
+  getInstitutionDetailMock,
+  getInstitutionsMock,
+  getSaveConsentResponseMock,
+  getServicesConsentsOptOutResponseMock,
+  } from './__mocks__/institutionsService';
 
 export const getBrokerDelegation = (
     institutionId?: string | undefined,
@@ -39,4 +48,26 @@ export const getInstitutionFullDetail = (
     } else {
         return BackofficeApi.institutions.getInstitutionFullDetail(institution_id).then((resources) => resources);
     }
+};
+
+export const saveServiceConsent = (
+    institutionId: string,
+    serviceId: string,
+    consent: ConsentEnum
+): Promise<ServiceConsentResponse> => {
+    if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+      return getSaveConsentResponseMock(consent);
+    } else {
+      return BackofficeApi.institutions.saveServiceConsent(institutionId, serviceId, consent).then((resources) => resources);
+    }
+  };
+
+export const getServiceConsents = (
+  institutionId: string,
+): Promise<ServiceConsentsResponse> => {
+  if (process.env.REACT_APP_API_MOCK_BACKOFFICE === 'true') {
+    return getServicesConsentsOptOutResponseMock();
+  } else {
+    return BackofficeApi.institutions.getServiceConsents(institutionId).then((resources) => resources);
+  }
 };

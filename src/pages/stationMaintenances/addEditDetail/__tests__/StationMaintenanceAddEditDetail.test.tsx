@@ -8,17 +8,22 @@ import * as StationService from '../../../../services/stationService';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { StationMaintenanceActionType } from '../../../../model/StationMaintenance';
 import { useAppDispatch } from '../../../../redux/hooks';
-import { stationMaintenanceActions } from '../../../../redux/slices/stationMaintenancesSlice';
+import { brokersActions } from '../../../../redux/slices/brokersSlide';
 import { StationMaintenanceResource } from '../../../../api/generated/portal/StationMaintenanceResource';
 import { mockStationMaintenance } from '../../../../services/__mocks__/stationMaintenancesService';
 import { mockedStations } from '../../../../services/__mocks__/stationService';
 import { add } from 'date-fns';
 import { formatDateToDDMMYYYY } from '../../../../utils/common-utils';
 
-const mockCreate = jest.spyOn(StationMaintenanceService, 'createStationMaintenance');
-const mockUpdate = jest.spyOn(StationMaintenanceService, 'updateStationMaintenance');
+let mockCreate: jest.SpyInstance;
+let mockUpdate: jest.SpyInstance;
+let mockGetStations: jest.SpyInstance;
 
-const mockGetStations = jest.spyOn(StationService, 'getStations');
+beforeEach(() => {
+  mockCreate = jest.spyOn(StationMaintenanceService, 'createStationMaintenance');
+  mockUpdate = jest.spyOn(StationMaintenanceService, 'updateStationMaintenance');
+  mockGetStations = jest.spyOn(StationService, 'getStations');
+});
 
 const ComponentRender = ({
   action,
@@ -31,7 +36,7 @@ const ComponentRender = ({
 }) => {
   const dispatch = useAppDispatch();
   dispatch(
-    stationMaintenanceActions.setStationMaintenanceState({
+    brokersActions.setStationMaintenanceState({
       hoursRemaining: hoursRemaining ?? 36,
       stationMaintenance:
         action !== StationMaintenanceActionType.CREATE

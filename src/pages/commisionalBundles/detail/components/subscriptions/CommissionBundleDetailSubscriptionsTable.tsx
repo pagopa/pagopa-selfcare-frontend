@@ -17,7 +17,8 @@ import {
 import { GridColDef } from '@mui/x-data-grid';
 import { useErrorDispatcher, useLoading } from '@pagopa/selfcare-common-frontend';
 import { useState, useEffect } from 'react';
-import { useTranslation, TFunction } from 'react-i18next';
+import {TFunction} from 'i18next';
+import {useTranslation} from 'react-i18next';
 import GenericModal from '../../../../../components/Form/GenericModal';
 import TableDataGrid from '../../../../../components/Table/TableDataGrid';
 import TableSearchBar from '../../../../../components/Table/TableSearchBar';

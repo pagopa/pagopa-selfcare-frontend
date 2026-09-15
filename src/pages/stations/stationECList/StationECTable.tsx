@@ -13,7 +13,7 @@ import TableDataGrid from '../../../components/Table/TableDataGrid';
 import { StationECAssociateActionType } from '../../../model/Station';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
-import { stationCIActions } from '../../../redux/slices/stationCISlice';
+import { stationsActions } from '../../../redux/slices/stationsSlice';
 import ROUTES from '../../../routes';
 import { dissociateECfromStation, getECListByStationCode } from '../../../services/stationService';
 import {
@@ -53,7 +53,7 @@ export default function StationECTable({
   const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
 
   function handleOnClick(ci: CreditorInstitutionResource) {
-    dispatcher(stationCIActions.setStationCIState(ci));
+    dispatcher(stationsActions.setSelectedCreditInstitution(ci));
 
     history.push(
       generatePath(ROUTES.STATION_ASSOCIATE_EC, {

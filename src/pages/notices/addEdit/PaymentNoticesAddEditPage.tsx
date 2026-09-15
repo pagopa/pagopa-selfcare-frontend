@@ -12,9 +12,9 @@ import {useAppSelector} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {
     initialState,
-    institutionsDataDetailsActions,
-    institutionsDataDetailsSelectors
-} from '../../../redux/slices/institutionsDataDetailsSlice';
+    paymentsActions,
+    paymentNoticeTemplateSelectors
+} from '../../../redux/slices/paymentsSlice';
 import {InstitutionUploadData} from '../../../api/generated/portal/InstitutionUploadData';
 import {getInstitutionData} from '../../../services/noticesService';
 import {store} from '../../../redux/store';
@@ -37,21 +37,23 @@ const PaymentNoticesAddEditPage = () => {
         setLoadingOverlay(status);
     };
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
-    const [institutionUploadData, setInstitutionUploadData] = useState<InstitutionUploadData | null>(useAppSelector(institutionsDataDetailsSelectors
-        .selectInstitutionsDataDetailsDetails));
+    const [institutionUploadData, setInstitutionUploadData] = useState<InstitutionUploadData | null>(useAppSelector(paymentNoticeTemplateSelectors
+        .selectPaymentNoticeTemplate));
+
+    const { paymentNoticeTemplate } = initialState;
 
     useEffect(() => {
         if (institutionUploadData && institutionUploadData?.cbill !== null && (
             selectedParty?.fiscalCode !== institutionUploadData?.taxCode
         )) {
             setLoadingStatus(true);
-            store.dispatch(institutionsDataDetailsActions
-                    .setInstitutionDataDetailsState(initialState));
+            store.dispatch(paymentsActions
+                    .setPaymentsNoticeTemplate(paymentNoticeTemplate));
             getInstitutionData(selectedParty?.fiscalCode as string)
                 .then(async (r) => {
                     setInstitutionUploadData(r ? r : null);
-                    store.dispatch(institutionsDataDetailsActions
-                            .setInstitutionDataDetailsState(r ? r : initialState));
+                    store.dispatch(paymentsActions
+                            .setPaymentsNoticeTemplate(r ? r : paymentNoticeTemplate));
                 })
                 .catch((err) => {
                     const problemJson = extractProblemJson(err);

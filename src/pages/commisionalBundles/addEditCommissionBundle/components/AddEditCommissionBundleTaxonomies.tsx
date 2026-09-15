@@ -41,7 +41,7 @@ const reduceTaxonomies = (taxonomies: Array<PSPBundleTaxonomyWithFromFile>) =>
         return newResult;
     }, {});
 
-// eslint-disable-next-line @typescript-eslint/semi
+// eslint-disable-next-line semi
 const mapTaxonomyToPspBundleTaxonomy = (
     taxonomy: TaxonomyWithFromFile
 ): PSPBundleTaxonomyWithFromFile => ({
@@ -146,20 +146,12 @@ const AddEditCommissionBundleTaxonomies = ({bundleTaxonomies, formik}: Props) =>
         ];
         setTaxonomies(newTaxonomyList);
         updateTableData(newTaxonomyList);
-        addTransferCategoryItem(newTaxonomyList.map((taxonomy) => taxonomy.specificBuiltInData ?? ''));
+        formik.setFieldValue('transferCategoryList', newTaxonomyList.map((taxonomy) => taxonomy.specificBuiltInData ?? ''));
     };
 
     const updateTableData = (taxonomies: Array<PSPBundleTaxonomyWithFromFile>) => {
         setTaxonomyTableData(reduceTaxonomies(taxonomies));
     };
-
-    const addTransferCategoryItem = (transferCategoryList: Array<string>) => {
-        if (formik.values.transferCategoryList && transferCategoryList) {
-            const newArr = [...formik.values.transferCategoryList, ...transferCategoryList];
-            formik.setFieldValue('transferCategoryList', newArr);
-        }
-    };
-
     const deleteTransferCategoryItem = (elementsToFilter: Array<string | undefined>) => {
         if (formik.values.transferCategoryList && elementsToFilter) {
             const newArr = formik.values.transferCategoryList.filter(
@@ -284,7 +276,7 @@ const AddEditCommissionBundleTaxonomies = ({bundleTaxonomies, formik}: Props) =>
                 <Typography variant="body1" mb={1} mt={1}>
                   {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.dontKnowHow')}
                   <a
-                    href={process.env.PUBLIC_URL + '/file/taxonomiesExample.csv'}
+                    href={`${import.meta.env.BASE_URL}file/taxonomiesExample.csv`}
                     download="taxonomiesExample.csv"
                   >
                     {t('commissionBundlesPage.addEditCommissionBundle.addTaxonomies.downloadExample')}{' '}

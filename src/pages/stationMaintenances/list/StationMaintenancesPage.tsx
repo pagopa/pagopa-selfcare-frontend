@@ -14,7 +14,7 @@ import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { partiesSelectors } from '../../../redux/slices/partiesSlice';
 import { getBrokerMaintenancesSummary } from '../../../services/stationMaintenancesService';
 import { LOADING_TASK_STATION_MAINTENANCES_HOURS_SUMMARY } from '../../../utils/constants';
-import { stationMaintenanceActions } from '../../../redux/slices/stationMaintenancesSlice';
+import { brokersActions } from '../../../redux/slices/brokersSlide';
 import SuccessAlertLayout from '../../../components/Layout/SuccessAlertLayout';
 import StationMaintenancesTable from './StationMaintenancesTable';
 import StationMaintenancesHoursSummary from './StationMaintenancesHoursSummary';
@@ -49,7 +49,7 @@ export default function StationMaintenancesPage() {
       .then((res: MaintenanceHoursSummaryResource) => {
         if (res) {
           dispatcher(
-            stationMaintenanceActions.setStationMaintenanceState({
+            brokersActions.setStationMaintenanceState({
               hoursRemaining: fromHoursFormattedToNumbers(res.remaining_hours),
               stationMaintenance: undefined,
             })

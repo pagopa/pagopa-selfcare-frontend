@@ -8,7 +8,7 @@ import React from 'react';
 import AddEditCommissionBundlePage from '../../addEditCommissionBundle/AddEditCommissionBundlePage';
 import {FormAction} from '../../../../model/CommissionBundle';
 import {useAppDispatch} from '../../../../redux/hooks';
-import {bundleDetailsActions} from '../../../../redux/slices/bundleDetailsSlice';
+import {bundlesActions} from '../../../../redux/slices/bundlesSlice';
 import {
     mockedCommissionBundlePspDetailGlobal,
     mockedCommissionBundlePspDetailPrivate,
@@ -48,7 +48,7 @@ const RenderComponent = ({
     bundle: PSPBundleResource;
 }) => {
     const dispatcher = useAppDispatch();
-    dispatcher(bundleDetailsActions.setBundleDetailsState(bundle));
+    dispatcher(bundlesActions.setSelectedBundle(bundle));
     return (
         <MemoryRouter initialEntries={[initialEntries]}>
             <Route path={path}>
@@ -320,7 +320,7 @@ describe('<AddEditCommissionBundlePage />', () => {
         let bundle = {
             ...mockedCommissionBundlePspDetailGlobal,
             touchpoint: 'ANY',
-            paymentType: 'ANY',
+            paymentType: 'CP',
             bundleTaxonomies: [],
         };
         render(
@@ -370,7 +370,7 @@ describe('<AddEditCommissionBundlePage />', () => {
             abi: '',
             pspBusinessName: '',
             touchpoint: undefined,
-            paymentType: undefined,
+            paymentType: 'CP',
             transferCategoryList: undefined,
         };
         delete requestBundle.idBundle;
@@ -382,5 +382,44 @@ describe('<AddEditCommissionBundlePage />', () => {
         await waitFor(() => {
             expect(spyOnUpdateBundle).toHaveBeenCalledWith('', mockedCommissionBundlePspDetailGlobal.idBundle, requestBundle);
         });
+    });
+    
+    test('PaymentType dropdown does NOT show "ALL" (ANY) option', async () => {
+        spyOnUpdateBundle.mockReturnValueOnce(new Promise<void>((resolve) => resolve()));
+        const name = 'someNameId';
+        const initialEntries = `/comm-bundles/${name}/${FormAction.Edit}`;
+        const path = '/comm-bundles/:bundleId/:actionId';
+        
+        const bundle = {
+            ...mockedCommissionBundlePspDetailGlobal,
+            touchpoint: 'ANY',
+            paymentType: 'CP',
+            bundleTaxonomies: [],
+        };
+
+        render(
+            <Provider store={store}>
+                <RenderComponent
+                    initialEntries={initialEntries}
+                    path={path}
+                    bundle={bundle}
+                />
+            </Provider>
+        );
+
+        let bundleFormDiv;
+        await waitFor(() => {
+            bundleFormDiv = screen.queryByTestId('bundle-form-div');
+            expect(bundleFormDiv).toBeInTheDocument();
+        });
+
+        const paymentTypeDropdown = screen.getByLabelText(
+            'commissionBundlesPage.addEditCommissionBundle.form.paymentType'
+        );
+        fireEvent.mouseDown(paymentTypeDropdown);
+
+        expect(
+            screen.queryByText('commissionBundlesPage.addEditCommissionBundle.form.all')
+        ).not.toBeInTheDocument();
     });
 });

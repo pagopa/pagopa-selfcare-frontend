@@ -2,12 +2,12 @@ import {InfoOutlined as InfoOutlinedIcon} from '@mui/icons-material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Tooltip from '@mui/material/Tooltip';
 import {GridColDef} from '@mui/x-data-grid';
-import {TFunction} from 'react-i18next';
+import {TFunction} from 'i18next';
 import {CIBrokerDelegationResource} from '../../../api/generated/portal/CIBrokerDelegationResource';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import {renderCell, showCustomHeader} from '../../../components/Table/TableUtils';
 import {useAppDispatch} from '../../../redux/hooks';
-import {delegationDetailActions} from '../../../redux/slices/delegationDetailSlice';
+import {brokersActions} from '../../../redux/slices/brokersSlide';
 import ROUTES from '../../../routes';
 
 export function buildColumnDefs(t: TFunction<'translation', undefined>) {
@@ -105,7 +105,7 @@ export const GridLinkActionDelegationDetails = ({
             {delegation.is_institution_signed_in ? (
                 <GridLinkAction
                     label="Gestisci intermediario"
-                    onClick={() => dispatcher(delegationDetailActions.setDelegationDetailState(delegation))}
+                    onClick={() => dispatcher(brokersActions.setSelectedDelegation(delegation))}
                     data-testid='column-go-to-delegation-detail'
                     to={ROUTES.DELEGATIONS_DETAIL}
                     icon={<ChevronRightIcon color="primary"/>}

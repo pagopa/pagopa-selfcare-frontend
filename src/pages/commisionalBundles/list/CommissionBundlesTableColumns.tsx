@@ -2,12 +2,13 @@
 import { FormControl, MenuItem, Select } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { TFunction, useTranslation } from 'react-i18next';
+import {TFunction} from 'i18next';
+import {useTranslation} from 'react-i18next';
 import { generatePath } from 'react-router-dom';
 import { Euro } from '@mui/icons-material';
 import GridLinkAction from '../../../components/Table/GridLinkAction';
 import ROUTES from '../../../routes';
-import { bundleDetailsActions } from '../../../redux/slices/bundleDetailsSlice';
+import { bundlesActions } from '../../../redux/slices/bundlesSlice';
 import { useAppDispatch } from '../../../redux/hooks';
 import {
   dateDifferenceInDays,
@@ -174,7 +175,7 @@ export const GridLinkActionBundleDetails = ({ bundle }: { bundle: BundleResource
   return (
     <GridLinkAction
       label="Gestisci pacchetto"
-      onClick={() => dispatcher(bundleDetailsActions.setBundleDetailsState(bundle))}
+      onClick={() => dispatcher(bundlesActions.setSelectedBundle(bundle))}
       to={generatePath(ROUTES.COMMISSION_BUNDLES_DETAIL, { bundleId: bundle.idBundle })}
       icon={<ChevronRightIcon color="primary" />}
     />

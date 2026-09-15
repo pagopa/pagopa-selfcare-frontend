@@ -61,6 +61,7 @@ import routes from './routes';
 import { getMaintenanceMessage } from './services/maintenanceService';
 import { rewriteLinks } from './utils/onetrust-utils';
 import QuicksightDashboardPage from './pages/quicksight/QuicksightDashboardPage';
+import SettingsPage from './pages/settings/SettingsPage';
 
 const SecuredRoutes = withLogin(
   withFeatureFlags(
@@ -350,6 +351,17 @@ const SecuredRoutes = withLogin(
                     <QuicksightDashboardPage />
                   </ProtectedRoute>
                 </Route>
+                
+              <Route path={routes.SETTINGS} exact={true}>
+                  <ProtectedRoute
+                    permission="settings"
+                    flagValue="settings-section"
+                    orgCheckCondition={(orgInfo) => orgInfo.types.isEcIPA}
+                  >
+                    <SettingsPage />
+                  </ProtectedRoute>
+                </Route>
+
 
                 <Route path="*">
                   <Redirect to={routes.HOME} />
@@ -363,39 +375,85 @@ const SecuredRoutes = withLogin(
   )
 );
 
-const App = () => (
-  <ErrorBoundary>
-    <LoadingOverlay />
-    <UserNotifyHandle />
-    <UnloadEventHandler />
-    <Switch>
-      <Route path={routes.AUTH}>
-        <Auth />
-      </Route>
-      <Route path={routes.TOS} exact={true}>
-        <TosAndPrivacy
-          html={tosJson.html}
-          waitForElementCondition={'.otnotice-content'}
-          waitForElementFunction={() => {
-            rewriteLinks(routes.TOS, '.otnotice-content a');
-          }}
-        />
-      </Route>
+const App = () => {
+  useEffect(() => {
+    /* eslint-disable functional/no-let, functional/immutable-data */
+    let rafId: number | null = null;
+    // true only while the overflow lock was applied by this effect, so we never
+    // clear a lock owned by something else (OneTrust banner, TOS wall, ...)
+    let lockedByUs = false;
 
-      <Route path={routes.PRIVACY} exact={true}>
-        <TosAndPrivacy
-          html={privacyJson.html}
-          waitForElementCondition={'.otnotice-content'}
-          waitForElementFunction={() => {
-            rewriteLinks(routes.PRIVACY, '.otnotice-content a');
-          }}
-        />
-      </Route>
-      <Route path="*">
-        <SecuredRoutes />
-      </Route>
-    </Switch>
-  </ErrorBoundary>
-);
+    const applyBodyScrollLock = () => {
+      rafId = null;
+      const hasOpenModal = document.querySelector('.MuiModal-root:not([aria-hidden="true"])');
+      if (hasOpenModal) {
+        if (document.body.style.overflow !== 'hidden') {
+          document.body.style.overflow = 'hidden';
+          lockedByUs = true;
+        }
+      } else if (lockedByUs) {
+        document.body.style.overflow = '';
+        lockedByUs = false;
+      }
+    };
+
+    const scheduleSync = () => {
+      if (rafId === null) {
+        rafId = requestAnimationFrame(applyBodyScrollLock);
+      }
+    };
+    /* eslint-enable functional/no-let, functional/immutable-data */
+
+    const observer = new MutationObserver(scheduleSync);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['aria-hidden', 'style', 'class'],
+    });
+    scheduleSync();
+    return () => {
+      observer.disconnect();
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+    };
+  }, []);
+
+  return (
+    <ErrorBoundary>
+      <LoadingOverlay />
+      <UserNotifyHandle />
+      <UnloadEventHandler />
+      <Switch>
+        <Route path={routes.AUTH}>
+          <Auth />
+        </Route>
+        <Route path={routes.TOS} exact={true}>
+          <TosAndPrivacy
+            html={tosJson.html}
+            waitForElementCondition={'.otnotice-content'}
+            waitForElementFunction={() => {
+              rewriteLinks(routes.TOS, '.otnotice-content a');
+            }}
+          />
+        </Route>
+
+        <Route path={routes.PRIVACY} exact={true}>
+          <TosAndPrivacy
+            html={privacyJson.html}
+            waitForElementCondition={'.otnotice-content'}
+            waitForElementFunction={() => {
+              rewriteLinks(routes.PRIVACY, '.otnotice-content a');
+            }}
+          />
+        </Route>
+        <Route path="*">
+          <SecuredRoutes />
+        </Route>
+      </Switch>
+    </ErrorBoundary>
+  );
+};
 
 export default App;

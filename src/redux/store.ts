@@ -5,13 +5,11 @@ import {userReducer} from '@pagopa/selfcare-common-frontend/redux/slices/userSli
 import {LOG_REDUX_ACTIONS} from '../utils/constants';
 import {partiesReducer} from './slices/partiesSlice';
 import {featureFlagsReducer} from './slices/featureFlagsSlice';
-import {bundleDetailsReducer} from './slices/bundleDetailsSlice';
-import {delegationDetailReducer} from './slices/delegationDetailSlice';
-import {institutionsDataDetailsReducer} from './slices/institutionsDataDetailsSlice';
-import { stationCIReducer } from './slices/stationCISlice';
-import { stationMaintenanceReducer } from './slices/stationMaintenancesSlice';
-
-const additionalMiddlewares = [LOG_REDUX_ACTIONS ? logger : undefined];
+import {bundlesReducer} from './slices/bundlesSlice';
+import {paymentsReducer} from './slices/paymentsSlice';
+import { stationsReducer } from './slices/stationsSlice';
+import { brokersReducer } from './slices/brokersSlide';
+import { channelsReducer } from './slices/channelsSlice';
 
 export const createStore = () =>
     configureStore({
@@ -20,17 +18,16 @@ export const createStore = () =>
             user: userReducer,
             appState: appStateReducer,
             featureFlags: featureFlagsReducer,
-            bundleDetails: bundleDetailsReducer,
-            delegationDetail: delegationDetailReducer,
-            institutionDataDetails: institutionsDataDetailsReducer,
-            stationCI: stationCIReducer,
-            stationMaintenance: stationMaintenanceReducer
+            bundles: bundlesReducer,
+            payments: paymentsReducer,
+            stations: stationsReducer,
+            brokers: brokersReducer,
+            channels: channelsReducer,
         },
-        middleware: (getDefaultMiddleware) =>
-            additionalMiddlewares.reduce(
-                (array, middleware) => (middleware ? array.concat(middleware) : array),
-                getDefaultMiddleware({serializableCheck: false})
-            ),
+        middleware: (getDefaultMiddleware) => {
+            const defaultMiddleware = getDefaultMiddleware({serializableCheck: false});
+            return LOG_REDUX_ACTIONS ? defaultMiddleware.concat(logger) : defaultMiddleware;
+        },
     });
 
 export const store = createStore();

@@ -4,7 +4,8 @@ import {useFormik} from 'formik';
 import {add} from 'date-fns';
 import {Box, Breadcrumbs, Button, Grid, Stack, Step, StepLabel, Stepper, Typography,} from '@mui/material';
 import {ButtonNaked} from '@pagopa/mui-italia';
-import {TFunction, useTranslation} from 'react-i18next';
+import {TFunction} from 'i18next';
+import {useTranslation} from 'react-i18next';
 import {TitleBox, useErrorDispatcher, useLoading} from '@pagopa/selfcare-common-frontend';
 import {useHistory, useParams} from 'react-router-dom';
 import {useState} from 'react';
@@ -15,7 +16,7 @@ import ROUTES from '../../../routes';
 import {useAppSelector, useAppSelectorWithRedirect} from '../../../redux/hooks';
 import {partiesSelectors} from '../../../redux/slices/partiesSlice';
 import {FormAction} from '../../../model/CommissionBundle';
-import {bundleDetailsSelectors} from '../../../redux/slices/bundleDetailsSlice';
+import {bundlesSelectors} from '../../../redux/slices/bundlesSlice';
 import {createBundle, updatePSPBundle} from '../../../services/bundleService';
 import {isValidArray, removeDateZoneInfo} from '../../../utils/common-utils';
 import {extractProblemJson} from '../../../utils/client-utils';
@@ -48,7 +49,7 @@ const toNewFormData = (
   minPaymentAmount: data?.minPaymentAmount ?? 0,
   name: data?.name ?? '',
   paymentAmount: data?.paymentAmount ?? 0,
-  paymentType: data?.paymentType ?? 'ANY',
+  paymentType: data?.paymentType ?? '',
   touchpoint: data?.touchpoint ?? 'ANY',
   transferCategoryList: data?.bundleTaxonomies
     ? data.bundleTaxonomies.map((item) => item?.specificBuiltInData ?? '')
@@ -101,6 +102,9 @@ const validate = (
               ? t(`${componentPath}.validationMessage.moreThanMaxPayment`)
               : undefined,
         name: !values.name ? t(`${componentPath}.validationMessage.requiredField`) : undefined,
+        paymentType: !values.paymentType
+          ? t(`${componentPath}.validationMessage.requiredField`)
+          : undefined,
         paymentAmount:
           !values.paymentAmount && values.paymentAmount !== 0
             ? t(`${componentPath}.validationMessage.requiredField`)
@@ -130,6 +134,7 @@ const validate = (
 const enableSubmit = (values: BundleRequest) =>
   values.type !== undefined &&
   values.name !== '' &&
+  Boolean(values.paymentType) &&  
   (values.minPaymentAmount ?? 0) >= 0 &&
   !Number.isNaN(values.minPaymentAmount) &&
   values.maxPaymentAmount !== 0 &&
@@ -158,7 +163,7 @@ const AddEditCommissionBundlePage = () => {
   const textType = isEdit ? 'Edit' : 'Create';
   const bundleDetails: PSPBundleResource =
     useAppSelectorWithRedirect({
-      selector: bundleDetailsSelectors.selectBundleDetails,
+      selector: bundlesSelectors.selectBundle,
       routeToRedirect: isEdit ? ROUTES.COMMISSION_BUNDLES : undefined,
     }) ?? {};
   const bundleId: string = bundleDetails?.idBundle ?? '';
@@ -182,7 +187,7 @@ const AddEditCommissionBundlePage = () => {
       validityDateFrom: removeDateZoneInfo(body.validityDateFrom),
       validityDateTo: removeDateZoneInfo(body.validityDateTo),
       touchpoint: body.touchpoint !== 'ANY' ? body.touchpoint : undefined,
-      paymentType: body.paymentType !== 'ANY' ? body.paymentType : undefined,
+      paymentType: body.paymentType ? body.paymentType : undefined,
       transferCategoryList: isValidArray(body.transferCategoryList)
         ? body.transferCategoryList
         : undefined,

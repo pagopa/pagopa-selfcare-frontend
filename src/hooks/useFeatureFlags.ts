@@ -23,5 +23,5 @@ export const useFeatureFlags = (): (() => Promise<FeatureFlags>) => {
 
 export const useFlagValue = (name: string): boolean => {
     const featureFlags = useAppSelector(featureFlagsSelectors.selectFeatureFlags);
-    return featureFlags ? featureFlags![name] : false;
+    return featureFlags ? featureFlags[name] : false;
 };

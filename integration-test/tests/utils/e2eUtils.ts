@@ -102,15 +102,20 @@ export async function selectDigitalClockTime(page: Page) {
 
     const enabled = list.locator('li[role="option"]:not(.Mui-disabled)');
     // the minutes column is rendered lazily after the hour is picked, and its
-    // options may all start disabled until minTime is re-evaluated.
+    // options may all start disabled until minTime is re-evaluated, so poll
+    // for a bit instead of giving up after a single fixed wait.
     await enabled.first().waitFor({ state: 'attached', timeout: 10000 }).catch(() => {});
-    await page.waitForTimeout(300);
-
-    const enabledCount = await enabled.count();
+    // eslint-disable-next-line functional/no-let
+    let enabledCount = await enabled.count();
+    // eslint-disable-next-line functional/no-let
+    for (let i = 0; i < 10 && enabledCount === 0; i++) {
+      await page.waitForTimeout(300);
+      enabledCount = await enabled.count();
+    }
     if (enabledCount === 0) {
       throw new Error(
         `selectDigitalClockTime: no enabled options in "${listLabel}" column ` +
-          `(likely running too close to midnight for minTime to leave a valid slot).`
+          `after waiting for minTime to be re-evaluated (possibly running too close to midnight).`
       );
     }
     const option = enabled.last();

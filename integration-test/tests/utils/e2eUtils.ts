@@ -78,9 +78,9 @@ export async function checkReturnHomepage(page: Page) {
     // Fall back to a hard reload so the next test starts from a known state.
   }
 
-  await page.goto(feURL, { waitUntil: 'load' }).catch(() => {});
-  await page.waitForTimeout(2000);
-  await menu.click({ timeout: 20000 }).catch(() => {});
+  await page.goto(feURL, { waitUntil: 'load' });
+  await menu.waitFor({ state: 'visible', timeout: 15000 });
+  await menu.click({ timeout: 15000 });
 }
 
 /**
@@ -106,9 +106,14 @@ export async function selectDigitalClockTime(page: Page) {
     await enabled.first().waitFor({ state: 'attached', timeout: 10000 }).catch(() => {});
     await page.waitForTimeout(300);
 
-    const option = (await enabled.count()) > 0
-      ? enabled.last()
-      : list.locator('li[role="option"]').last();
+    const enabledCount = await enabled.count();
+    if (enabledCount === 0) {
+      throw new Error(
+        `selectDigitalClockTime: no enabled options in "${listLabel}" column ` +
+          `(likely running too close to midnight for minTime to leave a valid slot).`
+      );
+    }
+    const option = enabled.last();
     // select via keyboard so the picker's normal close-on-select still fires
     // (a forced mouse click on the clipped <ul> would skip it).
     await option.scrollIntoViewIfNeeded().catch(() => {});

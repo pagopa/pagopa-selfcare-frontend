@@ -74,6 +74,9 @@ const CommissionBundlesTable = ({ filtersValue, bundleType }: Props) => {
     setPrivateBundleStatus,
     privateBundleStatus
   );
+  const translatedPrivateBundleStatus = privateBundleStatus
+    ? String(t(`${componentPath}.table.state.${privateBundleStatus}`)).toLowerCase()
+    : null;
 
   const setLoadingStatus = (status: boolean) => {
     setLoading(status);
@@ -122,7 +125,7 @@ const CommissionBundlesTable = ({ filtersValue, bundleType }: Props) => {
             const formattedBundles = res.bundles?.map((el: BundleResource) => ({
               ...el,
               touchpoint: el.touchpoint ?? 'ANY',
-              paymentType: el.paymentType ?? 'ANY',
+              paymentType: el.paymentType ?? '',
             }));
             setListFiltered({
               bundles: formattedBundles,
@@ -181,9 +184,7 @@ const CommissionBundlesTable = ({ filtersValue, bundleType }: Props) => {
         componentPath={componentPath}
         translationArgs={{
           bundleType: t(bundleType).toLowerCase(),
-          status: privateBundleStatus
-            ? ' ' + t(`commissionBundlesPage.list.table.state.${privateBundleStatus}`).toLowerCase()
-            : null,
+          status: translatedPrivateBundleStatus ? ` ${translatedPrivateBundleStatus}` : null,
         }}
         linkToRedirect={orgInfo.types.isPsp ? ROUTES.COMMISSION_BUNDLES_ADD : undefined}
         emptyStateChildren={

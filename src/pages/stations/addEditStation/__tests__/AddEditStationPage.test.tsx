@@ -14,16 +14,17 @@ import {useAppDispatch} from '../../../../redux/hooks';
 import {partiesActions} from '../../../../redux/slices/partiesSlice';
 import {pspAdminSignedDirect} from '../../../../services/__mocks__/partyService';
 
+let spyOnGetStationDetail: jest.SpyInstance;
+
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
     });
     jest.spyOn(console, 'warn').mockImplementation(() => {
     });
+    spyOnGetStationDetail = jest.spyOn(StationService, 'getStationDetail');
 });
 
 afterEach(cleanup);
-
-const spyOnGetStationDetail = jest.spyOn(StationService, 'getStationDetail');
 
 const RenderComponentCreateMode = () => {
     const history = createMemoryHistory();

@@ -33,7 +33,9 @@ const IbanDetailPage = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [lastIban, setLastIban] = useState(false);
     const [ibanDeletionDate, setIbanDeletionDate] = useState<Date | null>(null);
-    const [isExistPendingDeletionRequest, setIsExistPendingDeletionRequest] = useState< string | null >();
+    const [isExistPendingDeletionRequest, setIsExistPendingDeletionRequest] = useState<string | null>(
+        null
+    );
     const [showCancelIbanDeletionRequestModal, setShowCancelIbanDeletionRequestModal] = useState(false);
 
     useEffect(() => {
@@ -84,8 +86,7 @@ const IbanDetailPage = () => {
     };
 
     const cancelIbanDeletionRequestHandler = async (id: string) => {
-        console.log('cancelIbanDeletionRequestHandler called with id:', id);
-            setLoadingDelete(true);
+        setLoadingDelete(true);
         try {
             await cancelIbanDeletionRequests(selectedParty?.fiscalCode ?? '', id);
             history.push(ROUTES.IBAN);
@@ -283,7 +284,7 @@ const IbanDetailPage = () => {
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DesktopDatePicker
                                         label={t('addEditIbanPage.delete-modal.deletionDateLabel')} 
-                                        inputFormat="dd/MM/yyyy"
+                                        format="dd/MM/yyyy"
                                         minDate={(() => {
                                             const tomorrow = new Date(); 
                                             tomorrow.setDate(tomorrow.getDate() + 1); 
@@ -291,7 +292,11 @@ const IbanDetailPage = () => {
                                         })()}
                                         value={ibanDeletionDate}
                                         onChange={(newDate: Date|null) => setIbanDeletionDate(newDate||null)}
-                                        renderInput={(params) => <TextField {...params} fullWidth />}
+                                        slotProps={{
+                                            textField: {
+                                                fullWidth: true,
+                                            },
+                                        }}
                                     />
                                 </LocalizationProvider>
                             </Box>

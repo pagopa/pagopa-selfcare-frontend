@@ -20,7 +20,6 @@ import {
   Select,
   Switch,
   TextField,
-  TextFieldProps,
   Tooltip,
   Typography,
 } from '@mui/material';
@@ -160,7 +159,12 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
           setPaymentOptions(paymentTypes);
         }
         if (touchpoints) {
-          setTouchpointList(touchpoints);
+          setTouchpointList({
+            ...touchpoints,
+            touchpoints: [...(touchpoints.touchpoints ?? [])].sort(
+              (a, b) => (a.name === 'ANY' ? -1 : b.name === 'ANY' ? 1 : 0)
+            ),
+          });
         }
         let listBroker = brokerDelegation?.delegation_list
           ? [...brokerDelegation.delegation_list]
@@ -391,9 +395,7 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                       !(paymentOptions?.payment_types && paymentOptions.payment_types.length > 0)
                     }
                   >
-                    <MenuItem key={`payment_types$all`} value={'ANY'}>
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.all')}
-                    </MenuItem>
+                    
                     {paymentOptions?.payment_types &&
                       sortPaymentType(paymentOptions.payment_types)?.map((option: any) => (
                         <MenuItem key={option.payment_type} value={option.payment_type}>
@@ -414,8 +416,14 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                     name={'touchpoint'}
                     label={t('commissionBundlesPage.addEditCommissionBundle.form.touchpoint')}
                     placeholder={t('commissionBundlesPage.addEditCommissionBundle.form.touchpoint')}
-                    size="small"
-                    value={formik.values.touchpoint ?? ''}
+                    size="small"                   
+                    value={
+                        touchpointList?.touchpoints?.some(
+                          (el) => el.name === formik.values.touchpoint
+                        )
+                          ? formik.values.touchpoint
+                          : ''
+                      }
                     onChange={formik.handleChange}
                     error={formik.touched.touchpoint && Boolean(formik.errors.touchpoint)}
                     data-testid="touchpoint-test"
@@ -423,14 +431,12 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                       !(touchpointList?.touchpoints && touchpointList.touchpoints.length > 0)
                     }
                   >
-                    <MenuItem key={`touchpoint$all`} value={'ANY'}>
-                      {t('commissionBundlesPage.addEditCommissionBundle.form.all')}
+                   
+                  {(touchpointList?.touchpoints ?? []).map((el) => (
+                    <MenuItem key={`touchpoint${el.name}`} value={el.name}>
+                      {el.name}
                     </MenuItem>
-                    {touchpointList?.touchpoints?.map((el) => (
-                      <MenuItem key={`touchpoint${el.name}`} value={el.name}>
-                        {el.name}
-                      </MenuItem>
-                    ))}
+                  ))}
                   </Select>
                 </FormControl>
               </Grid>
@@ -754,7 +760,7 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
                     label={t('commissionBundlesPage.addEditCommissionBundle.form.from')}
-                    inputFormat="dd/MM/yyyy"
+                    format="dd/MM/yyyy"
                     value={formik.values.validityDateFrom}
                     onChange={(value) => {
                       formik.setFieldValue('validityDateFrom', value);
@@ -766,26 +772,21 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                         formik.setFieldValue('validityDateTo', null);
                       }
                     }}
-                    renderInput={(params: TextFieldProps) => (
-                      <TextField
-                        {...params}
-                        inputProps={{
-                          ...params.inputProps,
+                    slotProps={{
+                      textField: {
+                        inputProps: {
                           placeholder: 'dd/MM/aaaa',
                           'data-testid': 'from-date-test',
-                        }}
-                        id="validityDateFrom"
-                        name="validityDateFrom"
-                        type="date"
-                        size="small"
-                        error={
+                        },
+                        id: 'validityDateFrom',
+                        name: 'validityDateFrom',
+                        size: 'small',
+                        error:
                           formik.touched.validityDateFrom && Boolean(formik.errors.validityDateFrom)
-                        }
-                        helperText={
-                          formik.touched.validityDateFrom && formik.errors.validityDateFrom
-                        }
-                      />
-                    )}
+                        ,
+                        helperText: formik.touched.validityDateFrom && formik.errors.validityDateFrom,
+                      },
+                    }}
                     shouldDisableDate={(date: Date) => {
                       let limit = new Date();
                       limit = add(limit, { days: 2 });
@@ -799,27 +800,22 @@ const AddEditCommissionBundleForm = ({ isEdit, formik, idBrokerPsp }: Props) => 
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
                     label={t('commissionBundlesPage.addEditCommissionBundle.form.to')}
-                    inputFormat="dd/MM/yyyy"
+                    format="dd/MM/yyyy"
                     value={formik.values.validityDateTo}
                     onChange={(value) => formik.setFieldValue('validityDateTo', value)}
-                    renderInput={(params: TextFieldProps) => (
-                      <TextField
-                        {...params}
-                        inputProps={{
-                          ...params.inputProps,
+                    slotProps={{
+                      textField: {
+                        inputProps: {
                           placeholder: 'dd/MM/aaaa',
                           'data-testid': 'to-date-test',
-                        }}
-                        id="validityDateTo"
-                        name="validityDateTo"
-                        type="date"
-                        size="small"
-                        error={
-                          formik.touched.validityDateTo && Boolean(formik.errors.validityDateTo)
-                        }
-                        helperText={formik.touched.validityDateTo && formik.errors.validityDateTo}
-                      />
-                    )}
+                        },
+                        id: 'validityDateTo',
+                        name: 'validityDateTo',
+                        size: 'small',
+                        error: formik.touched.validityDateTo && Boolean(formik.errors.validityDateTo),
+                        helperText: formik.touched.validityDateTo && formik.errors.validityDateTo,
+                      },
+                    }}
                     shouldDisableDate={(date: Date) =>
                       isBefore(date, formik.values.validityDateFrom ?? new Date())
                     }

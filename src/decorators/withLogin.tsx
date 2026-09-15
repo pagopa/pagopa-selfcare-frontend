@@ -5,7 +5,7 @@ import {userSelectors} from '@pagopa/selfcare-common-frontend/redux/slices/userS
 import {useLogin} from '../hooks/useLogin';
 import {LOADING_TASK_LOGIN_CHECK} from '../utils/constants';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type LoginProps = {};
 
 /** Decorator to check if there is a valid JWT token, loading into redux the logged user */

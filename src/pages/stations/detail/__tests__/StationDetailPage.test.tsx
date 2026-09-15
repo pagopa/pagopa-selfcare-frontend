@@ -18,16 +18,17 @@ jest.mock('../../../components/commonFunctions');
 jest.mock('../../../../hooks/useUserRole');
 jest.mock('../../../../hooks/useOrganizationType');
 
+let spyOnGetStationDetail: jest.SpyInstance;
+
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
     });
     jest.spyOn(console, 'warn').mockImplementation(() => {
     });
+    spyOnGetStationDetail = jest.spyOn(StationService, 'getStationDetail');
 });
 
 afterEach(cleanup);
-
-const spyOnGetStationDetail = jest.spyOn(StationService, 'getStationDetail');
 
 const renderApp = (
     stationId: string,

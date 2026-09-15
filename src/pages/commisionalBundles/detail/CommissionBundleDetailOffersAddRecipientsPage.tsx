@@ -309,7 +309,7 @@ export default function CommissionBundleDetailOffersAddRecipientsPage() {
               <Typography variant="body1" mb={1} mt={1}>
                 {t(`${componentPath}.paper.dontKnowHow`)}
                 <a
-                  href={process.env.PUBLIC_URL + '/file/recipientsExample.csv'}
+                  href={`${import.meta.env.BASE_URL}file/recipientsExample.csv`}
                   download="recipientsExample.csv"
                 >
                   {t(`${componentPath}.paper.downloadExample`)}

@@ -1,5 +1,5 @@
 import React from 'react';
-import {render, screen, waitFor} from '@testing-library/react';
+import {render, waitFor} from '@testing-library/react';
 import {ThemeProvider} from '@mui/system';
 import {theme} from '@pagopa/mui-italia';
 import {createMemoryHistory} from 'history';
@@ -18,11 +18,20 @@ import {mockedParties} from '../services/__mocks__/partyService';
 import {mockedPartyProducts} from '../services/__mocks__/productService';
 
 const mockSignOutFn = jest.fn();
+const mockUseTOSAgreementLocalStorage = jest.fn();
 
 jest.mock('../decorators/withLogin');
 jest.mock('../decorators/withParties');
 jest.mock('../decorators/withSelectedParty');
 jest.mock('../decorators/withSelectedPartyProducts');
+jest.mock('../hooks/useTOSAgreementLocalStorage', () => ({
+    __esModule: true,
+    default: () => mockUseTOSAgreementLocalStorage(),
+}));
+jest.mock('../decorators/withFeatureFlags', () => ({
+    __esModule: true,
+    default: (WrappedComponent: React.ComponentType<any>) => WrappedComponent,
+}));
 
 jest.setTimeout(10000);
 
@@ -55,12 +64,11 @@ const renderApp = (
 };
 
 test('Test rendering', () => {
-
-    jest.mock('../hooks/useTOSAgreementLocalStorage', () => () => ({
+    mockUseTOSAgreementLocalStorage.mockReturnValue({
         isTOSAccepted: true,
         acceptTOS: mockSignOutFn,
         acceptedTOS: '',
-    }));
+    });
 
     const {store} = renderApp();
 
@@ -70,10 +78,9 @@ test('Test rendering', () => {
 });
 
 test('Test rendering tosNotAccepted', () => {
-
-    jest.mock('../hooks/useTOSAgreementLocalStorage', () => () => ({
+    mockUseTOSAgreementLocalStorage.mockReturnValue({
         isTOSAccepted: false
-    }));
+    });
 
     const store = createStore();
     const history = createMemoryHistory();
@@ -93,10 +100,9 @@ test('Test rendering tosNotAccepted', () => {
 });
 
 test('Test rendering tos', () => {
-
-    jest.mock('../hooks/useTOSAgreementLocalStorage', () => () => ({
+    mockUseTOSAgreementLocalStorage.mockReturnValue({
         isTOSAccepted: false
-    }));
+    });
 
     const store = createStore();
     const history = createMemoryHistory();
@@ -115,11 +121,32 @@ test('Test rendering tos', () => {
 
 });
 
-test('Test rendering privacy', () => {
+test('locks body scroll while a MUI modal is open', async () => {
+    mockUseTOSAgreementLocalStorage.mockReturnValue({
+        isTOSAccepted: true,
+        acceptTOS: mockSignOutFn,
+        acceptedTOS: '',
+    });
 
-    jest.mock('../hooks/useTOSAgreementLocalStorage', () => () => ({
+    renderApp();
+
+    expect(document.body.style.overflow).toBe('');
+
+    const modalRoot = document.createElement('div');
+    modalRoot.className = 'MuiModal-root';
+    document.body.appendChild(modalRoot);
+
+    await waitFor(() => expect(document.body.style.overflow).toBe('hidden'));
+
+    document.body.removeChild(modalRoot);
+
+    await waitFor(() => expect(document.body.style.overflow).toBe(''));
+});
+
+test('Test rendering privacy', () => {
+    mockUseTOSAgreementLocalStorage.mockReturnValue({
         isTOSAccepted: false
-    }));
+    });
 
     const store = createStore();
     const history = createMemoryHistory();

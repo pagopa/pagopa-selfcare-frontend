@@ -1,4 +1,4 @@
-import i18n from '@pagopa/selfcare-common-frontend/locale/locale-utils';
+import i18next from 'i18next';
 import { appStateActions } from '@pagopa/selfcare-common-frontend/redux/slices/appStateSlice';
 import { storageTokenOps } from '@pagopa/selfcare-common-frontend/utils/storage';
 import { ReactNode } from 'react';
@@ -107,6 +107,7 @@ import { CreateStationMaintenance } from './generated/portal/CreateStationMainte
 import { InstitutionBaseResources } from './generated/portal/InstitutionBaseResources';
 import { InstitutionDetail } from './generated/portal/InstitutionDetail';
 import { QuicksightEmbedUrlResponse } from './generated/portal/QuicksightEmbedUrlResponse';
+import { IbanBulkOperationRequest } from './generated/portal/IbanBulkOperationRequest';
 import { IbanDeletionRequest } from './generated/portal/IbanDeletionRequest';
 import { IbanDeletionRequests } from './generated/portal/IbanDeletionRequests';
 import { ServiceConsentResponse } from './generated/portal/ServiceConsentResponse';
@@ -182,8 +183,10 @@ const onRedirectToLogin = () =>
       techDescription: 'token expired or not valid',
       toNotify: false,
       blocking: false,
-      displayableTitle: i18n.t('session.expired.title'),
-      displayableDescription: i18n.t('session.expired.message') as ReactNode,
+      displayableTitle: (i18next.t as unknown as (key: string) => string)('session.expired.title'),
+      displayableDescription: (i18next.t as unknown as (key: string) => string)(
+        'session.expired.message'
+      ) as ReactNode,
     })
   );
 
@@ -1097,6 +1100,17 @@ export const BackofficeApi = {
       });
       return extractResponse(result, 200, onRedirectToLogin);
     },
+
+    handleBulkIbanOperations: async (
+      creditorinstitutioncode: string,
+      ibanBulkOperationRequest: IbanBulkOperationRequest
+    ): Promise<void> => {
+      const result = await backofficeClient.bulkIbanOperations({
+        'ci-code': creditorinstitutioncode,
+        body: ibanBulkOperationRequest,
+      });
+      return extractResponse(result, 201, onRedirectToLogin);
+    }
   },
   ibanDeletionRequest: {
     createIbanDeletionRequest: async (

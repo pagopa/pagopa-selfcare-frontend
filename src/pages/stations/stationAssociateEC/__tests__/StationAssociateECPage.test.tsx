@@ -17,6 +17,17 @@ let getCreditorInstitutionSegregationCodesSpy: jest.SpyInstance;
 let getAvailableCreditorInstitutionsForStationSpy: jest.SpyInstance;
 let associateEcToStationSpy: jest.SpyInstance;
 
+const selectSegregationCode = async (code: string) => {
+    const selectInput = screen.getByTestId('segregation-code-test') as HTMLInputElement;
+    const selectButton = selectInput.parentElement?.querySelector('[role="combobox"]');
+
+    expect(selectButton).not.toBeNull();
+    fireEvent.mouseDown(selectButton as Element);
+    fireEvent.click(await screen.findByRole('option', {name: code}));
+
+    await waitFor(() => expect(selectInput.value).toBe(code));
+};
+
 beforeEach(() => {
     getCreditorInstitutionSegregationCodesSpy = jest.spyOn(
         require('../../../../services/stationService'),
@@ -85,8 +96,7 @@ describe('<StationAssociateECPage />', () => {
         const auxDigit = screen.getByTestId('aux-digit-test') as HTMLInputElement;
         expect(auxDigit.value).toBe('3');
 
-        const segCode = screen.getByTestId('segregation-code-test');
-        fireEvent.change(segCode, {target: {value: segCodeMocked}});
+        await selectSegregationCode(segCodeMocked);
 
         const aca = screen.getByTestId('aca-test')as HTMLInputElement;
         const acaTrue = aca.querySelector(`[value="true"]`) as HTMLInputElement;
@@ -240,8 +250,7 @@ describe('<StationAssociateECPage />', () => {
         const auxDigit = screen.getByTestId('aux-digit-test') as HTMLInputElement;
         expect(auxDigit.value).toBe('3');
 
-        const segCode = screen.getByTestId('segregation-code-test');
-        fireEvent.change(segCode, {target: {value: segCodeMocked}});
+        await selectSegregationCode(segCodeMocked);
 
         const confirm = screen.getByTestId('confirm-btn-test');
         fireEvent.click(confirm);
@@ -296,8 +305,7 @@ describe('<StationAssociateECPage />', () => {
         const auxDigit = screen.getByTestId('aux-digit-test') as HTMLInputElement;
         expect(auxDigit.value).toBe('3');
 
-        const segCode = screen.getByTestId('segregation-code-test');
-        fireEvent.change(segCode, {target: {value: segCodeMocked}});
+        await selectSegregationCode(segCodeMocked);
 
         const confirm = screen.getByTestId('confirm-btn-test');
         fireEvent.click(confirm);

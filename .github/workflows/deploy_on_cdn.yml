@@ -21,6 +21,7 @@ jobs:
     env:
       ENVIRONMENT: ${{ inputs.environment }}
       BACKEND_REPO: pagopa/pagopa-selfcare-ms-backoffice-backend
+      NODE_VERSION: 22.20.0
 
     steps:
       - name: Checkout
@@ -35,10 +36,10 @@ jobs:
           git status
           git --no-pager branch -vv
 
-      - name: Set Node.js 16.14.0
-        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
+      - name: Set Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
-          node-version: 16.14.0
+          node-version: ${{ env.NODE_VERSION }}
           cache: yarn
 
       - name: Cache Yarn
@@ -127,7 +128,7 @@ jobs:
 
           export REACT_APP_PAGOPA_HELP_EMAIL='assistenza@selfcare.it'
           export REACT_APP_MIXPANEL_TOKEN='${{ secrets.REACT_APP_MIXPANEL_TOKEN }}'
-          export REACT_APP_ONE_TRUST_BASE_URL='${{ vars.SELFCARE_HOST_FE }}/ot/test'
+
           export REACT_APP_ONETRUST_DOMAIN_ID='${{ secrets.REACT_APP_ONETRUST_DOMAIN_ID }}'
 
           export REACT_APP_ANALYTICS_ENABLE='false'
@@ -181,9 +182,9 @@ jobs:
             echo "ENVIRONMENT=${ENVIRONMENT}"
             date
 
-            az cdn endpoint purge \
+            az afd endpoint purge \
               -g ${{ vars.CDN_RESOURCE_GROUP }} \
-              -n ${{ vars.CDN_ENDPOINT }} \
+              --endpoint-name ${{ vars.CDN_ENDPOINT }} \
               --profile-name ${{ vars.CDN_PROFILE }} \
               --content-paths "/ui" "/ui/*" "/"
 

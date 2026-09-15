@@ -18,6 +18,7 @@ on:
 
 env:
   PROJECT_KEY: pagopa_pagopa-selfcare-frontend
+  NODE_VERSION: 22.20.0
 
 permissions:
   id-token: write
@@ -40,10 +41,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set Node.js 16.14.0
+      - name: Set Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
-          node-version: 16.14.0
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
 
       - name: Cache Yarn
@@ -117,7 +118,6 @@ jobs:
 
           export REACT_APP_PAGOPA_HELP_EMAIL='assistenza@selfcare.it'
           export REACT_APP_MIXPANEL_TOKEN='DUMMY'
-          export REACT_APP_ONE_TRUST_BASE_URL='https://dev.selfcare.pagopa.it/ot/test'
           export REACT_APP_ONETRUST_DOMAIN_ID='a8f58d7a-7f6a-4fe6-ac02-f95bac3876d4-test'
 
           export REACT_APP_ANALYTICS_ENABLE='false'
@@ -217,10 +217,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set Node.js 16
-        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
+      - name: Set Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
-          node-version: 16.14.0
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Lint
         run: |
@@ -236,10 +236,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set Node.js 16
-        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
+      - name: Set Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
         with:
-          node-version: 16.14.0
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Unit Tests
         run: |
@@ -266,7 +266,7 @@ jobs:
 
       # Columns files are excluded from duplication check as they are similar by nature
       - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
+        uses: sonarsource/sonarcloud-github-action@ba3875ecf642b2129de2b589510c81a8b53dbf4e # master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

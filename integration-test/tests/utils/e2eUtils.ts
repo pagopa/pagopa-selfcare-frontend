@@ -61,6 +61,17 @@ export async function isOperator(page: Page) {
   await page.getByText('Operatore PagoPA');
 }
 
+export async function mockOperatorFlag(page: Page, value = true) {
+  await page.route('**/flags', async (route) => {
+    const response = await route.fetch();
+    const json = await response.json().catch(() => ({}));
+    await route.fulfill({
+      response,
+      json: { ...json, flags: { ...(json.flags ?? {}), isOperator: value } },
+    });
+  });
+}
+
 export async function checkReturnHomepage(page: Page) {
   const feURL: string = process.env.FE_URL ?? DEV_URL;
 

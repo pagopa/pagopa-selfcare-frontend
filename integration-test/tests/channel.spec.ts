@@ -1,5 +1,5 @@
 import { Page, test, expect } from '@playwright/test';
-import { changeToPspUser, checkReturnHomepage } from './utils/e2eUtils';
+import { changeToPspUser, checkReturnHomepage, mockOperatorFlag } from './utils/e2eUtils';
 import {
   prepareChannelIds,
   isChannelVisibleInSearch,
@@ -29,6 +29,10 @@ test.describe.serial('Channel flow', () => {
   test.afterAll(async () => {
     // TODO delete channel
     await page.close();
+  });
+
+  test.afterEach(async () => {
+    await page.unroute('**/flags').catch(() => {});
   });
 
   test('PSP creates channel', async () => {
@@ -159,6 +163,7 @@ test.describe.serial('Channel flow', () => {
   test('Pagopa Operator approves channel', async () => {
     console.log('🚀 STARTING TEST: Pagopa Operator approves channel');
 
+    await mockOperatorFlag(page);
     await changeToPspUser(page, true);
     await page.getByTestId('channels-test').click();
 
@@ -217,6 +222,7 @@ test.describe.serial('Channel flow', () => {
   test('Pagopa Operator request edit', async () => {
     console.log('🚀 STARTING TEST: Pagopa Operator request edit');
 
+    await mockOperatorFlag(page);
     await changeToPspUser(page, true);
     await page.getByTestId('channels-test').click();
 

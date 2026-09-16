@@ -1,5 +1,5 @@
 import { Page, test } from '@playwright/test';
-import { changeToEcUser, checkReturnHomepage } from './utils/e2eUtils';
+import { changeToEcUser, checkReturnHomepage, mockOperatorFlag } from './utils/e2eUtils';
 
 test.describe.serial('Station flow', () => {
   // eslint-disable-next-line functional/no-let
@@ -21,6 +21,10 @@ test.describe.serial('Station flow', () => {
     await page.close();
   });
 
+  test.afterEach(async () => {
+    await page.unroute('**/flags').catch(() => {});
+  });
+
   test('EC creates async station', async () => {
     console.log('🚀 STARTING TEST: EC creates async station');
     await changeToEcUser(page);
@@ -38,6 +42,7 @@ test.describe.serial('Station flow', () => {
 
   test('Pagopa Operator approves station', async () => {
     console.log('🚀 STARTING TEST: Pagopa Operator approves station');
+    await mockOperatorFlag(page);
     await changeToEcUser(page, true);
     await page.getByTestId('stations-test').click();
 
@@ -159,6 +164,7 @@ test.describe.serial('Station flow', () => {
 
   test('Pagopa Operator request edit', async () => {
     console.log('🚀 STARTING TEST: Pagopa Operator request edit');
+    await mockOperatorFlag(page);
     await changeToEcUser(page, true);
     await page.getByTestId('stations-test').click();
 

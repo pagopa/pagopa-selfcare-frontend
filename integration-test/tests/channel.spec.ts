@@ -1,5 +1,5 @@
 import { Page, test, expect } from '@playwright/test';
-import { changeToPspUser, checkReturnHomepage } from './utils/e2eUtils';
+import { changeToPspUser, checkReturnHomepage, mockOperatorFlag } from './utils/e2eUtils';
 import {
   prepareChannelIds,
   isChannelVisibleInSearch,
@@ -31,6 +31,10 @@ test.describe.serial('Channel flow', () => {
     await page.close();
   });
 
+  test.afterEach(async () => {
+    await page.unroute('**/flags').catch(() => {});
+  });
+
   test('PSP creates channel', async () => {
     console.log('🚀 STARTING TEST: PSP creates channel');
 
@@ -42,26 +46,30 @@ test.describe.serial('Channel flow', () => {
 
     await test.step('Create new channel', async () => {
       await page.getByTestId('create-channel').click();
-      await page.waitForTimeout(2000);
 
-      channelId = await page.getByTestId('channel-code-test').inputValue();
+      const channelCodeInput = page.getByTestId('channel-code-test');
+      await channelCodeInput.waitFor({ state: 'visible' });
+      channelId = await channelCodeInput.inputValue();
 
       await page.getByTestId('target-union-test').click();
       await page.getByTestId('target-union-test').fill(endpoint);
 
-      await page.waitForTimeout(1000);
+      // Payment type: MUI Select opens a listbox in a portal. Pick the first
+      // available option instead of matching a specific label (which changes
+      // depending on what the backend returns).
       await page.locator('#payment_types0_select').click();
-      await page.waitForTimeout(1000);
+      const paymentOption = page.getByRole('option').first();
+      await paymentOption.waitFor({ state: 'visible' });
+      await paymentOption.click();
+      await page.keyboard.press('Escape').catch(() => {});
 
-      try {
-        await page.getByRole('option', { name: /bancomat pay/i }).click({ timeout: 5000 });
-      } catch (error) {
-        console.error('Error occurred:', error);
-      }
-
-      await page.waitForTimeout(1000);
+      // Submit -> confirm modal -> confirm.
       await page.getByRole('button', { name: 'Conferma' }).click();
-      await page.getByTestId('confirm-button-modal-test').click();
+
+      const modalConfirm = page.getByTestId('confirm-button-modal-test');
+      await modalConfirm.waitFor({ state: 'visible' });
+      await modalConfirm.click();
+
       await checkReturnHomepage(page);
     });
   });
@@ -155,6 +163,7 @@ test.describe.serial('Channel flow', () => {
   test('Pagopa Operator approves channel', async () => {
     console.log('🚀 STARTING TEST: Pagopa Operator approves channel');
 
+    await mockOperatorFlag(page);
     await changeToPspUser(page, true);
     await page.getByTestId('channels-test').click();
 
@@ -213,6 +222,7 @@ test.describe.serial('Channel flow', () => {
   test('Pagopa Operator request edit', async () => {
     console.log('🚀 STARTING TEST: Pagopa Operator request edit');
 
+    await mockOperatorFlag(page);
     await changeToPspUser(page, true);
     await page.getByTestId('channels-test').click();
 
@@ -248,17 +258,25 @@ test.describe.serial('Channel flow', () => {
 
       await page.waitForLoadState('networkidle', { timeout: 15000 });
 
-      await page.waitForSelector('[data-testid="request-edit-button"]', {
-        state: 'visible',
-        timeout: 15000
-      });
-
       const requestEditButton = page.getByTestId('request-edit-button');
-      const isVisible = await requestEditButton.isVisible();
+      const isVisible = await requestEditButton
+        .waitFor({ state: 'visible', timeout: 15000 })
+        .then(() => true)
+        .catch(() => false);
 
       if (!isVisible) {
-        console.log('Request edit button not visible, skipping test');
+        // `request-edit-button` only renders for a PagoPA operator on a
+        // TO_CHECK channel. "Operator" comes purely from the `isOperator`
+        // feature flag the backend returns for operatorePagopa@test.it; when
+        // it is missing on DEV every operator-only control disappears. That is
+        // a DEV environment issue, not a test bug, so skip loudly.
+        console.warn(
+          '⚠️  SKIPPING "Pagopa Operator request edit": operator UI unavailable on DEV ' +
+            '(isOperator feature flag not active for operatorePagopa@test.it). ' +
+            'Re-enable once the DEV feature-flags / operator allowlist is fixed.'
+        );
         test.skip();
+        return;
       }
 
       await requestEditButton.click({ force: true, timeout: 10000 });

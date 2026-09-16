@@ -74,18 +74,21 @@ jobs:
           npx playwright install chromium --with-deps
 
           export KEY_PEM='${{ secrets.DEV_KEY_PEM }}'
-          export SUBKEY='${{ secrets.DEV_SUBKEY }}' 
-          
-          npx playwright test --workers=1 --max-failures=1 --project=chromium
+          export SUBKEY='${{ secrets.DEV_SUBKEY }}'
+
+          npx playwright test --workers=1 --max-failures=6 --project=chromium
 
       - name: Setup Pages
+        if: ${{ !cancelled() }}
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
       - name: Upload artifact
+        if: ${{ !cancelled() }}
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with:
           path: './integration-test/playwright-report/'
       - name: Deploy to GitHub Pages
         id: deployment
+        if: ${{ !cancelled() }}
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
 
   print_debug:

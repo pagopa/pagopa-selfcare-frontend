@@ -1,4 +1,3 @@
-import {useState} from 'react';
 import {SigninData} from '../model/Node';
 import {Party} from '../model/Party';
 import {useAppDispatch} from '../redux/hooks';
@@ -7,9 +6,8 @@ import {
     getBrokerAndEcDetails,
     getBrokerAndPspDetails,
     getPSPBrokerDetails,
-    getPaymentServiceProviders,
 } from '../services/nodeService';
-import {PaymentServiceProvidersResource} from '../api/generated/portal/PaymentServiceProvidersResource';
+import {getPartyProfileContext} from '../utils/profile-utils';
 
 /* A custom hook to retrieve the signin details of PSP, EC and PT and store them into redux. */
 export const useSigninData = () => {
@@ -28,7 +26,9 @@ export const useSigninData = () => {
 
 const fetchSigninData = async (party: Party): Promise<SigninData> => {
     try {
-        if (party.institutionType === 'PT') {
+        const profileContext = getPartyProfileContext(party);
+
+        if (profileContext === 'PT') {
             // eslint-disable-next-line functional/no-let
             let pspBrokerDetails: any;
             try {
@@ -51,7 +51,7 @@ const fetchSigninData = async (party: Party): Promise<SigninData> => {
             };
         }
 
-        if (party.institutionType === 'PSP') {
+        if (profileContext === 'PSP') {
             // eslint-disable-next-line functional/no-let
             let pspBrokerDetails: any = {};
             try {

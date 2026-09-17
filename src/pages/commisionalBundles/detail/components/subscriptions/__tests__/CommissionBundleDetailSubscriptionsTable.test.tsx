@@ -20,12 +20,31 @@ let spyOnAcceptSubcriptionRequest: jest.SpyInstance;
 let spyOnDeleteSubscription: jest.SpyInstance;
 let spyOnDeleteOffer: jest.SpyInstance;
 
+// jsdom reports 0-sized layout boxes; @mui/x-data-grid uses real
+// measurements to decide how many rows fit, so without this the grid
+// renders no rows in tests even though the data is there.
+const originalGetBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
+
 const generalPath = "commissionBundlesPage.commissionBundleDetail.subscriptionsTable"
 const componentPath = `${generalPath}.requestsTable`;
 
 const idBundle = 'idBundle';
 describe('<CommissionBundleDetailSubscriptionsTable />', () => {
     beforeEach(() => {
+        HTMLElement.prototype.getBoundingClientRect = () =>
+            ({
+                width: 1000,
+                height: 1000,
+                top: 0,
+                left: 0,
+                right: 1000,
+                bottom: 1000,
+                x: 0,
+                y: 0,
+                toJSON() {
+                    return this;
+                },
+            }) as DOMRect;
         spyOnGetBundleCISubscriptions = jest.spyOn(
             bundleService,
             'getBundleCISubscriptions'
@@ -42,6 +61,7 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
 
     afterEach(() => {
         jest.clearAllMocks();
+        HTMLElement.prototype.getBoundingClientRect = originalGetBoundingClientRect;
     });
 
     test('render component CommissionBundleDetailSubscriptionsTable and test empty table, change state filter & render datagrid', async () => {
@@ -91,9 +111,8 @@ describe('<CommissionBundleDetailSubscriptionsTable />', () => {
         await waitFor(() => {
             expect(spyOnGetBundleCISubscriptions).toBeCalledTimes(2);
             expect(screen.queryByTestId('empty-state-table')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
         });
-
-        expect(screen.queryByTestId('data-grid')).toBeInTheDocument();
     });
 
     test('render component CommissionBundleDetailSubscriptionsTable and test error retrieving request detail', async () => {

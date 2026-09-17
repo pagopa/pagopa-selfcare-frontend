@@ -10,6 +10,7 @@ import ROUTES from '../../../routes';
 import {BrokerAndEcDetailsResource} from '../../../api/generated/portal/BrokerAndEcDetailsResource';
 import {BrokerOrPspDetailsResource} from '../../../api/generated/portal/BrokerOrPspDetailsResource';
 import {PTResource} from '../../../model/Node';
+import {getPartyProfileContext} from '../../../utils/profile-utils';
 import NodeSignInPSPForm from './NodeSignInPSPForm';
 import NodeSignInCIForm from './NodeSignInECForm';
 import NodeSignInPTForm from './NodeSignInPTForm';
@@ -20,6 +21,7 @@ const NodeSignInPage = () => {
     const selectedParty = useAppSelector(partiesSelectors.selectPartySelected);
     const goBack = () => history.push(ROUTES.HOME);
     const signInData = useAppSelector(partiesSelectors.selectSigninData);
+    const profileContext = getPartyProfileContext(selectedParty);
 
     return (
         <Grid container justifyContent={'center'}>
@@ -43,7 +45,7 @@ const NodeSignInPage = () => {
                 <TitleBox
                     title={t(`nodeSignInPage.title`)}
                     subTitle={
-                        selectedParty?.institutionType === 'PSP'
+                        profileContext === 'PSP'
                             ? t(`nodeSignInPage.subtitlePSP`)
                             : t(`nodeSignInPage.subtitleEC`)
                     }
@@ -53,12 +55,12 @@ const NodeSignInPage = () => {
                     variantTitle="h4"
                     variantSubTitle="body1"
                 />
-                {selectedParty?.institutionType === 'PSP' ? (
+                {profileContext === 'PSP' ? (
                     <NodeSignInPSPForm
                         goBack={goBack}
                         signInData={signInData as BrokerOrPspDetailsResource}
                     />
-                ) : !selectedParty?.pspData && selectedParty?.institutionType === 'PT' ? (
+                ) : profileContext === 'PT' ? (
                     <NodeSignInPTForm goBack={goBack} signInData={signInData as PTResource}/>
                 ) : (
                     <NodeSignInCIForm goBack={goBack} signInData={signInData as BrokerAndEcDetailsResource}/>

@@ -10,6 +10,7 @@ import ROUTES from '../../routes';
 import { ShowSettingsSection } from '../settings/utils';
 import { useFlagValue } from '../../hooks/useFeatureFlags';
 import { useOrganizationType } from '../../hooks/useOrganizationType';
+import { getPartyProfileContext } from '../../utils/profile-utils';
 import DownloadSection from './components/DownloadSection';
 import ECRegistrationData from './components/ECRegistrationData';
 import NextSteps from './components/NextSteps';
@@ -24,6 +25,7 @@ const DashboardPage = () => {
     const signinData = useAppSelector(partiesSelectors.selectSigninData);
     const { orgInfo, orgIsBrokerSigned } = useOrganizationType();
     const { userHasPermission } = usePermissions();
+    const profileContext = getPartyProfileContext(selectedParty);
     return (
         <SideMenuLayout>
             <TitleBox
@@ -60,9 +62,9 @@ const DashboardPage = () => {
                             <Typography variant="h6">{t('dashboardPage.registrationData.title')}</Typography>
                         </Box>
                         <Grid container spacing={3} pb={4}>
-                            {selectedParty?.institutionType === 'PSP' ? (
+                            {profileContext === 'PSP' ? (
                                 <PSPRegistrationData />
-                            ) : selectedParty?.institutionType === 'PT' ? (
+                            ) : profileContext === 'PT' ? (
                                 <PTRegistrationData />
                             ) : (
                                 <ECRegistrationData />

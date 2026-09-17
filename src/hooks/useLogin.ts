@@ -8,6 +8,7 @@ import { storageTokenOps, storageUserOps } from '@pagopa/selfcare-common-fronten
 import { parseJwt } from '../utils/jwt-utils';
 import { JWTUser } from '../model/JwtUser';
 import { fetchPagoPAToken } from '../services/tokenExchangeService';
+import { identityTokenStorageOps } from '../utils/identity-token-storage';
 
 const mockedUser = {
   uid: '0',
@@ -70,6 +71,7 @@ export const useLogin = () => {
         const { pathname, search } = history.location;
         history.replace({ pathname, search, hash: '' });
 
+        identityTokenStorageOps.write(newSelfCareIdentityToken);
         await couldSetTokenFromSelfCareIdentityToken(newSelfCareIdentityToken);
       }
 
@@ -80,6 +82,7 @@ export const useLogin = () => {
       if (!token || isExpired) {
         // Remove any partial data that might have remained, just for safety
         storageUserOps.delete();
+        identityTokenStorageOps.delete();
         // Go to the login view
         window.location.assign(CONFIG.URL_FE.LOGIN);
         // This return is necessary

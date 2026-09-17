@@ -98,6 +98,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
         });
         store.dispatch(partiesActions.setPartySelected(ecAdminSignedDirect));
         const createWrapperStation = jest.spyOn(stationService, 'createWrapperStation');
+        jest.spyOn(stationService, 'getStationCodeV2').mockResolvedValue(mockedStationCode);
 
         render(
             <Provider store={store}>

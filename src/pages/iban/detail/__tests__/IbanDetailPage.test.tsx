@@ -554,6 +554,7 @@ describe('IbanDetailPage', () => {
     it('should delete an ibanDeletionRequest and navigate back', async () => {
 
         createIbanDeletionRequestSpy.mockResolvedValue({});
+
         renderComponent();
 
         const deleteButton = await screen.findByTestId('delete-button-test');
@@ -562,10 +563,10 @@ describe('IbanDetailPage', () => {
         expect(
             await screen.findByText('addEditIbanPage.delete-modal.title')
         ).toBeInTheDocument();
-        
+
         const dateInput = await screen.findByLabelText('addEditIbanPage.delete-modal.deletionDateLabel');
-        
-        fireEvent.change(dateInput, {target: {value: '01/01/2099'}});
+
+        fireEvent.change(dateInput, { target: { value: '01/01/2099' } });
 
         expect(
             await screen.findByText('addEditIbanPage.delete-modal.alert')

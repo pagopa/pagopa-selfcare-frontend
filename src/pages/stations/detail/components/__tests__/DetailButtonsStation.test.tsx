@@ -13,15 +13,11 @@ import {Router} from 'react-router-dom';
 import {createMemoryHistory} from 'history';
 import * as StationService from '../../../../../services/stationService';
 
-jest.mock('../../../../../services/stationService', () => ({
-    ...jest.requireActual('../../../../../services/stationService'),
-    updateWrapperStationWithOperatorReview: jest.fn(),
-}));
+let spyOnSendEditRequest: jest.SpyInstance;
 
-const spyOnSendEditRequest =
-    StationService.updateWrapperStationWithOperatorReview as jest.MockedFunction<
-        typeof StationService.updateWrapperStationWithOperatorReview
-    >;
+beforeEach(() => {
+    spyOnSendEditRequest = jest.spyOn(StationService, 'updateWrapperStationWithOperatorReview');
+});
 
 describe('Test DetailButtonStation as CI', () => {
     const mockSetStation = jest.fn();

@@ -2,6 +2,7 @@ import {ROLE} from '../model/RolePermission';
 import {useAppSelector} from '../redux/hooks';
 import {partiesSelectors} from '../redux/slices/partiesSlice';
 import {Party} from "../model/Party";
+import {getPartyProfileContext} from '../utils/profile-utils';
 import {useOrganizationType} from "./useOrganizationType";
 import {useFlagValue} from "./useFeatureFlags";
 
@@ -50,9 +51,9 @@ const mapUserRole = (party: Party, orgInfo: any): ROLE => {
     let role = ROLE.UNKNOWN;
     if (userIsPagopaOperator()) {
         role = ROLE.PAGOPA_OPERATOR;
-    } else if (party.institutionType === 'PT') {
+    } else if (getPartyProfileContext(party) === 'PT') {
         role = mapPtRoles(orgInfo.types.isPspBroker, orgInfo.types.isEcBroker);
-    } else if (party.institutionType === 'PSP') {
+    } else if (getPartyProfileContext(party) === 'PSP') {
         role = mapPspRoles(orgInfo.types.isPspBroker, roleKey);
     } else {
         role = mapEcRoles(orgInfo.types.isEcBroker, roleKey);
@@ -76,11 +77,12 @@ function mapPtRoles(isPSPBroker: boolean, isECBroker: boolean) {
 }
 
 function mapPspRoles(isPSPBroker: boolean, roleKey: string) {
+    const isPspAdmin = roleKey === 'admin-psp' || roleKey === 'admin';
     if (isPSPBroker) {
-        return roleKey === 'admin-psp' ? ROLE.PSP_DIRECT_ADMIN : ROLE.PSP_DIRECT_OPERATOR;
+        return isPspAdmin ? ROLE.PSP_DIRECT_ADMIN : ROLE.PSP_DIRECT_OPERATOR;
     }
 
-    return roleKey === 'admin-psp' ? ROLE.PSP_ADMIN : ROLE.PSP_OPERATOR;
+    return isPspAdmin ? ROLE.PSP_ADMIN : ROLE.PSP_OPERATOR;
 }
 
 function mapEcRoles(isECBroker: boolean, roleKey: string) {
@@ -96,4 +98,3 @@ function mapEcRoles(isECBroker: boolean, roleKey: string) {
     }
     return ROLE.UNKNOWN;
 }
-

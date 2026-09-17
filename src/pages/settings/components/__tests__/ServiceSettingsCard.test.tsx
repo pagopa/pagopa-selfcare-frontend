@@ -241,6 +241,7 @@ describe('Service setting page card rendering', () => {
         }
         // click on action button
         fireEvent.click(serviceModalActionButton);
+
         // and check that this time api call is performed with expected request body
         await waitFor(() => {
             expect(saveServiceConsentSpy).toHaveBeenCalledTimes(1);

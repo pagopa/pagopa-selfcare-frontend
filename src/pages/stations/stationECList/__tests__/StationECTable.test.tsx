@@ -31,7 +31,6 @@ jest.mock('@pagopa/selfcare-common-frontend/services/errorService', () => ({
 let getECListByStationCodeSpy: jest.SpyInstance;
 let dissociateEcSpy: jest.SpyInstance;
 
-
 const originalGetBoundingClientRect =
   HTMLElement.prototype.getBoundingClientRect;
 

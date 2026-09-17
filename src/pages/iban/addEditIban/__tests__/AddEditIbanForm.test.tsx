@@ -10,7 +10,6 @@ import {MemoryRouter, Route, Router} from 'react-router-dom';
 import {store} from '../../../../redux/store';
 import {emptyIban} from '../../IbanPage';
 import {add} from 'date-fns';
-import { useErrorDispatcher } from '@pagopa/selfcare-common-frontend';
 import { partiesActions } from '../../../../redux/slices/partiesSlice';
 import { Party } from '../../../../model/Party';
 import { validateIbanCsvData } from '../../../../utils/iban-csv-to-upload-parser';
@@ -29,7 +28,13 @@ jest.mock('@pagopa/selfcare-common-frontend/hooks/useErrorDispatcher', () => ({
 let createIbanSpy: jest.SpyInstance;
 let updateIbanSpy: jest.SpyInstance;
 let handleBulkIbanOperationsSpy: jest.SpyInstance;
-let addError: jest.SpyInstance;
+const mockAddError = jest.fn();
+
+jest.mock('@pagopa/selfcare-common-frontend', () => ({
+    useErrorDispatcher: () => mockAddError,
+    useLoading: () => jest.fn(),
+    TitleBox: () => null,
+}));
 
 
 /**
@@ -80,7 +85,7 @@ beforeEach(() => {
     createIbanSpy = jest.spyOn(require('../../../../services/ibanService'), 'createIban');
     updateIbanSpy = jest.spyOn(require('../../../../services/ibanService'), 'updateIban');
     handleBulkIbanOperationsSpy = jest.spyOn(require('../../../../services/ibanService'), 'handleBulkIbanOperations');
-    addError = useErrorDispatcher as unknown as jest.SpyInstance;
+    mockAddError.mockClear();
     jest.spyOn(console, 'error').mockImplementation(() => {
     });
     jest.spyOn(console, 'warn').mockImplementation(() => {
@@ -336,7 +341,7 @@ describe('AddEditIbanForm', () => {
         });
 
         await waitFor(() => {
-            expect(addError).toBeCalled();
+            expect(mockAddError).toBeCalled();
         });
 
         const ibanErrorText = document.getElementById('iban-helper-text');

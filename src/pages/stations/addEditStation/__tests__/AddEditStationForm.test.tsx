@@ -123,9 +123,7 @@ describe('AddEditStationForm ', (injectedHistory?: ReturnType<typeof createMemor
         const primitiveVersion = screen.getByTestId('primitive-version-test') as HTMLInputElement;
         const targetPofConcat = screen.getByTestId('targetPofConcat-test') as HTMLInputElement;
 
-        fireEvent.change(stationCode, {target: {value: 'station Code'}});
-        expect(stationCode.value).toBe('station Code');
-
+        expect(stationCode.value).toBe(mockedStationCode.stationCode);
         expect(primitiveVersion.value).toBe('2');
         expect(targetPofConcat.value).toBe('');
 

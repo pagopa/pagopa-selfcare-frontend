@@ -86,7 +86,7 @@ const IbanDetailPage = () => {
     };
 
     const cancelIbanDeletionRequestHandler = async (id: string) => {
-            setLoadingDelete(true);
+        setLoadingDelete(true);
         try {
             await cancelIbanDeletionRequests(selectedParty?.fiscalCode ?? '', id);
             history.push(ROUTES.IBAN);

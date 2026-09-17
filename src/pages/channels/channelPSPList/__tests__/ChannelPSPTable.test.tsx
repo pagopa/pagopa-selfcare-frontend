@@ -10,6 +10,19 @@ import * as channelService from '../../../../services/channelService';
 
 let spyApi: jest.SpyInstance;
 
+// jsdom reports 0-sized layout boxes; @mui/x-data-grid uses real measurements
+// to decide how many rows fit, and this grid has virtualization enabled, so
+// without a getBoundingClientRect + ResizeObserver mock it renders no rows
+// in tests even though the data is there.
+const originalGetBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
+
+class ResizeObserverMock {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+}
+(global as any).ResizeObserver = ResizeObserverMock;
+
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {
     });
@@ -17,9 +30,13 @@ beforeEach(() => {
     });
     spyApi = jest.spyOn(channelService, 'dissociatePSPfromChannel');
     jest.resetModules();
+    HTMLElement.prototype.getBoundingClientRect = () => new DOMRect(0, 0, 1000, 1000);
 });
 
-afterEach(cleanup);
+afterEach(() => {
+    HTMLElement.prototype.getBoundingClientRect = originalGetBoundingClientRect;
+    cleanup();
+});
 const channelId = 'XPAY_03_ONUS';
 
 describe('<ChannelPSPTable />', () => {

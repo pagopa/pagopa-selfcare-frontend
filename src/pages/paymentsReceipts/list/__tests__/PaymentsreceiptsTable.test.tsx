@@ -14,8 +14,18 @@ let mockDetails: jest.SpyInstance;
 
 // jsdom reports 0-sized layout boxes; @mui/x-data-grid uses real
 // measurements to decide how many rows fit, so without this the grid
-// renders no rows in tests even though the data is there.
+// renders no rows in tests even though the data is there. This grid also
+// has virtualization enabled (unlike the other tables, which go through
+// TableDataGrid and disable it), so it additionally needs a ResizeObserver
+// to compute the render viewport, which jsdom doesn't provide.
 const originalGetBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
+
+class ResizeObserverMock {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+}
+(global as any).ResizeObserver = ResizeObserverMock;
 
 beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {

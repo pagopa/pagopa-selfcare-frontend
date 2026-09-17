@@ -666,12 +666,12 @@ const HoursInput = ({
     <DesktopTimePicker
       label={label}
       views={['hours', 'minutes']}
-      onChange={(value: Date | null) => setHours(value ? value.toString() : null)}
-      value={hours ? new Date(hours) : null}
       ampm={false}
       minutesStep={15}
-      minTime={new Date(minTime ? minTime : minDateFromToday)}
       disabled={disabled}
+      value={hours ? new Date(hours) : null}
+      onChange={(value) => setHours(value?.toString() ?? null)}
+      minTime={minTime ? new Date(minTime) : new Date(minDateFromToday)}
       slotProps={{
         textField: {
           inputProps: {
@@ -711,8 +711,8 @@ const DatePicker = ({
         label={t(`${componentPath}.configuration.hoursSection.ofDay`)}
         value={date ? new Date(date) : null}
         format="dd/MM/yyyy"
-        onChange={(value: Date | null) => setDate(value ? value.toString() : null)}
-        minDate={new Date(minDate ? minDate : minDateFromToday)}
+        onChange={(value) => setDate(value?.toString() ?? null)}
+        minDate={minDate ? new Date(minDate) : new Date(minDateFromToday)}
         maxDate={add(new Date(), { months: 6 })}
         disabled={disabled}
         slotProps={{

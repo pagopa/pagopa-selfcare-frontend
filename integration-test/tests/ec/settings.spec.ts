@@ -1,5 +1,5 @@
 import { Page, test, expect } from '@playwright/test';
-import { changeToEcIPAUser, ORG } from './utils/e2eUtils';
+import { changeToEcIPAUser, ORG } from '../utils/e2eUtils';
 
 const INSTITUTION_ID = ORG.EC_IPA.id;
 const GET_SERVICES_URL = `**/institutions/${INSTITUTION_ID}/services/consents`;

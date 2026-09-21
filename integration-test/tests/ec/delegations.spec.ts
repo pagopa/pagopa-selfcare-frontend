@@ -1,5 +1,5 @@
 import { Page, test, expect } from '@playwright/test';
-import { changeToEcUser, checkReturnHomepage } from './utils/e2eUtils';
+import { changeToEcUser, checkReturnHomepage } from '../utils/e2eUtils';
 
 const STATION_IDS = [
   '99999000013_05',

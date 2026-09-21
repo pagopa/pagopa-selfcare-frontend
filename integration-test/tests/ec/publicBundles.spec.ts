@@ -5,13 +5,13 @@ import {
   getToBundleDetail,
   getToInActivationBundleDetail,
   validateBundle
-} from './utils/bundleUtils';
+} from '../utils/bundleUtils';
 import {
   BundleTypes,
   changeToEcUser,
   changeToPspUser,
   checkReturnHomepage,
-} from './utils/e2eUtils';
+} from '../utils/e2eUtils';
 
 test.setTimeout(100000);
 test.describe.serial('Public bundles flow', () => {

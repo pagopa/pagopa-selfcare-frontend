@@ -3,8 +3,8 @@ import {
   bundleNameGlobal,
   deleteAllExpiredBundles,
   getToInActivationBundleDetail,
-} from './utils/bundleUtils';
-import { BundleTypes, changeToEcUser, changeToPspUser, checkReturnHomepage } from './utils/e2eUtils';
+} from '../utils/bundleUtils';
+import { BundleTypes, changeToEcUser, changeToPspUser, checkReturnHomepage } from '../utils/e2eUtils';
 
 test.setTimeout(100000);
 test.describe.serial('Global bundles flow', () => {

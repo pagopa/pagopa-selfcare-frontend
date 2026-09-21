@@ -5,7 +5,7 @@ import {
   checkReturnHomepage,
   selectDatePickerDate,
   selectDigitalClockTime,
-} from './utils/e2eUtils';
+} from '../utils/e2eUtils';
 
 test.setTimeout(100000);
 test.describe.serial('Station Maintenances flow', () => {

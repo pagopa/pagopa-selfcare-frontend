@@ -27,12 +27,18 @@ export const ORG = {
   EC_IPA: { id: '6b920f99-fc0d-4eb4-9f91-719a98ba48db', taxCode: '00067060947' },
 };
 
-export async function login(
-  page: Page,
-  org: ORG_TYPE = ORG.EC_DEMO_DIRECT,
-  isOperator?: boolean
-) {
+/**
+ * The two identities the integration tests run as. Every test file lives under
+ * `tests/ec` or `tests/op` and only ever logs in as the matching persona
+ * (`yarn test:ec` / `yarn test:op`):
+ *  - `ec`: regular EC/PSP admin, `isOperator` feature flag forced to `false`
+ *  - `op`: PagoPA operator, `isOperator` feature flag forced to `true`
+ */
+export type Persona = 'ec' | 'op';
+
+async function login(page: Page, org: ORG_TYPE, persona: Persona) {
   const feURL: string = process.env.FE_URL ?? DEV_URL;
+  const isOperator = persona === 'op';
   const jwt = createJWT(org, isOperator); // id Comune di Frosinone
   await page.goto(feURL + '#logged=forced');
   await page.evaluate(
@@ -57,11 +63,12 @@ export async function login(
   await page.goto(feURL, { waitUntil: 'load' });
 }
 
-export async function isOperator(page: Page) {
-  await page.getByText('Operatore PagoPA');
-}
-
-export async function mockOperatorFlag(page: Page, value = true) {
+/**
+ * Pins the `isOperator` feature flag returned by the backend so the persona
+ * does not depend on what DEV happens to answer for the test user.
+ */
+async function forceOperatorFlag(page: Page, value: boolean) {
+  await page.unroute('**/flags').catch(() => {});
   await page.route('**/flags', async (route) => {
     const response = await route.fetch();
     const json = await response.json().catch(() => ({}));
@@ -70,6 +77,11 @@ export async function mockOperatorFlag(page: Page, value = true) {
       json: { ...json, flags: { ...(json.flags ?? {}), isOperator: value } },
     });
   });
+}
+
+export async function loginAs(page: Page, persona: Persona, org: ORG_TYPE = ORG.EC_DEMO_DIRECT) {
+  await forceOperatorFlag(page, persona === 'op');
+  await login(page, org, persona);
 }
 
 export async function checkReturnHomepage(page: Page) {
@@ -187,16 +199,26 @@ export async function selectDatePickerDate(page: Page, target: Date) {
   await page.waitForTimeout(300);
 }
 
-export async function changeToEcUser(page: Page, isOperator?: boolean) {
-  await login(page, ORG.EC_DEMO_DIRECT, isOperator);
+export async function changeToEcUser(page: Page) {
+  await loginAs(page, 'ec', ORG.EC_DEMO_DIRECT);
 }
 
-export async function changeToPspUser(page: Page, isOperator?: boolean) {
-  await login(page, ORG.PSP_DEMO_DIRECT, isOperator);
+export async function changeToPspUser(page: Page) {
+  await loginAs(page, 'ec', ORG.PSP_DEMO_DIRECT);
 }
 
-export async function changeToEcIPAUser(page: Page, isOperator?: boolean) {
-  await login(page, ORG.EC_IPA, isOperator);
+export async function changeToEcIPAUser(page: Page) {
+  await loginAs(page, 'ec', ORG.EC_IPA);
+}
+
+/** PagoPA operator acting on the demo EC (stations). */
+export async function changeToOperatorOnEc(page: Page) {
+  await loginAs(page, 'op', ORG.EC_DEMO_DIRECT);
+}
+
+/** PagoPA operator acting on the demo PSP (channels). */
+export async function changeToOperatorOnPsp(page: Page) {
+  await loginAs(page, 'op', ORG.PSP_DEMO_DIRECT);
 }
 
 export function getTodayDate() {

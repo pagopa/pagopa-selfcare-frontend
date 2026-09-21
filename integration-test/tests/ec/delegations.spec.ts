@@ -170,138 +170,118 @@ test.describe.serial('Delegations flow', () => {
       }
     }
 
-    if (!associationSuccessful) {
-      console.log('Could not find any station that can be associated with an EC, skipping test');
-    }
+    expect(
+      associationSuccessful,
+      `could not associate an EC to any of the stations ${STATION_IDS.join(', ')}`
+    ).toBe(true);
   });
 
   test('Test delegations page & details', async () => {
     console.log('🚀 STARTING TEST: Test delegations page & details');
     await page.getByTestId('delegations-test').click();
 
-    try {
+    const searchDelegations = async (text: string) => {
       await page.getByTestId('search-input').click();
-      await page.getByTestId('search-input').fill(ecName);
+      await page.getByTestId('search-input').clear();
+      await page.getByTestId('search-input').fill(text);
       await page.getByTestId('button-search').click();
       await page.waitForTimeout(2000);
+      return !(await page.getByText('Nessun risultato trovato').isVisible({ timeout: 3000 }).catch(() => false));
+    };
 
-      const noResults = page.getByText('Nessun risultato trovato');
-      const hasNoResults = await noResults.isVisible({ timeout: 3000 })
-        .catch(() => false);
+    // The EC name is the primary key; the station id is what the previous test
+    // just associated, so it must produce results too.
+    const found =
+      (await searchDelegations(ecName)) ||
+      (selectedStationId !== '' && (await searchDelegations(selectedStationId)));
+    expect(found, `no delegation found for "${ecName}" nor for station "${selectedStationId}"`).toBe(true);
 
-      if (hasNoResults) {
-        if (selectedStationId) {
-          await page.getByTestId('search-input').click();
-          await page.getByTestId('search-input').clear();
-          await page.getByTestId('search-input').fill(selectedStationId);
-          await page.getByTestId('button-search').click();
-          await page.waitForTimeout(2000);
-
-          const noStationResults = await noResults.isVisible({ timeout: 3000 })
-            .catch(() => false);
-
-          if (noStationResults) {
-            console.log('No delegation results found for the station ID either. Skipping delegation details test.');
-            return;
-          }
-        } else {
-          console.log('No selected station ID available. Skipping delegation details test.');
-          return;
-        }
-      }
-
-      const detailButton = page.getByTestId('column-go-to-delegation-detail');
-      const isDetailButtonVisible = await detailButton.isVisible({ timeout: 5000 })
-        .catch(() => false);
-
-      if (isDetailButtonVisible) {
-        await detailButton.click();
-      } else {
-        console.log('Delegation details button not found. Skipping delegation details test.');
-      }
-    } catch (error) {
-      console.log('Error in delegation details test:', error);
-    }
+    const detailButton = page.getByTestId('column-go-to-delegation-detail').first();
+    await expect(detailButton, 'delegation detail button not found').toBeVisible({ timeout: 5000 });
+    await detailButton.click();
   });
 
   test('Disassociate station', async () => {
     console.log('🚀 STARTING TEST: Disassociate station');
-    try {
-      await page.getByTestId('stations-test').click();
+    await page.getByTestId('stations-test').click();
 
-      const stationIdsToTry = selectedStationId ?
-        [selectedStationId, ...STATION_IDS.filter(id => id !== selectedStationId)] :
-        STATION_IDS;
+    const stationIdsToTry = selectedStationId ?
+      [selectedStationId, ...STATION_IDS.filter(id => id !== selectedStationId)] :
+      STATION_IDS;
+
+    const EC_NAMES_TO_TRY = [
+      'EC DEMO DIRECT',
+      'EC Signed Direct',
+      'Comune di Frosinone'
+    ];
+
+    // eslint-disable-next-line functional/no-let
+    let disassociationSuccessful = false;
+
+    for (const stationId of stationIdsToTry) {
+      try {
+        await page.getByTestId('search-input').click();
+        await page.getByTestId('search-input').clear();
+        await page.getByTestId('search-input').fill(stationId);
+        await page.waitForTimeout(2000);
+
+        const stationRow = page.getByRole('row', { name: stationId });
+        const isStationVisible = await stationRow.isVisible({ timeout: 3000 })
+          .catch(() => false);
+
+        if (!isStationVisible) {
+          continue;
+        }
+
+        await stationRow.getByLabel('more').click();
+        await page.waitForTimeout(1000);
+
+        await page.getByRole('link', { name: 'Gestisci EC' }).click();
+        await page.waitForTimeout(2000);
 
         // eslint-disable-next-line functional/no-let
-      let disassociationSuccessful = false;
+        let ecFound = false;
 
-      for (const stationId of stationIdsToTry) {
-        try {
-          await page.getByTestId('search-input').click();
-          await page.getByTestId('search-input').clear();
-          await page.getByTestId('search-input').fill(stationId);
-          await page.waitForTimeout(2000);
+        for (const name of EC_NAMES_TO_TRY) {
+          const ecRow = page.getByRole('row', { name: new RegExp(name, 'i') });
+          const isVisible = await ecRow.isVisible({ timeout: 3000 }).catch(() => false);
 
-          const stationRow = page.getByRole('row', { name: stationId });
-          const isStationVisible = await stationRow.isVisible({ timeout: 3000 })
-            .catch(() => false);
-
-          if (!isStationVisible) {
-            continue;
+          if (isVisible) {
+            await ecRow.getByLabel('more').click();
+            ecFound = true;
+            break;
           }
-
-          await stationRow.getByLabel('more').click();
-          await page.waitForTimeout(1000);
-
-          await page.getByRole('link', { name: 'Gestisci EC' }).click();
-          await page.waitForTimeout(2000);
-
-          const EC_NAMES_TO_TRY = [
-            'EC DEMO DIRECT',
-            'EC Signed Direct',
-            'Comune di Frosinone'
-          ];
-
-          // eslint-disable-next-line functional/no-let
-          let ecFound = false;
-
-          for (const ecName of EC_NAMES_TO_TRY) {
-            const ecRow = page.getByRole('row', { name: new RegExp(ecName, 'i') });
-            const isVisible = await ecRow.isVisible({ timeout: 3000 }).catch(() => false);
-
-            if (isVisible) {
-              await ecRow.getByLabel('more').click();
-              ecFound = true;
-              break;
-            }
-          }
-
-          if (!ecFound) {
-            console.log('None of the expected EC entries found in the list');
-            test.skip();
-          }
-
-          await page.waitForTimeout(1000);
-
-          await page.getByRole('menuitem', { name: 'Dissocia EC' }).click({
-            force: true,
-            timeout: 5000
-          });
-
-          await page.getByTestId('confirm-button-modal-test').click();
-          await page.waitForTimeout(1000);
-          disassociationSuccessful = true;
-          await checkReturnHomepage(page);
-          break;
-        } catch (error) {
-          await page.goto('/ui/stations');
-          await page.waitForTimeout(1000);
         }
+
+        if (!ecFound) {
+          // this station has no associated EC we know about: try the next one
+          await navigateBackToStationsList(page);
+          continue;
+        }
+
+        await page.waitForTimeout(1000);
+
+        await page.getByRole('menuitem', { name: 'Dissocia EC' }).click({
+          force: true,
+          timeout: 5000
+        });
+
+        await page.getByTestId('confirm-button-modal-test').click();
+        await page.waitForTimeout(1000);
+        disassociationSuccessful = true;
+        await checkReturnHomepage(page);
+        break;
+      } catch (error) {
+        console.error(`Disassociation attempt on station ${stationId} failed:`, error);
+        await page.goto('/ui/stations');
+        await page.waitForTimeout(1000);
       }
-    } catch (error) {
-      console.log('Error in disassociation test:', error);
     }
+
+    expect(
+      disassociationSuccessful,
+      `could not dissociate any of ${EC_NAMES_TO_TRY.join(', ')} from stations ${stationIdsToTry.join(', ')}`
+    ).toBe(true);
   });
 
   async function navigateBackToStationsList(page) {

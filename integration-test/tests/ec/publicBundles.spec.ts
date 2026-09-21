@@ -85,25 +85,21 @@ test.describe.serial('Public bundles flow', () => {
       await page.getByTestId('payment-amount-test').fill('5');
 
       // Test flag onUs
-      const hasOnUsCheckbox = await page.getByRole('checkbox', { name: 'onUs' }).count() > 0;
-      if (hasOnUsCheckbox) {
-        expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeChecked();
-        expect(page.getByRole('checkbox', { name: 'onUs' })).toBeDisabled();
+      await expect(page.getByRole('checkbox', { name: 'onUs' })).toBeVisible();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeChecked();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).toBeDisabled();
 
-        await page.getByLabel('Tipo di pagamento').click();
-        await page.getByRole('option', { name: 'Carta di pagamento - CP' }).click();
+      await page.getByLabel('Tipo di pagamento').click();
+      await page.getByRole('option', { name: 'Carta di pagamento - CP' }).click();
 
-        expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeDisabled();
-        await page.getByRole('checkbox', { name: 'onUs' }).check();
-        expect(page.getByRole('checkbox', { name: 'onUs' })).toBeChecked();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeDisabled();
+      await page.getByRole('checkbox', { name: 'onUs' }).check();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).toBeChecked();
 
-        await page.getByLabel('Tipo di pagamento').click();
-        await page.getByRole('option', { name: paymentOptions[currentPaymentOptionIndex] }).click();
-        expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeChecked();
-        expect(page.getByRole('checkbox', { name: 'onUs' })).toBeDisabled();
-      } else {
-        console.log('Skipping onUs checkbox tests as the element is not present');
-      }
+      await page.getByLabel('Tipo di pagamento').click();
+      await page.getByRole('option', { name: paymentOptions[currentPaymentOptionIndex] }).click();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeChecked();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).toBeDisabled();
 
       // Test broker
       await page.getByLabel('Codice intermediario').click();
@@ -114,25 +110,20 @@ test.describe.serial('Public bundles flow', () => {
 
       // Test flag cart
       const cartCheckboxLabel = 'Gestione carrello di pagamenti';
-      const hasCartCheckbox = await page.getByRole('checkbox', { name: cartCheckboxLabel }).count() > 0;
+      await expect(page.getByRole('checkbox', { name: cartCheckboxLabel })).toBeVisible();
+      expect(page.getByRole('checkbox', { name: cartCheckboxLabel })).not.toBeChecked();
+      expect(page.getByRole('checkbox', { name: cartCheckboxLabel })).toBeDisabled();
 
-      if (hasCartCheckbox) {
-        expect(page.getByRole('checkbox', { name: cartCheckboxLabel })).not.toBeChecked();
-        expect(page.getByRole('checkbox', { name: cartCheckboxLabel })).toBeDisabled();
+      await page.getByLabel('Codice canale').fill('99999000011_01');
+      await page.getByRole('option', { name: '99999000011_01' }).click();
+      expect(page.getByRole('checkbox', { name: cartCheckboxLabel })).not.toBeDisabled();
+      await page.getByRole('checkbox', { name: cartCheckboxLabel }).check();
+      expect(page.getByRole('checkbox', { name: cartCheckboxLabel })).toBeChecked();
 
-        await page.getByLabel('Codice canale').fill('99999000011_01');
-        await page.getByRole('option', { name: '99999000011_01' }).click();
-        expect(page.getByRole('checkbox', { name: cartCheckboxLabel })).not.toBeDisabled();
-        await page.getByRole('checkbox', { name: cartCheckboxLabel }).check();
-        expect(page.getByRole('checkbox', { name: cartCheckboxLabel })).toBeChecked();
-
-        await page.getByLabel('Codice canale').fill('99999000011_03');
-        await page.getByRole('option', { name: '99999000011_03' }).click();
-        expect(page.getByRole('checkbox', { name: cartCheckboxLabel })).not.toBeChecked();
-        expect(page.getByRole('checkbox', { name: cartCheckboxLabel })).toBeDisabled();
-      } else {
-        console.log('Skipping cart management checkbox tests as the element is not present');
-      }
+      await page.getByLabel('Codice canale').fill('99999000011_03');
+      await page.getByRole('option', { name: '99999000011_03' }).click();
+      expect(page.getByRole('checkbox', { name: cartCheckboxLabel })).not.toBeChecked();
+      expect(page.getByRole('checkbox', { name: cartCheckboxLabel })).toBeDisabled();
 
       if (firstAttempt) {
         await page.getByTestId('open-modal-button-test').click();
@@ -199,10 +190,7 @@ test.describe.serial('Public bundles flow', () => {
   test('Validate bundle', async () => {
     console.log('🚀 STARTING TEST: Validate bundle');
     const validated = await validateBundle(bundleNamePublic, BundleTypes.PUBLIC);
-    if (!validated) {
-      console.log('Skipping validation test due to missing or invalid bundle');
-      test.skip();
-    }
+    expect(validated, `bundle "${bundleNamePublic}" could not be validated (see logs above)`).toBe(true);
   });
 
   const navigateToPublicBundles = async (page: Page): Promise<void> => {
@@ -214,49 +202,34 @@ test.describe.serial('Public bundles flow', () => {
   const checkBundleExists = async (page: Page): Promise<boolean> =>
     await getToBundleDetail(page, bundleNamePublic);
 
-  const handleDeactivateAction = async (page: Page): Promise<boolean> => {
-    try {
-      await page.getByTestId('deactivate-button').waitFor({ timeout: 5000 });
-    } catch {
-      return false;
-    }
-
+  const handleDeactivateAction = async (page: Page): Promise<void> => {
+    await expect(page.getByTestId('deactivate-button'), 'deactivate button not found').toBeVisible({
+      timeout: 5000
+    });
     await page.getByTestId('deactivate-button').click();
 
-    try {
-      await page.getByTestId('confirm-button-test').waitFor({ timeout: 5000 });
-    } catch {
-      return false;
-    }
-
+    await expect(page.getByTestId('confirm-button-test')).toBeVisible({ timeout: 5000 });
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);
-    return true;
   };
 
-  const handleEcBundleActions = async (page: Page, action: 'activate' | 'deactivate', attempt?: string): Promise<boolean> => {
+  const handleEcBundleActions = async (
+    page: Page,
+    action: 'activate' | 'deactivate',
+    attempt?: string
+  ): Promise<void> => {
     console.log(`🚀 STARTING TEST: EC ${action}s public bundle${attempt ? ' ' + attempt : ''}`);
 
     await navigateToPublicBundles(page);
 
     const bundleFound = await checkBundleExists(page);
-    if (!bundleFound) {
-      test.skip();
-    }
+    expect(bundleFound, `bundle "${bundleNamePublic}" not found`).toBe(true);
 
     if (action === 'activate') {
-      const activated = await activatePublicBundle(page);
-      if (!activated) {
-        test.skip();
-      }
+      await activatePublicBundle(page);
     } else {
-      const deactivated = await handleDeactivateAction(page);
-      if (!deactivated) {
-        test.skip();
-      }
+      await handleDeactivateAction(page);
     }
-
-    return true;
   };
 
   test('EC activates public bundle', async () => {
@@ -270,16 +243,12 @@ test.describe.serial('Public bundles flow', () => {
     await page.getByTestId('tab-public').click();
 
     const bundleFound = await getToBundleDetail(page, bundleNamePublic);
-    if (!bundleFound) {
-      test.skip();
-    }
+    expect(bundleFound, `bundle "${bundleNamePublic}" not found`).toBe(true);
 
-    try {
-      await page.getByTestId('delete-request-button').waitFor({ timeout: 5000 });
-    } catch {
-      console.log('No subscription requests found, skipping test');
-      test.skip();
-    }
+    await expect(
+      page.getByTestId('delete-request-button'),
+      'no subscription request to delete'
+    ).toBeVisible({ timeout: 5000 });
     await page.getByTestId('delete-request-button').click();
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);
@@ -312,53 +281,21 @@ test.describe.serial('Public bundles flow', () => {
     const bundleFound = await test.step('Check if bundle exists', async () =>
       await getToBundleDetail(page, bundleNamePublic)
     );
-
-    if (!bundleFound) {
-      test.skip();
-    }
-
-    const detailButtonExists = await test.step('Check for subscription request', async () => {
-      try {
-        const count = await page.getByTestId('request-detail-button').count();
-        return count > 0;
-      } catch (error) {
-        return false;
-      }
-    });
-
-    if (!detailButtonExists) {
-      test.skip();
-    }
+    expect(bundleFound, `bundle "${bundleNamePublic}" not found`).toBe(true);
 
     await test.step('Reject the subscription request', async () => {
-      try {
-        await page.getByTestId('request-detail-button').click();
-      } catch (error) {
-        return;
-      }
+      const detailButton = page.getByTestId('request-detail-button').first();
+      await expect(detailButton, 'no subscription request to reject').toBeVisible({
+        timeout: 10000
+      });
+      await detailButton.click();
 
-      const rejectButtonExists = await page.getByTestId('request-reject-button').count() > 0;
-      if (!rejectButtonExists) {
-        return;
-      }
+      await expect(page.getByTestId('request-reject-button')).toBeVisible({ timeout: 10000 });
+      await page.getByTestId('request-reject-button').click();
 
-      try {
-        await page.getByTestId('request-reject-button').click();
-      } catch (error) {
-        return;
-      }
-
-      const confirmButtonExists = await page.getByTestId('confirm-button-test').count() > 0;
-      if (!confirmButtonExists) {
-        return;
-      }
-
-      try {
-        await page.getByTestId('confirm-button-test').click();
-        await checkReturnHomepage(page);
-      } catch (error) {
-        return;
-      }
+      await expect(page.getByTestId('confirm-button-test')).toBeVisible({ timeout: 10000 });
+      await page.getByTestId('confirm-button-test').click();
+      await checkReturnHomepage(page);
     });
   });
 
@@ -377,81 +314,49 @@ test.describe.serial('Public bundles flow', () => {
     await page.getByTestId('tab-public').click();
 
     const bundleFound = await getToInActivationBundleDetail(page, bundleNamePublic);
-    if (!bundleFound) {
-      test.skip();
-    }
+    expect(bundleFound, `bundle "${bundleNamePublic}" not found among the "In attivazione" ones`).toBe(true);
 
-    try {
-      await page.getByTestId('delete-button').waitFor({ timeout: 5000 });
-    } catch {
-      console.log('No public bundle found to delete, skipping test');
-      test.skip();
-    }
+    await expect(page.getByTestId('delete-button'), 'delete button not found').toBeVisible({
+      timeout: 5000
+    });
     await page.getByTestId('delete-button').click();
     await page.getByTestId('confirm-button-test').click();
     await checkReturnHomepage(page);
   });
 });
 
-async function activatePublicBundle(page: Page): Promise<boolean> {
-  try {
-    const openDrawer = await page.getByTestId('padded-drawer').count() > 0;
-    if (openDrawer) {
-      try {
-        await page.keyboard.press('Escape');
-        await page.waitForTimeout(1000);
-      } catch (error) {
-        console.error('Error occurred:', error);
-      }
-    }
-
-    const activateButtonExists = await page.getByTestId('activate-button').count() > 0;
-    if (!activateButtonExists) {
-      return false;
-    }
-
-    await page.getByTestId('activate-button').click();
-
-    const paymentInputExists = await page.getByLabel('Importo a tuo carico').count() > 0;
-    if (!paymentInputExists) {
-      return false;
-    }
-
-    await page.getByLabel('Importo a tuo carico').click();
-    await page.getByLabel('Importo a tuo carico').fill('40');
-
-    const confirmButton = page.locator('div').filter({ hasText: /^Conferma$/ });
-
-    const confirmButtonExists = await confirmButton.count() > 0;
-    if (!confirmButtonExists) {
-      return false;
-    }
-
-    await confirmButton.click();
-
-    const paymentInputStillExists = await page.getByLabel('Importo a tuo carico').count() > 0;
-    if (paymentInputStillExists) {
-      await page.getByLabel('Importo a tuo carico').click();
-      await page.getByLabel('Importo a tuo carico').fill('4');
-    }
-
-    const openModalButtonExists = await page.getByTestId('open-modal-button-test').count() > 0;
-    if (!openModalButtonExists) {
-      return false;
-    }
-
-    await page.getByTestId('open-modal-button-test').click();
-
-    const finalConfirmButtonExists = await page.getByTestId('confirm-button-test').count() > 0;
-    if (!finalConfirmButtonExists) {
-      return false;
-    }
-
-    await page.getByTestId('confirm-button-test').click();
-
-    await checkReturnHomepage(page);
-    return true;
-  } catch (error) {
-    return false;
+async function activatePublicBundle(page: Page): Promise<void> {
+  const openDrawer = (await page.getByTestId('padded-drawer').count()) > 0;
+  if (openDrawer) {
+    await page.keyboard.press('Escape').catch((error) => console.error('Error occurred:', error));
+    await page.waitForTimeout(1000);
   }
+
+  await expect(page.getByTestId('activate-button'), 'activate button not found').toBeVisible({
+    timeout: 10000
+  });
+  await page.getByTestId('activate-button').click();
+
+  const paymentInput = page.getByLabel('Importo a tuo carico');
+  await expect(paymentInput).toBeVisible({ timeout: 10000 });
+  await paymentInput.click();
+  await paymentInput.fill('40');
+
+  const confirmButton = page.locator('div').filter({ hasText: /^Conferma$/ });
+  await expect(confirmButton).toBeVisible({ timeout: 10000 });
+  await confirmButton.click();
+
+  // the first amount is rejected by the form, retry with a valid one
+  if ((await paymentInput.count()) > 0) {
+    await paymentInput.click();
+    await paymentInput.fill('4');
+  }
+
+  await expect(page.getByTestId('open-modal-button-test')).toBeVisible({ timeout: 10000 });
+  await page.getByTestId('open-modal-button-test').click();
+
+  await expect(page.getByTestId('confirm-button-test')).toBeVisible({ timeout: 10000 });
+  await page.getByTestId('confirm-button-test').click();
+
+  await checkReturnHomepage(page);
 }

@@ -77,25 +77,21 @@ test.describe.serial('Global bundles flow', () => {
       await page.getByTestId('payment-amount-test').click();
       await page.getByTestId('payment-amount-test').fill('5');
 
-      const hasOnUsCheckbox = await page.getByRole('checkbox', { name: 'onUs' }).count() > 0;
-      if (hasOnUsCheckbox) {
-        expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeChecked();
-        expect(page.getByRole('checkbox', { name: 'onUs' })).toBeDisabled();
+      await expect(page.getByRole('checkbox', { name: 'onUs' })).toBeVisible();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeChecked();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).toBeDisabled();
 
-        await page.getByLabel('Tipo di pagamento').click();
-        await page.getByRole('option', { name: 'Carta di pagamento - CP' }).click();
+      await page.getByLabel('Tipo di pagamento').click();
+      await page.getByRole('option', { name: 'Carta di pagamento - CP' }).click();
 
-        expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeDisabled();
-        await page.getByRole('checkbox', { name: 'onUs' }).check();
-        expect(page.getByRole('checkbox', { name: 'onUs' })).toBeChecked();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeDisabled();
+      await page.getByRole('checkbox', { name: 'onUs' }).check();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).toBeChecked();
 
-        await page.getByLabel('Tipo di pagamento').click();
-        await page.getByRole('option', { name: paymentOptions[currentPaymentOptionIndex] }).click();
-        expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeChecked();
-        expect(page.getByRole('checkbox', { name: 'onUs' })).toBeDisabled();
-      } else {
-        console.log('Skipping onUs checkbox tests as the element is not present');
-      }
+      await page.getByLabel('Tipo di pagamento').click();
+      await page.getByRole('option', { name: paymentOptions[currentPaymentOptionIndex] }).click();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeChecked();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).toBeDisabled();
 
       // Test broker
       await page.getByLabel('Codice intermediario').click();

@@ -85,25 +85,21 @@ test.describe.serial('Private bundles flow', () => {
       await page.getByTestId('payment-amount-test').fill('5');
 
       // Test flag onUs
-      const hasOnUsCheckbox = await page.getByRole('checkbox', { name: 'onUs' }).count() > 0;
-      if (hasOnUsCheckbox) {
-        expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeChecked();
-        expect(page.getByRole('checkbox', { name: 'onUs' })).toBeDisabled();
+      await expect(page.getByRole('checkbox', { name: 'onUs' })).toBeVisible();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeChecked();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).toBeDisabled();
 
-        await page.getByLabel('Tipo di pagamento').click();
-        await page.getByRole('option', { name: 'Carta di pagamento - CP' }).click();
+      await page.getByLabel('Tipo di pagamento').click();
+      await page.getByRole('option', { name: 'Carta di pagamento - CP' }).click();
 
-        expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeDisabled();
-        await page.getByRole('checkbox', { name: 'onUs' }).check();
-        expect(page.getByRole('checkbox', { name: 'onUs' })).toBeChecked();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeDisabled();
+      await page.getByRole('checkbox', { name: 'onUs' }).check();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).toBeChecked();
 
-        await page.getByLabel('Tipo di pagamento').click();
-        await page.getByRole('option', { name: paymentOptions[currentPaymentOptionIndex] }).click();
-        expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeChecked();
-        expect(page.getByRole('checkbox', { name: 'onUs' })).toBeDisabled();
-      } else {
-        console.log('Skipping onUs checkbox tests as the element is not present');
-      }
+      await page.getByLabel('Tipo di pagamento').click();
+      await page.getByRole('option', { name: paymentOptions[currentPaymentOptionIndex] }).click();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).not.toBeChecked();
+      expect(page.getByRole('checkbox', { name: 'onUs' })).toBeDisabled();
 
       // Test broker
       await page.getByLabel('Codice intermediario').click();
@@ -194,19 +190,12 @@ test.describe.serial('Private bundles flow', () => {
   test('Validate bundle', async () => {
     console.log('🚀 STARTING TEST: Validate bundle');
     const validated = await validateBundle(bundleNamePrivate, BundleTypes.PRIVATE);
-    if (!validated) {
-      console.log('Skipping validation test due to missing or invalid bundle');
-      test.skip();
-    }
+    expect(validated, `bundle "${bundleNamePrivate}" could not be validated (see logs above)`).toBe(true);
   });
 
   test('PSP sends private bundle offer', async () => {
     console.log('🚀 STARTING TEST: PSP sends private bundle offer');
-    const result = await sendPrivateBundleOffer(page);
-
-    if (!result?.success) {
-      return;
-    }
+    await sendPrivateBundleOffer(page);
   });
 
   test('PSP deletes private bundle offer', async ({ page }) => {
@@ -218,36 +207,18 @@ test.describe.serial('Private bundles flow', () => {
       await page.getByTestId('tab-private').click();
     });
 
-    const bundleExists = await test.step('Check if bundle exists', async () => 
+    const bundleExists = await test.step('Check if bundle exists', async () =>
       await getToBundleDetail(page, bundleNamePrivate)
     );
-
-    if (!bundleExists) {
-      return;
-    }
-
-    const detailButtonExists = await test.step('Check if request detail button exists', async () => {
-      try {
-        await page.getByTestId('request-detail-button').waitFor({ timeout: 5000 });
-        return true;
-      } catch (error) {
-        return false;
-      }
-    });
-
-    if (!detailButtonExists) {
-      return;
-    }
+    expect(bundleExists, `bundle "${bundleNamePrivate}" not found`).toBe(true);
 
     await test.step('Delete private bundle offer', async () => {
-      await page.getByTestId('request-detail-button').click();
+      await expect(page.getByTestId('request-detail-button').first(), 'no offer to delete').toBeVisible({
+        timeout: 10000
+      });
+      await page.getByTestId('request-detail-button').first().click();
 
-      try {
-        await page.getByTestId('offer-delete-button').waitFor({ timeout: 5000 });
-      } catch (error) {
-        return;
-      }
-
+      await expect(page.getByTestId('offer-delete-button')).toBeVisible({ timeout: 10000 });
       await page.getByTestId('offer-delete-button').click();
       await page.getByTestId('confirm-button-test').click();
       await checkReturnHomepage(page);
@@ -256,90 +227,52 @@ test.describe.serial('Private bundles flow', () => {
 
   test('PSP sends private bundle offer 2nd time', async () => {
     console.log('🚀 STARTING TEST: PSP sends private bundle offer 2nd time');
-    const result = await sendPrivateBundleOffer(page);
-
-    if (!result?.success) {
-      return;
-    }
+    await sendPrivateBundleOffer(page);
   });
 
-  const checkBundleAvailability = async (page: Page, action: 'accept' | 'reject'): Promise<boolean> => {
+  const checkBundleAvailability = async (page: Page): Promise<boolean> => {
     await changeToEcUser(page);
     await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId('tab-private').click();
-    
-    try {
-      if (action === 'accept') {
-        await page.getByLabel('Attivi').waitFor({ timeout: 5000 });
-        await page.getByLabel('Attivi').click();
-      } else {
-        await page.getByLabel('Attivi').click();
-      }
 
-      await page.getByRole('option', { name: 'Disponibili' }).waitFor({ timeout: 5000 });
-      await page.getByRole('option', { name: 'Disponibili' }).click();
-      await page.waitForTimeout(2000);
-    } catch (error) {
-      console.error(`Error switching to Disponibili tab: ${error}`);
-      return false;
-    }
-    
+    await page.getByLabel('Attivi').click();
+    await page.getByRole('option', { name: 'Disponibili' }).click();
+    await page.waitForTimeout(2000);
+
     return await getToBundleDetail(page, bundleNamePrivate);
   };
 
-  const performAcceptAction = async (page: Page): Promise<boolean> => {
-    try {
-      await page.getByTestId('payment-amount-test').first().waitFor({ timeout: 5000 });
-      await page.getByTestId('payment-amount-test').first().click();
-      await page.getByTestId('payment-amount-test').first().fill('40');
+  const performAcceptAction = async (page: Page): Promise<void> => {
+    await page.getByTestId('payment-amount-test').first().click();
+    await page.getByTestId('payment-amount-test').first().fill('40');
 
-      const confirmButton = page.locator('div').filter({ hasText: /^Conferma$/ });
-      await confirmButton.waitFor({ timeout: 5000 });
-      await confirmButton.click();
+    const confirmButton = page.locator('div').filter({ hasText: /^Conferma$/ });
+    await confirmButton.click();
 
-      await page.getByTestId('payment-amount-test').first().click();
-      await page.getByTestId('payment-amount-test').first().fill('4');
+    await page.getByTestId('payment-amount-test').first().click();
+    await page.getByTestId('payment-amount-test').first().fill('4');
 
-      await page.getByTestId('open-modal-button-test').waitFor({ timeout: 5000 });
-      await page.getByTestId('open-modal-button-test').click();
-      return true;
-    } catch (error) {
-      console.error(`Error during bundle acceptance: ${error}`);
-      return false;
-    }
+    await page.getByTestId('open-modal-button-test').click();
   };
 
-  const handleEcBundleInteraction = async (page: Page, action: 'accept' | 'reject'): Promise<boolean> => {
+  const handleEcBundleInteraction = async (page: Page, action: 'accept' | 'reject'): Promise<void> => {
     console.log(`🚀 STARTING TEST: EC ${action}s private bundle offer`);
 
-    const bundleExists = await checkBundleAvailability(page, action);
-    if (!bundleExists) {
-      return false;
-    }
+    const bundleExists = await checkBundleAvailability(page);
+    expect(bundleExists, `bundle "${bundleNamePrivate}" not found among the available ones`).toBe(true);
 
     const buttonTestId = action === 'accept' ? 'activate-button' : 'reject-button';
-    try {
-      await page.getByTestId(buttonTestId).waitFor({ timeout: 5000 });
-    } catch (error) {
-      console.error(`${action} button does not exist: ${error}`);
-      return false;
-    }
-
+    await expect(page.getByTestId(buttonTestId), `${action} button not found`).toBeVisible({
+      timeout: 5000
+    });
     await page.getByTestId(buttonTestId).click();
 
-    if (action === 'accept' && !(await performAcceptAction(page))) {
-      return false;
+    if (action === 'accept') {
+      await performAcceptAction(page);
     }
 
-    try {
-      await page.getByTestId('confirm-button-test').waitFor({ timeout: 5000 });
-      await page.getByTestId('confirm-button-test').click();
-      await checkReturnHomepage(page);
-      return true;
-    } catch (error) {
-      console.error(`Error confirming ${action} action: ${error}`);
-      return false;
-    }
+    await page.getByTestId('confirm-button-test').click();
+    await checkReturnHomepage(page);
   };
 
   test('EC reject private bundle offer', async ({ page }) => {
@@ -348,11 +281,7 @@ test.describe.serial('Private bundles flow', () => {
 
   test('PSP sends private bundle offer 3rd time', async () => {
     console.log('🚀 STARTING TEST: PSP sends private bundle offer 3rd time');
-    const result = await sendPrivateBundleOffer(page);
-
-    if (!result?.success) {
-      return;
-    }
+    await sendPrivateBundleOffer(page);
   });
 
   test('EC accept private bundle offer', async ({ page }) => {
@@ -368,37 +297,19 @@ test.describe.serial('Private bundles flow', () => {
       await page.getByTestId('tab-private').click();
     });
 
-    const bundleExists = await test.step('Check if bundle exists', async () => 
+    const bundleExists = await test.step('Check if bundle exists', async () =>
       await getToBundleDetail(page, bundleNamePrivate)
     );
-
-    if (!bundleExists) {
-      return;
-    }
-    
-    const deactivateButtonExists = await test.step('Check if deactivate button exists', async () => {
-      try {
-        await page.getByTestId('deactivate-button').waitFor({ timeout: 5000 });
-        return true;
-      } catch (error) {
-        return false;
-      }
-    });
-
-    if (!deactivateButtonExists) {
-      return;
-    }
+    expect(bundleExists, `bundle "${bundleNamePrivate}" not found`).toBe(true);
 
     await test.step('Deactivate private bundle', async () => {
+      await expect(page.getByTestId('deactivate-button'), 'deactivate button not found').toBeVisible({
+        timeout: 5000
+      });
       await page.getByTestId('deactivate-button').click();
 
-      try {
-        await page.getByTestId('confirm-button-test').waitFor({ timeout: 5000 });
-        await page.getByTestId('confirm-button-test').click();
-        await checkReturnHomepage(page);
-      } catch (error) {
-        console.error('Error during deactivation:', error);
-      }
+      await page.getByTestId('confirm-button-test').click();
+      await checkReturnHomepage(page);
     });
   });
 
@@ -409,10 +320,7 @@ test.describe.serial('Private bundles flow', () => {
     await page.getByTestId('tab-private').click();
 
     const bundleFound = await getToInActivationBundleDetail(page, bundleNamePrivate);
-    if (!bundleFound) {
-      console.log(`Skipping deletion test due to missing bundle: ${bundleNamePrivate}`);
-      test.skip();
-    }
+    expect(bundleFound, `bundle "${bundleNamePrivate}" not found among the "In attivazione" ones`).toBe(true);
 
     await page.getByTestId('delete-button').click();
     await page.getByTestId('confirm-button-test').click();
@@ -420,21 +328,14 @@ test.describe.serial('Private bundles flow', () => {
   });
 });
 
-async function sendPrivateBundleOffer(page: Page) {
+async function sendPrivateBundleOffer(page: Page): Promise<void> {
   await page.getByTestId('commission-bundles-test').click();
   await page.getByTestId('tab-private').click();
 
   const bundleFound = await getToBundleDetail(page, bundleNamePrivate);
-  if (!bundleFound) {
-    return { success: false, reason: 'bundle-not-found' };
-  }
+  expect(bundleFound, `bundle "${bundleNamePrivate}" not found`).toBe(true);
 
-  try {
-    await page.getByRole('link', { name: 'Invita enti' }).waitFor({ timeout: 5000 });
-  } catch (error) {
-    return { success: false, reason: 'invita-enti-not-found' };
-  }
-
+  await expect(page.getByRole('link', { name: 'Invita enti' })).toBeVisible({ timeout: 5000 });
   await page.getByRole('link', { name: 'Invita enti' }).click();
   await page.getByLabel('Cerca EC').click();
   await page.getByTestId('ec-selection-id-test').getByLabel('Cerca EC').fill('EC DEMO');
@@ -446,14 +347,13 @@ async function sendPrivateBundleOffer(page: Page) {
   await page.getByTestId('remove-selected-ec-btn-id-test').nth(1).click();
   await page.getByTestId('open-modal-button-test').click();
   await page.getByTestId('confirm-button-test').click();
-  
-  const requestDetailButtonExists = await page.getByTestId('request-detail-button').count() > 0;
-  if (!requestDetailButtonExists) {
-    console.log('Request detail button not found, skipping offer deletion and retry');
-    return { success: true, reason: 'request-detail-not-found-but-continuing' };
-  }
 
-  await page.getByTestId('request-detail-button').click();
+  // Once the offer is sent the bundle detail lists it: delete it and send it again.
+  await expect(
+    page.getByTestId('request-detail-button').first(),
+    'the sent offer does not appear in the bundle detail'
+  ).toBeVisible({ timeout: 10000 });
+  await page.getByTestId('request-detail-button').first().click();
   await page.getByTestId('offer-delete-button').click();
   await page.getByTestId('confirm-button-test').click();
   await page.getByRole('link', { name: 'Invita enti' }).click();
@@ -463,6 +363,4 @@ async function sendPrivateBundleOffer(page: Page) {
   await page.getByTestId('open-modal-button-test').click();
   await page.getByTestId('confirm-button-test').click();
   await checkReturnHomepage(page);
-  
-  return { success: true };
 }

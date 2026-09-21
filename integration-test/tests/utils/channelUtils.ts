@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { changeToPspUser, checkReturnHomepage } from './e2eUtils';
 
 export const CHANNEL_ENDPOINT = 'https://test.it:80/';
@@ -365,6 +365,7 @@ export const createChannelAsPsp = async (page: Page): Promise<string> => {
 
   const channelCodeInput = page.getByTestId('channel-code-test');
   await channelCodeInput.waitFor({ state: 'visible' });
+  await expect(channelCodeInput).not.toHaveValue('', { timeout: 15000 });
   const channelId = await channelCodeInput.inputValue();
 
   await page.getByTestId('target-union-test').click();

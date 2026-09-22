@@ -221,7 +221,7 @@ test.describe.serial('Public bundles flow', () => {
     await navigateToPublicBundles(page);
 
     const expectedTestId = action === 'activate' ? 'activate-button' : 'deactivate-button';
-ù   const bundleFound = await waitForBundleDetail(page, bundleNamePublic, 'tab-public', expectedTestId);
+    const bundleFound = await waitForBundleDetail(page, bundleNamePublic, 'tab-public', expectedTestId);
     expect(bundleFound, `bundle "${bundleNamePublic}" (with ${expectedTestId} available) not found`).toBe(true);
 
     if (action === 'activate') {

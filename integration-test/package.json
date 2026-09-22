@@ -4,7 +4,14 @@
   "license": "MIT",
   "scripts": {
     "dep": "npx playwright install --with-deps",
-    "test": "npx playwright test --workers=1 --max-failures=1 --project=chromium --headed"
+    "test": "yarn test:ec; ec=$?; yarn test:op; op=$?; exit $((ec || op))",
+    "test:ec": "PLAYWRIGHT_HTML_REPORT=playwright-report/ec npx playwright test tests/ec --output=test-results/ec --workers=1 --max-failures=6 --project=chromium",
+    "test:op": "PLAYWRIGHT_HTML_REPORT=playwright-report/op npx playwright test tests/op --output=test-results/op --workers=1 --max-failures=6 --project=chromium",
+    "test:ec:headed": "npx playwright test tests/ec --workers=1 --max-failures=1 --project=chromium --headed",
+    "test:op:headed": "npx playwright test tests/op --workers=1 --max-failures=1 --project=chromium --headed",
+    "report": "npx playwright show-report",
+    "report:ec": "npx playwright show-report playwright-report/ec",
+    "report:op": "npx playwright show-report playwright-report/op"
   },
   "devDependencies": {
     "@playwright/test": "^1.44.1",

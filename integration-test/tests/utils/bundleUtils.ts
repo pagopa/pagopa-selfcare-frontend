@@ -231,6 +231,44 @@ export async function deleteAllExpiredBundles(bundleName: string, bundleType: Bu
   }
 }
 
+async function isEventuallyVisible(page: Page, testId: string, timeoutMs: number): Promise<boolean> {
+  return page
+    .getByTestId(testId)
+    .waitFor({ state: 'visible', timeout: timeoutMs })
+    .then(() => true)
+    .catch(() => false);
+}
+
+export async function waitForBundleDetail(
+  page: Page,
+  bundleName: string,
+  tabTestId: string,
+  expectedTestId: string,
+  timeoutMs = 30000
+): Promise<boolean> {
+
+  if (await isEventuallyVisible(page, expectedTestId, 10000)) {
+    return true;
+  }
+
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    await page.getByTestId('commission-bundles-test').click();
+    await page.getByTestId(tabTestId).click();
+    await page.waitForTimeout(1000);
+
+    const bundleFound = await getToBundleDetail(page, bundleName);
+    if (!bundleFound) {
+      continue;
+    }
+
+    if (await isEventuallyVisible(page, expectedTestId, 5000)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export async function getToInActivationBundleDetail(
   page: Page,
   bundleName: string

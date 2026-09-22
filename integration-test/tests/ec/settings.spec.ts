@@ -1,5 +1,5 @@
 import { Page, test, expect } from '@playwright/test';
-import { changeToEcIPAUser, ORG } from './utils/e2eUtils';
+import { changeToEcIPAUser, ORG } from '../utils/e2eUtils';
 
 const INSTITUTION_ID = ORG.EC_IPA.id;
 const GET_SERVICES_URL = `**/institutions/${INSTITUTION_ID}/services/consents`;
@@ -20,7 +20,7 @@ test.describe('Settings Page - Service Consents', () => {
     console.log('🚀 STARTING TEST: Render the list of services');
     await page.getByTestId('settings-nav-test').click();
     await expect(page.getByRole('heading', { name: /Impostazioni/i })).toBeVisible();
-    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(page.getByRole('alert').first()).toBeVisible();
     await expect(page.getByRole('heading', { name: /SEPA Request to Pay/})).toBeVisible();
   });
 

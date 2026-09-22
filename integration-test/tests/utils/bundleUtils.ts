@@ -240,10 +240,7 @@ export async function waitForBundleDetail(
 ): Promise<boolean> {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
-    const exitButton = page.getByTestId('exit-btn-test');
-    if (await exitButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await exitButton.click();
-    }
+    await page.getByTestId('commission-bundles-test').click();
     await page.getByTestId(tabTestId).click();
     await page.waitForTimeout(1000);
 

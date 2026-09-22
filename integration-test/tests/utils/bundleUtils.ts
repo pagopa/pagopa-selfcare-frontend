@@ -231,6 +231,14 @@ export async function deleteAllExpiredBundles(bundleName: string, bundleType: Bu
   }
 }
 
+async function isEventuallyVisible(page: Page, testId: string, timeoutMs: number): Promise<boolean> {
+  return page
+    .getByTestId(testId)
+    .waitFor({ state: 'visible', timeout: timeoutMs })
+    .then(() => true)
+    .catch(() => false);
+}
+
 export async function waitForBundleDetail(
   page: Page,
   bundleName: string,
@@ -238,6 +246,11 @@ export async function waitForBundleDetail(
   expectedTestId: string,
   timeoutMs = 30000
 ): Promise<boolean> {
+
+  if (await isEventuallyVisible(page, expectedTestId, 10000)) {
+    return true;
+  }
+
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     await page.getByTestId('commission-bundles-test').click();
@@ -249,7 +262,7 @@ export async function waitForBundleDetail(
       continue;
     }
 
-    if (await page.getByTestId(expectedTestId).isVisible({ timeout: 5000 }).catch(() => false)) {
+    if (await isEventuallyVisible(page, expectedTestId, 5000)) {
       return true;
     }
   }

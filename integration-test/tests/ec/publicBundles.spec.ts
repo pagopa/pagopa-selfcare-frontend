@@ -4,7 +4,8 @@ import {
   deleteAllExpiredBundles,
   getToBundleDetail,
   getToInActivationBundleDetail,
-  validateBundle
+  validateBundle,
+  waitForBundleDetail
 } from '../utils/bundleUtils';
 import {
   BundleTypes,
@@ -199,9 +200,6 @@ test.describe.serial('Public bundles flow', () => {
     await page.getByTestId('tab-public').click();
   };
 
-  const checkBundleExists = async (page: Page): Promise<boolean> =>
-    await getToBundleDetail(page, bundleNamePublic);
-
   const handleDeactivateAction = async (page: Page): Promise<void> => {
     await expect(page.getByTestId('deactivate-button'), 'deactivate button not found').toBeVisible({
       timeout: 5000
@@ -222,8 +220,9 @@ test.describe.serial('Public bundles flow', () => {
 
     await navigateToPublicBundles(page);
 
-    const bundleFound = await checkBundleExists(page);
-    expect(bundleFound, `bundle "${bundleNamePublic}" not found`).toBe(true);
+    const expectedTestId = action === 'activate' ? 'activate-button' : 'deactivate-button';
+ù   const bundleFound = await waitForBundleDetail(page, bundleNamePublic, 'tab-public', expectedTestId);
+    expect(bundleFound, `bundle "${bundleNamePublic}" (with ${expectedTestId} available) not found`).toBe(true);
 
     if (action === 'activate') {
       await activatePublicBundle(page);

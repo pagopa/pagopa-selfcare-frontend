@@ -231,6 +231,34 @@ export async function deleteAllExpiredBundles(bundleName: string, bundleType: Bu
   }
 }
 
+export async function waitForBundleDetail(
+  page: Page,
+  bundleName: string,
+  tabTestId: string,
+  expectedTestId: string,
+  timeoutMs = 30000
+): Promise<boolean> {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    const exitButton = page.getByTestId('exit-btn-test');
+    if (await exitButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await exitButton.click();
+    }
+    await page.getByTestId(tabTestId).click();
+    await page.waitForTimeout(1000);
+
+    const bundleFound = await getToBundleDetail(page, bundleName);
+    if (!bundleFound) {
+      continue;
+    }
+
+    if (await page.getByTestId(expectedTestId).isVisible({ timeout: 5000 }).catch(() => false)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export async function getToInActivationBundleDetail(
   page: Page,
   bundleName: string

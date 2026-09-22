@@ -4,7 +4,8 @@ import {
   deleteAllExpiredBundles,
   getToBundleDetail,
   getToInActivationBundleDetail,
-  validateBundle
+  validateBundle,
+  waitForBundleDetail
 } from '../utils/bundleUtils';
 import {
   BundleTypes,
@@ -349,10 +350,13 @@ async function sendPrivateBundleOffer(page: Page): Promise<void> {
   await page.getByTestId('confirm-button-test').click();
 
   // Once the offer is sent the bundle detail lists it: delete it and send it again.
-  await expect(
-    page.getByTestId('request-detail-button').first(),
-    'the sent offer does not appear in the bundle detail'
-  ).toBeVisible({ timeout: 10000 });
+  const offerVisible = await waitForBundleDetail(
+    page,
+    bundleNamePrivate,
+    'tab-private',
+    'request-detail-button'
+  );
+  expect(offerVisible, 'the sent offer does not appear in the bundle detail').toBe(true);
   await page.getByTestId('request-detail-button').first().click();
   await page.getByTestId('offer-delete-button').click();
   await page.getByTestId('confirm-button-test').click();

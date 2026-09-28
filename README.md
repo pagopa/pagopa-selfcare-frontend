@@ -52,3 +52,5 @@ Set the extracted token value in your local environment:
 ```bash
 # File: .env.development.local
 REACT_APP_JWT=your_authorization_token_here
+
+temp

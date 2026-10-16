@@ -68,7 +68,24 @@
     "pspOperator": "Responsabile Tecnico",
     "ecAdmin": "Referente dei Pagamenti",
     "ecOperator": "Referente Tecnico",
-    "pagopaOperator": "Operatore PagoPA"
+    "pagopaOperator": "Operatore PagoPA",
+    "ptAdmin": "Partner Tecnologico",
+    "ptOperator": "Partner Tecnologico"
+  },
+  "profileItem": {
+    "caption": "Stai operando come",
+    "switchLabel": "Cambia profilo",
+    "modal": {
+      "title": "Vuoi cambiare profilo?",
+      "subtitle": "Scegli come vuoi operare sul portale.",
+      "closeAriaLabel": "Chiudi",
+      "confirm": "Conferma",
+      "activeCaption": "In uso ora"
+    },
+    "errors": {
+      "missingToken": "Non è stato possibile recuperare il token di accesso.",
+      "switchFailed": "Non è stato possibile cambiare profilo. Riprova."
+    }
   },
   "dashboardPage": {
     "title": "Panoramica",
@@ -945,7 +962,8 @@
         "addEditTitle": "Errore in salvataggio configurazione",
         "addEditMessage": "Errore inatteso nel corso del salvataggio della configurazione."
       },
-      "dropFileText": "Trascina qui il logo dell'ente per la stampa, o selezionalo dal tuo computer"
+      "dropFileText": "Trascina qui il logo dell'ente per la stampa, o selezionalo dal tuo computer",
+      "dropFileButton": "Carica file"
     }
   },
   "ibanPage": {
@@ -1090,6 +1108,7 @@
     "subtitle": "Carica il file con la lista degli IBAN da aggiungere, aggiornare o rimuovere.",
     "csvForm": {
       "dropzoneLabel": "Trascina qui il file con la lista degli IBAN oppure carica il file.",
+      "dropzoneButton": "Carica file",
       "rejectedLabel": "Formato file non supportato. Usa solo file CSV."
     },
     "helpText": "Non sai come preparare la lista?",

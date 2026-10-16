@@ -13,6 +13,17 @@ import {add} from 'date-fns';
 import { partiesActions } from '../../../../redux/slices/partiesSlice';
 import { Party } from '../../../../model/Party';
 import { validateIbanCsvData } from '../../../../utils/iban-csv-to-upload-parser';
+import { formatDateToDDMMYYYY } from '../../../../utils/common-utils';
+
+// useErrorDispatcher is a named export of a real ES module in the newer
+// @pagopa/selfcare-common-frontend build, whose namespace properties are
+// non-configurable, so jest.spyOn can't redefine it directly; mock just its
+// own module (index.js re-exports it from here) instead of the whole
+// package, which avoids a circular-import crash from jest.requireActual.
+jest.mock('@pagopa/selfcare-common-frontend/hooks/useErrorDispatcher', () => ({
+  __esModule: true,
+  default: jest.fn(),
+}));
 
 let createIbanSpy: jest.SpyInstance;
 let updateIbanSpy: jest.SpyInstance;
@@ -151,6 +162,12 @@ describe('AddEditIbanForm', () => {
         const description = screen.getByTestId('description-test');
         fireEvent.change(description, {target: {value: 'Descrizione iban'}});
 
+        const startDateInput = screen.getByTestId('start-date-test');
+        fireEvent.change(startDateInput, {target: {value: formatDateToDDMMYYYY(add(new Date(), {days: 1}))}});
+
+        const endDateInput = screen.getByTestId('end-date-test');
+        fireEvent.change(endDateInput, {target: {value: formatDateToDDMMYYYY(add(new Date(), {days: 2}))}});
+
         // const holderMe = screen.getByTestId('holder-me-test');
         // fireEvent.click(holderMe);
 
@@ -184,6 +201,12 @@ describe('AddEditIbanForm', () => {
         const description = screen.getByTestId('description-test');
         fireEvent.change(description, {target: {value: 'Descrizione iban'}});
 
+        const startDateInput = screen.getByTestId('start-date-test');
+        fireEvent.change(startDateInput, {target: {value: formatDateToDDMMYYYY(add(new Date(), {days: 1}))}});
+
+        const endDateInput = screen.getByTestId('end-date-test');
+        fireEvent.change(endDateInput, {target: {value: formatDateToDDMMYYYY(add(new Date(), {days: 2}))}});
+
         const submitBtn = screen.getByTestId('submit-button-test');
         await waitFor(() => expect(submitBtn).toBeEnabled());
         fireEvent.submit(screen.getByTestId('iban-form'));
@@ -215,6 +238,12 @@ describe('AddEditIbanForm', () => {
 
         const description = screen.getByTestId('description-test');
         fireEvent.change(description, {target: {value: 'Descrizione iban'}});
+
+        const startDateInput = screen.getByTestId('start-date-test');
+        fireEvent.change(startDateInput, {target: {value: formatDateToDDMMYYYY(add(new Date(), {days: 1}))}});
+
+        const endDateInput = screen.getByTestId('end-date-test');
+        fireEvent.change(endDateInput, {target: {value: formatDateToDDMMYYYY(add(new Date(), {days: 2}))}});
 
         const submitBtn = screen.getByTestId('submit-button-test');
         await waitFor(() => expect(submitBtn).toBeEnabled());
@@ -255,6 +284,12 @@ describe('AddEditIbanForm', () => {
         const description = screen.getByTestId('description-test');
         fireEvent.change(description, {target: {value: 'Descrizione iban'}});
 
+        const startDateInput = screen.getByTestId('start-date-test');
+        fireEvent.change(startDateInput, {target: {value: formatDateToDDMMYYYY(add(new Date(), {days: 1}))}});
+
+        const endDateInput = screen.getByTestId('end-date-test');
+        fireEvent.change(endDateInput, {target: {value: formatDateToDDMMYYYY(add(new Date(), {days: 2}))}});
+
         const submitBtn = screen.getByTestId('submit-button-test');
         await waitFor(() => expect(submitBtn).toBeEnabled());
         fireEvent.submit(screen.getByTestId('iban-form'));
@@ -290,6 +325,12 @@ describe('AddEditIbanForm', () => {
 
         const description = screen.getByTestId('description-test');
         fireEvent.change(description, {target: {value: 'Descrizione iban'}});
+
+        const startDateInput = screen.getByTestId('start-date-test');
+        fireEvent.change(startDateInput, {target: {value: formatDateToDDMMYYYY(add(new Date(), {days: 1}))}});
+
+        const endDateInput = screen.getByTestId('end-date-test');
+        fireEvent.change(endDateInput, {target: {value: formatDateToDDMMYYYY(add(new Date(), {days: 2}))}});
 
         const submitBtn = screen.getByTestId('submit-button-test');
         await waitFor(() => expect(submitBtn).toBeEnabled());

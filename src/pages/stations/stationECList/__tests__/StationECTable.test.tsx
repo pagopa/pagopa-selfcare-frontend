@@ -31,6 +31,9 @@ jest.mock('@pagopa/selfcare-common-frontend/services/errorService', () => ({
 let getECListByStationCodeSpy: jest.SpyInstance;
 let dissociateEcSpy: jest.SpyInstance;
 
+const originalGetBoundingClientRect =
+  HTMLElement.prototype.getBoundingClientRect;
+
 beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
@@ -47,10 +50,27 @@ beforeEach(() => {
     stationService,
     'dissociateECfromStation'
   );
+
+  HTMLElement.prototype.getBoundingClientRect = () =>
+    ({
+      x: 0,
+      y: 0,
+      width: 1000,
+      height: 1000,
+      top: 0,
+      left: 0,
+      right: 1000,
+      bottom: 1000,
+      toJSON: () => '',
+    }) as DOMRect;
 });
 
 afterEach(() => {
   cleanup();
+
+  HTMLElement.prototype.getBoundingClientRect =
+    originalGetBoundingClientRect;
+
   jest.restoreAllMocks();
 });
 
@@ -111,6 +131,7 @@ describe('StationECTable', () => {
     await waitFor(() => {
       expect(dissociateEcSpy).toHaveBeenCalledTimes(1);
     });
+
     await waitFor(() => {
       expect(getECListByStationCodeSpy).toHaveBeenCalledTimes(2);
     });

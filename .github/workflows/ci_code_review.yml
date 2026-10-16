@@ -106,7 +106,7 @@ jobs:
           export REACT_APP_URL_FE_SELFCARE='https://dev.selfcare.pagopa.it/dashboard/'
           export REACT_APP_URL_FE_TOKEN_EXCHANGE='https://dev.selfcare.pagopa.it/token-exchange'
 
-          export REACT_APP_URL_API_TOKEN='https://api.dev.platform.pagopa.it/api/token/token'
+          export REACT_APP_URL_API_TOKEN='https://api.dev.platform.pagopa.it/backoffice/selfcare/sso/v1/tokens'
           export REACT_APP_URL_BACKOFFICE='https://api.dev.platform.pagopa.it/backoffice/v1'
           export REACT_APP_PUBLIC_URL='/ui'
           export REACT_APP_URL_BETA='false'

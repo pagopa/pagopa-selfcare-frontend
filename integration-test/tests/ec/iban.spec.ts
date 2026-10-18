@@ -1,5 +1,5 @@
 import { Page, test } from '@playwright/test';
-import { changeToEcUser, checkReturnHomepage } from './utils/e2eUtils';
+import { changeToEcUser, checkReturnHomepage } from '../utils/e2eUtils';
 
 test.setTimeout(100000);
 test.describe.serial('IBAN flow', () => {

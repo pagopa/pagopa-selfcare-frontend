@@ -231,6 +231,9 @@ describe('<CommissionBundlesTable />', () => {
       ],
       pageInfo: mockedCommissionBundlePspList.pageInfo,
     };
+    getBundleListByPSPSpy.mockReturnValueOnce(
+      new Promise((resolve) => resolve(mockBundlesWithoutPaymentType))
+    );
 
     getBundleListByPSPSpy.mockResolvedValue(mockBundlesWithoutPaymentType);
 
@@ -252,7 +255,6 @@ describe('<CommissionBundlesTable />', () => {
     await waitFor(() => {
       expect(screen.getByTestId('data-grid')).toBeInTheDocument();
     });
-
     expect(getBundleListByPSPSpy).toHaveBeenCalled();
     // the bundle came back with paymentType undefined: the row still renders,
     // i.e. CommissionBundlesTable normalized it to '' instead of crashing

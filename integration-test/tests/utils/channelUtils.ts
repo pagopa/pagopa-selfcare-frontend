@@ -1,5 +1,7 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { changeToPspUser, checkReturnHomepage } from './e2eUtils';
+
+export const CHANNEL_ENDPOINT = 'https://test.it:80/';
 
 export const DEFAULT_CHANNEL_IDS = ['99999000011_20', '99999000011_19', '99999000011_18'];
 
@@ -344,4 +346,48 @@ export const handleDropdown = async (page: Page, dropdownLabel: string): Promise
   } catch (error) {
     console.error('Error occurred:', error);
   }
+};
+
+/**
+ * Logs in as the PSP user and creates a channel. The channel ends up in the
+ * "to be validated" tab, waiting for a PagoPA operator.
+ *
+ * Used by the EC/PSP suite and, as a setup step, by the OP suite (an operator
+ * cannot create channels, so it needs a PSP to put one in its queue).
+ * @returns the code of the created channel
+ */
+export const createChannelAsPsp = async (page: Page): Promise<string> => {
+  await changeToPspUser(page);
+  await page.waitForTimeout(2000);
+  await page.getByTestId('channels-test').click();
+
+  await page.getByTestId('create-channel').click();
+
+  const channelCodeInput = page.getByTestId('channel-code-test');
+  await channelCodeInput.waitFor({ state: 'visible' });
+  await expect(channelCodeInput).not.toHaveValue('', { timeout: 15000 });
+  const channelId = await channelCodeInput.inputValue();
+
+  await page.getByTestId('target-union-test').click();
+  await page.getByTestId('target-union-test').fill(CHANNEL_ENDPOINT);
+
+  // Payment type: MUI Select opens a listbox in a portal. Pick the first
+  // available option instead of matching a specific label (which changes
+  // depending on what the backend returns).
+  await page.locator('#payment_types0_select').click();
+  const paymentOption = page.getByRole('option').first();
+  await paymentOption.waitFor({ state: 'visible' });
+  await paymentOption.click();
+  await page.keyboard.press('Escape').catch(() => {});
+
+  // Submit -> confirm modal -> confirm.
+  await page.getByRole('button', { name: 'Conferma' }).click();
+
+  const modalConfirm = page.getByTestId('confirm-button-modal-test');
+  await modalConfirm.waitFor({ state: 'visible' });
+  await modalConfirm.click();
+
+  await checkReturnHomepage(page);
+
+  return channelId;
 };

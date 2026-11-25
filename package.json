@@ -55,7 +55,7 @@
     "env-var": "^7.5.0",
     "formik": "^2.2.9",
     "fp-ts": "^2.16.5",
-    "i18next": "^25.10.10",
+    "i18next": "^26.0.0",
     "i18next-browser-languagedetector": "^8.2.1",
     "io-ts": "^2.2.21",
     "luxon": "^3.5.0",
